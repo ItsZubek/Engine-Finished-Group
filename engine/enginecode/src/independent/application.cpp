@@ -1,6 +1,9 @@
 /** \file application.cpp
 */
 
+#ifdef NG_PLATFORM_WINDOWS
+#include "windows/window.h"
+#endif // NG_PLATFORM_WINDOWS
 
 #include "engine_pch.h"
 #include "core/application.h"

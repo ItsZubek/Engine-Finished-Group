@@ -6,3 +6,4 @@
 
 // entry point
 #include "include/independent/core/entrypoint.h"
+#include "include/independent/systems/MyLogger.h"

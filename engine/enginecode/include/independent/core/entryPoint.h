@@ -13,7 +13,7 @@ int main(int argc, char** argv)
 	application->run();
 	delete application;
 	
-	MyLogger::log("random log test");
+	//MyLogger::log("random log test");
 	return 0;
 }
 

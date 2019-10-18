@@ -35,7 +35,7 @@ namespace Engine {
 	void Application::onEvent(EventBaseClass& e)
 	{
 		//Check the event type
-		if (e.getEventType == EventType::WindowResize)
+		if (e.getEventType() == EventType::WindowResize)
 		{
 			//cast the event
 			WindowResizeEvent re = (WindowResizeEvent&)e;

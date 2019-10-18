@@ -1,6 +1,7 @@
 /** \file application.h
 */
 #pragma once
+#include "systems/WindowResizeEvent.h"
 
 namespace Engine {
 
@@ -20,6 +21,7 @@ namespace Engine {
 		virtual ~Application(); //!< Deconstructor
 		inline static Application& getInstance() { return *s_instance; } //!< Instance getter from singleton pattern
 		void run(); //!< Main loop
+		void onEvent(EventBaseClass& e); //!< Called when an event happens
 	};
 
 	// To be defined in users code

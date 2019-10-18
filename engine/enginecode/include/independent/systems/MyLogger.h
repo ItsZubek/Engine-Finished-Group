@@ -13,6 +13,6 @@ private:
 public:
 	MyLogger();
 	static void log(const std::string& msg);
-	//static bool isRunning();
+	static bool isRunning() { return running; };
 	
 };

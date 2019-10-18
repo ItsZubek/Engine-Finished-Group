@@ -1,7 +1,7 @@
 /** \file application.h
 */
 #pragma once
-#include "systems/WindowResizeEvent.h"
+#include "../events/WindowResizeEvent.h"
 
 namespace Engine {
 

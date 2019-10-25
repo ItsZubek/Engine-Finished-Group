@@ -1,15 +1,18 @@
 #include "engine_pch.h"
 #include "systems/MyLogger.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
 
 
-
-std::shared_ptr<spdlog::logger> MyLogger::s_logger;
-
-void MyLogger::log(const std::string& msg)
+namespace Engine 
 {
-	s_logger->info(msg);
+
+	std::shared_ptr<spdlog::logger> MyLogger::s_CoreLogger;
+
+	void MyLogger::Init()
+	{
+		spdlog::set_pattern("%^[%T] %n: %v%$");
+		s_CoreLogger = spdlog::stdout_color_mt("ENGINE");
+		s_CoreLogger->set_level(spdlog::level::trace);
+	}
+
 }
-//bool MyLogger::isRunning()
-//{
-	//return running;
-//}

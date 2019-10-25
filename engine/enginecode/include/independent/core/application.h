@@ -2,6 +2,7 @@
 */
 #pragma once
 #include "../events/WindowResizeEvent.h"
+#include "systems/MyLogger.h"
 
 namespace Engine {
 
@@ -17,6 +18,7 @@ namespace Engine {
 		Application(); //!< Constructor
 	private:
 		static Application* s_instance; //!< Singleton instance of the application
+		std::shared_ptr<MyLogger> mp_logger;
 	public:
 		virtual ~Application(); //!< Deconstructor
 		inline static Application& getInstance() { return *s_instance; } //!< Instance getter from singleton pattern

@@ -18,10 +18,15 @@ namespace Engine {
 		{
 			s_instance = this;
 		}
+		mp_logger = std::make_shared<MyLogger>();
+		mp_logger->start();
+
 	}
 
 	Application::~Application()
 	{
+		mp_logger->stop();
+		mp_logger.reset();
 	}
 
 	
@@ -29,6 +34,7 @@ namespace Engine {
 	void Application::run()
 	{
 		float accumulatedTime = 0.f;
+		ENGINE_CORE_CRITICAL("Logger Initialized");
 	
 	}
 
@@ -40,7 +46,7 @@ namespace Engine {
 			//cast the event
 			WindowResizeEvent re = (WindowResizeEvent&)e;
 			//deal with the event
-			//ENGINE_INFO("Window resize event. Width {0}. Height {1}", re.getWidth(), re.getHeight());
+			ENGINE_CORE_INFO("Window resize event. Width {0}. Height {1}", re.getWidth(), re.getHeight());
 		}
 	}
 

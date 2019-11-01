@@ -21,6 +21,8 @@ namespace Engine {
 		mp_logger = std::make_shared<MyLogger>();
 		mp_logger->start();
 		mp_timer = std::make_shared<MyTimer>();
+		mp_timer->start();
+
 
 	}
 
@@ -28,18 +30,38 @@ namespace Engine {
 	{
 		mp_logger->stop();
 		mp_logger.reset();
+		mp_timer->stop();
 	}
 
 	
 
 	void Application::run()
 	{
-		mp_timer->SetStartPoint();
+		
 		float accumulatedTime = 0.f;
 		ENGINE_CORE_INFO("Logger Initialized");
+		mp_timer->SetStartPoint();
+		mp_timer->SetFrameStart();
+
+
+		bool run = true;
+		while (run)
+		{
+			mp_timer->SetFrameEnd();
+			mp_timer->FrameCounter();
+
+			fps = 1.0f / mp_timer->FrameCounter();
+			mp_timer->SetFrameStart();
+	
+			ENGINE_CORE_TRACE("FPS: {0}", fps);
+
+		}
+
 		mp_timer->SetEndPoint();
-		TimeElapsedInSeconds = mp_timer->TimeElapsed();
+		TimeElapsedInSeconds = mp_timer->ElapsedTime();
 		ENGINE_CORE_WARN("Time Elapsed in Seconds {0}",TimeElapsedInSeconds);
+
+
 	
 	}
 

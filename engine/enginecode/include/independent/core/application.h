@@ -22,6 +22,8 @@ namespace Engine {
 		std::shared_ptr<MyLogger> mp_logger;
 		std::shared_ptr<MyTimer> mp_timer;
 		float TimeElapsedInSeconds;
+		float fps;
+		
 	public:
 		virtual ~Application(); //!< Deconstructor
 		inline static Application& getInstance() { return *s_instance; } //!< Instance getter from singleton pattern

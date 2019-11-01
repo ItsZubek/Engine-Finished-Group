@@ -16,7 +16,6 @@ namespace Engine
 		s_CoreLogger = spdlog::stdout_color_mt("ENGINE");
 		s_CoreLogger->set_level(spdlog::level::trace);
 
-		s_CoreLogger->info("Logger Initialised.");
 	}
 
 	void MyLogger::stop(SystemSignal close, ...)

@@ -17,7 +17,6 @@ namespace Engine {
 		~MyLogger() {};
 		void start(SystemSignal init = SystemSignal::None, ...) override;
 		void stop(SystemSignal close = SystemSignal::None, ...) override;
-		//static void log(const std::string& msg);
 		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
 
 	};

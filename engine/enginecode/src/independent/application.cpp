@@ -20,6 +20,7 @@ namespace Engine {
 		}
 		mp_logger = std::make_shared<MyLogger>();
 		mp_logger->start();
+		mp_timer = std::make_shared<MyTimer>();
 
 	}
 
@@ -33,8 +34,12 @@ namespace Engine {
 
 	void Application::run()
 	{
+		mp_timer->SetStartPoint();
 		float accumulatedTime = 0.f;
-		ENGINE_CORE_CRITICAL("Logger Initialized");
+		ENGINE_CORE_INFO("Logger Initialized");
+		mp_timer->SetEndPoint();
+		TimeElapsedInSeconds = mp_timer->TimeElapsed();
+		ENGINE_CORE_WARN("Time Elapsed in Seconds {0}",TimeElapsedInSeconds);
 	
 	}
 

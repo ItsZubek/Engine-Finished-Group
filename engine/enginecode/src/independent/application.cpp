@@ -33,7 +33,17 @@ namespace Engine {
 		mp_timer->stop();
 	}
 
-	
+	void Application::onEvent(EventBaseClass& e)
+	{
+		//Check the event type
+		if (e.getEventType() == EventType::WindowResize)
+		{
+			//cast the event
+			WindowResizeEvent re = (WindowResizeEvent&)e;
+			//deal with the event
+			ENGINE_CORE_INFO("Window resize event. Width {0}. Height {1}", re.getWidth(), re.getHeight());
+		}
+	}
 
 	void Application::run()
 	{
@@ -53,8 +63,16 @@ namespace Engine {
 			fps = 1.0f / mp_timer->FrameCounter();
 			mp_timer->SetFrameStart();
 	
-			ENGINE_CORE_TRACE("FPS: {0}", fps);
+			//ENGINE_CORE_TRACE("FPS: {0}", fps);
+			accumulatedTime += fps;
+			if (accumulatedTime > 10.f)
+			{
+				WindowResizeEvent e(1024, 720);
+				onEvent(e);
+				run = false;
+				ENGINE_CORE_INFO("Time Elapsed: {0}. Shutting Down.", accumulatedTime);
 
+			}
 		}
 
 		mp_timer->SetEndPoint();
@@ -65,16 +83,6 @@ namespace Engine {
 	
 	}
 
-	void Application::onEvent(EventBaseClass& e)
-	{
-		//Check the event type
-		if (e.getEventType() == EventType::WindowResize)
-		{
-			//cast the event
-			WindowResizeEvent re = (WindowResizeEvent&)e;
-			//deal with the event
-			ENGINE_CORE_INFO("Window resize event. Width {0}. Height {1}", re.getWidth(), re.getHeight());
-		}
-	}
+
 
 }

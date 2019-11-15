@@ -1,16 +1,18 @@
 /** \file application.cpp
 */
+#include "engine_pch.h"
+#include "core/application.h"
 
 #ifdef NG_PLATFORM_WINDOWS
 #include "windows/window.h"
 #endif // NG_PLATFORM_WINDOWS
 
-#include "engine_pch.h"
-#include "core/application.h"
+
 
 
 namespace Engine {
 	Application* Application::s_instance = nullptr;
+
 
 	Application::Application()
 	{
@@ -23,7 +25,6 @@ namespace Engine {
 		mp_timer = std::make_shared<MyTimer>();
 		mp_timer->start();
 
-
 	}
 
 	Application::~Application()
@@ -35,14 +36,20 @@ namespace Engine {
 
 	void Application::onEvent(EventBaseClass& e)
 	{
-		//Check the event type
-		if (e.getEventType() == EventType::WindowResize)
-		{
-			//cast the event
-			WindowResizeEvent re = (WindowResizeEvent&)e;
-			//deal with the event
-			ENGINE_CORE_INFO("Window resize event. Width {0}. Height {1}", re.getWidth(), re.getHeight());
-		}
+		EventDispatcher dispatcher(e);
+		dispatcher.dispatch<WindowCloseEvent>(std::bind(&Application::onClose, this, std::placeholders::_1));
+		dispatcher.dispatch<WindowResizeEvent>(std::bind(&Application::onResize, this, std::placeholders::_1));
+	}
+	bool Application::onClose(WindowCloseEvent & e)
+	{
+		ENGINE_CORE_INFO("Closing application");
+		m_running = false;
+		return true;
+	}
+	bool Application::onResize(WindowResizeEvent & e)
+	{
+		ENGINE_CORE_INFO("Resize window to {0} x {1}", e.getWidth(), e.getHeight());
+		return true;
 	}
 
 	void Application::run()
@@ -54,8 +61,8 @@ namespace Engine {
 		mp_timer->SetFrameStart();
 
 
-		bool run = true;
-		while (run)
+
+		while (m_running)
 		{
 			mp_timer->SetFrameEnd();
 			mp_timer->FrameCounter();
@@ -63,26 +70,19 @@ namespace Engine {
 			fps = 1.0f / mp_timer->FrameCounter();
 			mp_timer->SetFrameStart();
 	
-			//ENGINE_CORE_TRACE("FPS: {0}", fps);
+			ENGINE_CORE_TRACE("FPS: {0}", fps);
 			accumulatedTime += fps;
 			if (accumulatedTime > 10.f)
 			{
-				WindowResizeEvent e(1024, 720);
-				onEvent(e);
-				run = false;
-				ENGINE_CORE_INFO("Time Elapsed: {0}. Shutting Down.", accumulatedTime);
-
+				WindowResizeEvent e1(1024, 720);
+				onEvent(e1);
+				WindowCloseEvent e2;
+				onEvent(e2);
 			}
 		}
-
 		mp_timer->SetEndPoint();
 		TimeElapsedInSeconds = mp_timer->ElapsedTime();
-		ENGINE_CORE_WARN("Time Elapsed in Seconds {0}",TimeElapsedInSeconds);
-
-
-	
+		ENGINE_CORE_WARN("Time Elapsed in Seconds {0}",TimeElapsedInSeconds);	
 	}
-
-
 
 }

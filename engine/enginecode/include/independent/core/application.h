@@ -1,7 +1,8 @@
 /** \file application.h
 */
 #pragma once
-#include "../events/WindowResizeEvent.h"
+
+#include "../events/WindowEvents.h"
 #include "systems/MyLogger.h"
 #include "systems/MyTimer.h"
 
@@ -23,6 +24,10 @@ namespace Engine {
 		std::shared_ptr<MyTimer> mp_timer;
 		float TimeElapsedInSeconds;
 		float fps;
+		bool onClose(WindowCloseEvent& e);
+		bool onResize(WindowResizeEvent& e);
+		bool m_running = true;
+
 		
 	public:
 		virtual ~Application(); //!< Deconstructor

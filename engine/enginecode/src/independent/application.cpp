@@ -16,8 +16,10 @@ namespace Engine {
 	Application::Application()
 	{
 #ifdef NG_PLATFORM_WINDOWS
-
+		m_windows = std::make_shared<WindowsSys> (new GLFWWindowsSystem());
 #endif //NG_PLATFORM_WINDOWS
+		m_windows->start();
+		
 		if (s_instance == nullptr)
 		{
 			s_instance = this;

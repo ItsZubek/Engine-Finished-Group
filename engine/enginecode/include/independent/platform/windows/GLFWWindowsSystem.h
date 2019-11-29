@@ -4,12 +4,13 @@
 #include "systems/system.h"
 #include "../glfw/include/GLFW/glfw3.h"
 
-class GLFWWindowsSystem
-{
-private:
-	
-	int start(); //glfwInit()
-	void Close(); //glfwTerminate()
-};
+namespace Engine {
+	class GLFWWindowsSystem : System
+	{
+	private:
 
+		void start(SystemSignal init = SystemSignal::None, ...) override;
+		void stop(SystemSignal close = SystemSignal::None, ...) override;
+	};
 
+}

@@ -28,8 +28,8 @@ namespace Engine {
 	public:
 		virtual EventType getEventType() const = 0; //!< Get the event type
 		virtual int getCategoryFlags() const = 0; //!< Get the event category
-		inline bool Handled(bool IsHandled) { return m_handled; } //!< Has the event been handled
-		inline void handle(bool ToHandle) { ToHandle = m_handled; } //!< handle the event
+		inline bool handled() const { return m_handled; } //!< Has the event been handled
+		inline void handle(bool IsHandle) { IsHandle = m_handled; } //!< handle the event
 		inline bool isInCategory(EventCategory category) { return getCategoryFlags() & category; } //!< Is this event in the category
 	};
 	class EventDispatcher

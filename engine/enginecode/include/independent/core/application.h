@@ -5,6 +5,7 @@
 #include "../events/WindowEvents.h"
 #include "systems/MyLogger.h"
 #include "systems/MyTimer.h"
+#include <windows.h>
 
 namespace Engine {
 
@@ -27,6 +28,7 @@ namespace Engine {
 		bool onClose(WindowCloseEvent& e);
 		bool onResize(WindowResizeEvent& e);
 		bool m_running = true;
+		std::shared_ptr<Window> m_windows;
 
 		
 	public:

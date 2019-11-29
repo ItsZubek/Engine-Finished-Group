@@ -4,9 +4,8 @@
 #include "core/application.h"
 
 #ifdef NG_PLATFORM_WINDOWS
-#include "windows/window.h"
+#include "platform/windows/GLFWWindowsSystem.h"
 #endif // NG_PLATFORM_WINDOWS
-
 
 
 
@@ -16,6 +15,9 @@ namespace Engine {
 
 	Application::Application()
 	{
+#ifdef NG_PLATFORM_WINDOWS
+
+#endif //NG_PLATFORM_WINDOWS
 		if (s_instance == nullptr)
 		{
 			s_instance = this;

@@ -4,7 +4,6 @@
 #include "core/application.h"
 
 #ifdef NG_PLATFORM_WINDOWS
-#include "platform/windows/GLFWWindowsSystem.h"
 #endif // NG_PLATFORM_WINDOWS
 
 
@@ -16,9 +15,8 @@ namespace Engine {
 	Application::Application()
 	{
 #ifdef NG_PLATFORM_WINDOWS
-		m_windows = std::make_shared<WindowsSys> (new GLFWWindowsSystem());
+		m_Window = std::unique_ptr<Window>(Window::Create());
 #endif //NG_PLATFORM_WINDOWS
-		m_windows->start();
 		
 		if (s_instance == nullptr)
 		{
@@ -83,6 +81,7 @@ namespace Engine {
 				WindowCloseEvent e2;
 				onEvent(e2);
 			}
+			m_Window->onUpdate();
 		}
 		mp_timer->SetEndPoint();
 		TimeElapsedInSeconds = mp_timer->ElapsedTime();

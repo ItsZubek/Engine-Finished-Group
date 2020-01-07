@@ -1,20 +1,24 @@
 #pragma once
 #include "EventBaseClass.h"
+#include <sstream>
 
 namespace Engine {
 	class WindowResizeEvent : public EventBaseClass
 	{
 	private:
-		int m_width;
-		int m_height;
+		unsigned int m_width, m_height;
 	public:
-		WindowResizeEvent(int width, int height) : m_width(width), m_height(height) {}
-		static EventType getStaticType() { return EventType::WindowResize; }
-		virtual EventType getEventType() const override { return EventType::WindowResize; }
-		virtual int getCategoryFlags() const override { return EventCategoryWindow; }
-
-		inline int getWidth() const { return m_width; }
-		inline int getHeight() const { return m_height; }
+		WindowResizeEvent(unsigned int width, unsigned int height) : m_width(width), m_height(height) {}
+		inline unsigned int getWidth() const { return m_width; }
+		inline unsigned int getHeight() const { return m_height; }
+		std::string ToString() const override
+		{
+			std::stringstream ss;
+			ss << "WindowResizeEvent: " << m_width << ", " << m_height;
+			return ss.str();
+		}
+		EVENT_CLASS_TYPE(WindowResize)
+		EVENT_CLASS_CATEGORY(EventCategoryWindow)
 	};
 
 	class WindowCloseEvent : public EventBaseClass
@@ -22,8 +26,7 @@ namespace Engine {
 	public:
 		WindowCloseEvent() {}
 
-		static EventType getStaticType() { return EventType::WindowsClose; }
-		EventType getEventType() const override { return EventType::WindowsClose; }
-		int getCategoryFlags() const override { return EventCategoryWindow; }
+		EVENT_CLASS_TYPE(WindowClose)
+		EVENT_CLASS_CATEGORY(EventCategoryWindow)
 	};
 }

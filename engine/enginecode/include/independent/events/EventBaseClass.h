@@ -1,12 +1,13 @@
 #pragma once
 
 #include <functional>
+#include <string>
 
 namespace Engine {
 	enum class EventType
 	{
 		None = 0,
-		WindowsClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
+		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
 		KeyPressed, KeyReleased, KeyTyped,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	};
@@ -28,10 +29,19 @@ namespace Engine {
 	public:
 		virtual EventType getEventType() const = 0; //!< Get the event type
 		virtual int getCategoryFlags() const = 0; //!< Get the event category
+		virtual const char* GetName() const = 0;
 		inline bool handled() const { return m_handled; } //!< Has the event been handled
 		inline void handle(bool IsHandle) { IsHandle = m_handled; } //!< handle the event
 		inline bool isInCategory(EventCategory category) { return getCategoryFlags() & category; } //!< Is this event in the category
+		virtual std::string ToString() const { return GetName(); }
 	};
+
+#define EVENT_CLASS_TYPE(type) static EventType getStaticType() {return EventType::##type;}\
+							   virtual EventType getEventType() const override {return getStaticType();}\
+							   virtual const char* GetName() const override {return #type;}
+
+#define EVENT_CLASS_CATEGORY(category) virtual int getCategoryFlags() const override {return category;}
+
 	class EventDispatcher
 	{
 		template<typename T>

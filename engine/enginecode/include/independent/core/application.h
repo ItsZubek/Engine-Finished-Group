@@ -9,6 +9,8 @@
 #include "systems/MyTimer.h"
 #include "windows/window.h"
 #include <glm/glm.hpp>
+#include "windows/Shader.h"
+#include "windows/Buffer.h"
 
 namespace Engine {
 
@@ -41,7 +43,10 @@ namespace Engine {
 		static glm::ivec2 s_screenResolution; //!< Screen res
 		static float s_timestep; //!< last frame timestep
 
-		unsigned int m_VertexArray, m_VertexBuffer, m_IndexBuffer;
+		unsigned int m_VertexArray;
+		std::unique_ptr<Shader> m_Shader;
+		std::unique_ptr<VertexBuffer> m_VertexBuffer;
+		std::unique_ptr<IndexBuffer> m_IndexBuffer;
 
 
 #pragma region TempVars

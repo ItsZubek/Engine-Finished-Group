@@ -3,6 +3,8 @@
 #pragma once
 
 #include "../events/WindowEvents.h"
+#include "../events/KeyEvents.h"
+#include "../events/MouseEvents.h"
 #include "systems/MyLogger.h"
 #include "systems/MyTimer.h"
 #include "windows/window.h"
@@ -27,6 +29,12 @@ namespace Engine {
 		float fps;
 		bool onWindowClose(WindowCloseEvent& e);
 		bool onResize(WindowResizeEvent& e);
+		bool onKeyPress(KeyPressedEvent& e);
+		bool onKeyRelease(KeyReleasedEvent& e);
+		bool onMouseButtonPress(MouseButtonPressedEvent& e);
+		bool onMouseButtonRelease(MouseButtonReleasedEvent& e);
+		bool onMouseScroll(MouseScrolledEvent& e);
+		bool onMouseMoved(MouseMovedEvent& e);
 		bool m_running = true;
 		std::unique_ptr<Window> m_Window;
 

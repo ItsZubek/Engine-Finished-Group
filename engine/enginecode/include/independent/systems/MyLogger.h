@@ -9,15 +9,15 @@ namespace Engine {
 	class MyLogger : public System
 	{
 	private:
-		static std::shared_ptr<spdlog::logger> s_CoreLogger;
-		static bool m_isRunning;
+		static std::shared_ptr<spdlog::logger> s_CoreLogger; //!< Initializes the logger from spdlog library
+		static bool m_isRunning; //!< Boolean to know if the logger is running or not
 
 	public:
 		MyLogger() {};
 		~MyLogger() {};
 		void start(SystemSignal init = SystemSignal::None, ...) override;
 		void stop(SystemSignal close = SystemSignal::None, ...) override;
-		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
+		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; } //!< Logger getter
 
 	};
 }

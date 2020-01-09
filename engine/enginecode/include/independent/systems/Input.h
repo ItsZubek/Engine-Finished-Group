@@ -4,12 +4,12 @@ namespace Engine {
 	class Input
 	{
 	public:
-		inline static bool isKeyPressed(int keycode) { return s_Instance->isKeyPressedImpl(keycode); }
-		inline static bool isMouseButtonPressed(int button) { return s_Instance->isMouseButtonPressedImpl(button); }
-		inline static float GetMouseX() { return s_Instance->GetMouseXImpl(); }
-		inline static float GetMouseY() { return s_Instance->GetMouseYImpl(); }
+		inline static bool isKeyPressed(int keycode) { return s_Instance->isKeyPressedImpl(keycode); } //!< Function that checks if the key is pressed
+		inline static bool isMouseButtonPressed(int button) { return s_Instance->isMouseButtonPressedImpl(button); } //!< Function that checks if the Mouse Button is pressed
+		inline static float GetMouseX() { return s_Instance->GetMouseXImpl(); } //!< Function that checks Mouse position on X axis
+		inline static float GetMouseY() { return s_Instance->GetMouseYImpl(); } //!< Function that checks Mouse position on Y axis
 
-
+		//Implementation functions used in the functions above
 	protected:
 		virtual bool isKeyPressedImpl(int keycode) = 0;
 		virtual bool isMouseButtonPressedImpl(int button) = 0;

@@ -5,6 +5,7 @@
 #include "systems/Input.h"
 #include <glad/glad.h>
 
+
 #pragma region TempIncludes
 // temp includes
 #include <glad/glad.h>
@@ -30,6 +31,7 @@ namespace Engine {
 #pragma endregion TempGlobalVars
 
 	Application::Application()
+		: m_Camera(-2.0f, 2.0f, -2.0f, 2.0f)
 	{
 		mp_logger = std::make_shared<MyLogger>();
 		mp_logger->start();
@@ -61,9 +63,11 @@ namespace Engine {
 
 		layout(location = 0) in vec3 a_Position;
 
+		uniform mat4 u_ViewProjection;
+
 		void main()
 		{
-			gl_Position = vec4(a_Position, 1.0);
+			gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 		}
 
 		)";
@@ -519,6 +523,7 @@ namespace Engine {
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			m_Shader->Bind();
+			m_Shader->UploadUniformMat4("u_ViewProjection", m_Camera.GetViewProjectionMatrix());
 
 			glBindVertexArray(m_VertexArray);
 			glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);

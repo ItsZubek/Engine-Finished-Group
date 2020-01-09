@@ -9,7 +9,7 @@
 namespace Engine {
 
 
-	struct WindowProperties
+	struct WindowProperties //!<Window Properties struct, holding things like the title, width, height and isFullScreen and isVsync
 	{
 		std::string m_title;
 		unsigned int m_width;
@@ -20,7 +20,7 @@ namespace Engine {
 		WindowProperties(const std::string& title = "My Window", unsigned int width = 800, unsigned int height = 600, bool fullscreen = false) : m_title(title), m_width(width), m_height(height), m_isFullScreen(fullscreen) {}
 	};
 
-	class Window
+	class Window //Pure Virtual Class for interface purposes
 	{
 	public:
 		using EventCallbackFn = std::function<void(EventBaseClass&)>;

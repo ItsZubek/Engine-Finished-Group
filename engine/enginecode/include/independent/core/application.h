@@ -11,6 +11,7 @@
 #include <glm/glm.hpp>
 #include "windows/Shader.h"
 #include "windows/Buffer.h"
+#include "windows/OrthographicCamera.h"
 
 namespace Engine {
 
@@ -47,6 +48,7 @@ namespace Engine {
 		std::unique_ptr<Shader> m_Shader;
 		std::unique_ptr<VertexBuffer> m_VertexBuffer;
 		std::unique_ptr<IndexBuffer> m_IndexBuffer;
+		OrthographicCamera m_Camera;
 
 
 #pragma region TempVars

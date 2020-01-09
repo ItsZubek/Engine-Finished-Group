@@ -41,6 +41,8 @@ namespace Engine {
 		static glm::ivec2 s_screenResolution; //!< Screen res
 		static float s_timestep; //!< last frame timestep
 
+		unsigned int m_VertexArray, m_VertexBuffer, m_IndexBuffer;
+
 
 #pragma region TempVars
 		// Temp stuff

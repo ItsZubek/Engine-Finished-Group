@@ -13,6 +13,7 @@ namespace Engine {
 	{
 		glfwMakeContextCurrent(m_WindowHandle);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		ENGINE_CORE_INFO("OpenGLContext Initialized");
 	}
 	void OpenGLContext::swapBuffers()
 	{

@@ -38,8 +38,28 @@ namespace Engine {
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));
 
+		glCreateVertexArrays(1, &m_VertexArray);
+		glBindVertexArray(m_VertexArray);
+
+		glCreateBuffers(1, &m_VertexBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
+
+		float vertices[3 * 3] = {
+			-0.5f, -0.5f, 0.0f,
+			 0.5f, -0.5f, 0.0f,
+			 0.0f,  0.5f, 0.0f
+		};
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices),vertices, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), nullptr);
+
+		glCreateBuffers(1, &m_IndexBuffer);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
+		unsigned int indices1[3] = { 0,1,2 };
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices1), indices1, GL_STATIC_DRAW);
+
 		Application::s_screenResolution = glm::ivec2(m_Window->getWidth(), m_Window->getHeight());
-		
+		/*
 #pragma region TempSetup
 		//  Temporary set up code to be abstracted
 
@@ -430,7 +450,7 @@ namespace Engine {
 		// End temporary code
 
 #pragma endregion TempSetup
-
+		*/
 
 
 		if (s_instance == nullptr)
@@ -472,10 +492,12 @@ namespace Engine {
 			auto y = Input::GetMouseY();
 
 			//ENGINE_CORE_TRACE("{0}, {1}", x, y );
-			glClearColor(1, 0, 1, 1);
+			glClearColor(0.2f, 0.2f, 0.2f, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 
-
+			glBindVertexArray(m_VertexArray);
+			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+/*
 #pragma region TempDrawCode
 			// Temporary draw code to be abstracted
 
@@ -556,7 +578,8 @@ namespace Engine {
 
 			// End temporary code
 #pragma endregion TempDrawCode
-
+			*/
+			
 
 			m_Window->onUpdate();
 

@@ -1,12 +1,14 @@
 #pragma once
 #include "windows/window.h"
 #include "../glfw/include/GLFW/glfw3.h"
+#include "windows/graphicsContext.h"
 
 namespace Engine {
 	class WindowsWindow : public Window
 	{
 	private:
 		GLFWwindow* m_Window;
+		GraphicsContext* m_Context;
 		virtual void init(const WindowProperties & properties);
 		virtual void Shutdown();
 		WindowProperties m_properties;

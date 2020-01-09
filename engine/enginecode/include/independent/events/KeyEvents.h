@@ -7,7 +7,7 @@ namespace Engine {
 	class KeyEvents : public EventBaseClass
 	{
 	public: 
-		inline int GetKeyCode() const { return m_KeyCode; }
+		inline int GetKeyCode() const { return m_KeyCode; } //!< KeyCode Getter
 
 		EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
 	protected:
@@ -33,7 +33,7 @@ namespace Engine {
 		}
 		EVENT_CLASS_TYPE(KeyPressed);
 	private:
-		int m_RepeatCount;
+		int m_RepeatCount; //!< Repeat Count
 	};
 	class KeyReleasedEvent : public KeyEvents
 	{

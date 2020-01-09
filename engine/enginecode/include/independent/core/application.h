@@ -25,7 +25,7 @@ namespace Engine {
 		std::shared_ptr<MyTimer> mp_timer;
 		float TimeElapsedInSeconds;
 		float fps;
-		bool onClose(WindowCloseEvent& e);
+		bool onWindowClose(WindowCloseEvent& e);
 		bool onResize(WindowResizeEvent& e);
 		bool m_running = true;
 		std::unique_ptr<Window> m_Window;
@@ -36,6 +36,7 @@ namespace Engine {
 		inline static Application& getInstance() { return *s_instance; } //!< Instance getter from singleton pattern
 		void run(); //!< Main loop
 		void onEvent(EventBaseClass& e); //!< Called when an event happens
+		inline Window& GetWindow() { return *m_Window; }
 	};
 
 	// To be defined in users code

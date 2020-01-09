@@ -4,10 +4,10 @@
 #include <string>
 #include <functional>
 #include "systems/MyLogger.h"
+#include "events/EventBaseClass.h"
 
 namespace Engine {
 
-	class Event; // Be replaced
 
 	struct WindowProperties
 	{
@@ -23,7 +23,7 @@ namespace Engine {
 	class Window
 	{
 	public:
-		using EventCallbackFn = std::function<void(Event&)>;
+		using EventCallbackFn = std::function<void(EventBaseClass&)>;
 
 		virtual ~Window() {};
 		virtual void onUpdate() = 0;

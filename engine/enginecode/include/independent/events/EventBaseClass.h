@@ -29,11 +29,11 @@ namespace Engine {
 	public:
 		virtual EventType getEventType() const = 0; //!< Get the event type
 		virtual int getCategoryFlags() const = 0; //!< Get the event category
-		virtual const char* GetName() const = 0;
+		virtual const char* GetName() const = 0; //!< Gets the name of an event
 		inline bool handled() const { return m_handled; } //!< Has the event been handled
 		inline void handle(bool IsHandle) { IsHandle = m_handled; } //!< handle the event
 		inline bool isInCategory(EventCategory category) { return getCategoryFlags() & category; } //!< Is this event in the category
-		virtual std::string ToString() const { return GetName(); }
+		virtual std::string ToString() const { return GetName(); } //!< Converts to string
 	};
 
 #define EVENT_CLASS_TYPE(type) static EventType getStaticType() {return EventType::##type;}\

@@ -28,7 +28,7 @@ namespace Engine {
 		inline void setEventCallback(const EventCallbackFn& callback) override { m_Data.EventCallback = callback; };
 		inline unsigned int getWidth() const override { return m_Data.Width; }
 		inline unsigned int getHeight() const override { return m_Data.Height; }
-		inline void* getNativeWindow() const override { return m_Window; }
+		inline virtual void* getNativeWindow() const override { return m_Window; }
 		inline bool isFullScreenMode() const override { return m_properties.m_isFullScreen; }
 		bool isVSync() const override;
 

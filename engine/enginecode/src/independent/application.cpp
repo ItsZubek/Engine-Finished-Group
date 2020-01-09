@@ -2,6 +2,7 @@
 */
 #include "engine_pch.h"
 #include "core/application.h"
+#include "systems/Input.h"
 
 #ifdef NG_PLATFORM_WINDOWS
 #endif // NG_PLATFORM_WINDOWS
@@ -14,9 +15,8 @@ namespace Engine {
 
 	Application::Application()
 	{
-#ifdef NG_PLATFORM_WINDOWS
 		m_Window = std::unique_ptr<Window>(Window::Create());
-#endif //NG_PLATFORM_WINDOWS
+		m_Window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));
 		
 		if (s_instance == nullptr)
 		{
@@ -39,10 +39,10 @@ namespace Engine {
 	void Application::onEvent(EventBaseClass& e)
 	{
 		EventDispatcher dispatcher(e);
-		dispatcher.dispatch<WindowCloseEvent>(std::bind(&Application::onClose, this, std::placeholders::_1));
+		dispatcher.dispatch<WindowCloseEvent>(std::bind(&Application::onWindowClose, this, std::placeholders::_1));
 		dispatcher.dispatch<WindowResizeEvent>(std::bind(&Application::onResize, this, std::placeholders::_1));
 	}
-	bool Application::onClose(WindowCloseEvent & e)
+	bool Application::onWindowClose(WindowCloseEvent & e)
 	{
 		ENGINE_CORE_INFO("Closing application");
 		m_running = false;
@@ -81,7 +81,15 @@ namespace Engine {
 				WindowCloseEvent e2;
 				onEvent(e2);
 			}
+
+			auto x = Input::GetMouseX();
+			auto y = Input::GetMouseY();
+
+			ENGINE_CORE_TRACE("{0}, {1}", x, y );
+
 			m_Window->onUpdate();
+
+
 		}
 		mp_timer->SetEndPoint();
 		TimeElapsedInSeconds = mp_timer->ElapsedTime();

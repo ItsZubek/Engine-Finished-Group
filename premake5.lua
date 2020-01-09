@@ -59,7 +59,8 @@ project "Engine"
 
 		defines
 		{
-			"NG_PLATFORM_WINDOWS"
+			"NG_PLATFORM_WINDOWS",
+			"GLFW_INCLUDE_NONE"
 		}
 
 	filter "configurations:Debug"

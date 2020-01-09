@@ -3,6 +3,7 @@
 #include "events/KeyEvents.h"
 #include "events/WindowEvents.h"
 #include "events/MouseEvents.h"
+#include <glad/glad.h>
 
 
 namespace Engine {
@@ -45,6 +46,7 @@ namespace Engine {
 		}
 		m_Window = glfwCreateWindow((int)properties.m_width, (int)properties.m_height, m_Data.Title.c_str(), nullptr, nullptr);
 		glfwMakeContextCurrent(m_Window);
+		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		setVSync(true);
 

@@ -1,4 +1,6 @@
 #pragma once
+/** \file EventBaseClass.h
+*/
 
 #include <functional>
 #include <string>
@@ -20,11 +22,15 @@ namespace Engine {
 		EventCategoryMouse = 1 << 3, //00001000
 		EventCategoryMouseButton = 1 << 4 //00010000
 	};
+/**
+\class EventBaseClass 
+Provides a base for all events taking place
+*/
 
 	class EventBaseClass
 	{
 	private:
-		bool m_handled = false;
+		bool m_handled = false; //!< Event Handler
 
 	public:
 		virtual EventType getEventType() const = 0; //!< Get the event type
@@ -42,6 +48,10 @@ namespace Engine {
 
 #define EVENT_CLASS_CATEGORY(category) virtual int getCategoryFlags() const override {return category;}
 
+	/**
+\class EventDispatcher
+Dispatches all events
+*/
 	class EventDispatcher
 	{
 		template<typename T>

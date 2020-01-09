@@ -1,3 +1,5 @@
+/** \file MyLogger.h
+*/
 #pragma once
 #include "system.h"
 #include <memory>
@@ -5,7 +7,10 @@
 #include "spdlog/spdlog.h"
 namespace Engine {
 
-
+/**
+\class MyLogger
+Responsible for logging all actions happening during runtime
+*/
 	class MyLogger : public System
 	{
 	private:

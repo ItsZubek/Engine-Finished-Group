@@ -1,9 +1,15 @@
+/** \file KeyEvents.h
+*/
 #pragma once
 #include "EventBaseClass.h"
 #include <sstream>
 
 namespace Engine {
 
+	/**
+\class KeyEvents
+Basic class used by all key function classes
+*/
 	class KeyEvents : public EventBaseClass
 	{
 	public: 
@@ -17,6 +23,10 @@ namespace Engine {
 
 		
 	};
+/**
+\class KeyPressedEvent
+Responsible for handling Key presses
+*/
 	class KeyPressedEvent : public KeyEvents
 	{
 	public: 
@@ -35,6 +45,10 @@ namespace Engine {
 	private:
 		int m_RepeatCount; //!< Repeat Count
 	};
+	/**
+	\class KeyPressedEvent
+	Responsible for handling Key releases
+	*/
 	class KeyReleasedEvent : public KeyEvents
 	{
 	public:

@@ -1,9 +1,13 @@
+/** \file OrthographicCamera.h
+*/
 #pragma once
 
 #include <glm/glm.hpp>
 
 namespace Engine {
-
+/**
+\Orthographic Camera used in the scene
+*/
 	class OrthographicCamera
 	{
 	public:

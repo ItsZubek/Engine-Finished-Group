@@ -1,3 +1,5 @@
+/** \file KeyCodes.h
+*/
 #pragma once
 //From GLFW3.H
 #define ENGINE_KEY_SPACE              32

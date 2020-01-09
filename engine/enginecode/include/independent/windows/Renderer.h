@@ -1,3 +1,5 @@
+/** \file Renderer.h
+*/
 #pragma once
 
 namespace Engine
@@ -6,7 +8,9 @@ namespace Engine
 	{
 		None = 0, OpenGL = 1
 	};
-
+	/**
+\Renderer Class, uses enums for API choices
+*/
 	class Renderer
 	{
 	public:

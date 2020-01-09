@@ -1,8 +1,14 @@
+/** \file WindowEvents.h
+*/
 #pragma once
 #include "EventBaseClass.h"
 #include <sstream>
 
 namespace Engine {
+	/**
+\class WindowResizeEvent
+Handles window resize event
+*/
 	class WindowResizeEvent : public EventBaseClass
 	{
 	private:
@@ -20,6 +26,10 @@ namespace Engine {
 		EVENT_CLASS_TYPE(WindowResize)
 		EVENT_CLASS_CATEGORY(EventCategoryWindow)
 	};
+	/**
+\class WindowCloseEvent
+Handles window close event
+*/
 
 	class WindowCloseEvent : public EventBaseClass
 	{

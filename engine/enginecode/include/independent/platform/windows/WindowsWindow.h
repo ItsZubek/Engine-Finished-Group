@@ -1,9 +1,15 @@
+/** \file WindowsWindow.h
+*/
 #pragma once
 #include "windows/window.h"
 #include "../glfw/include/GLFW/glfw3.h"
 #include "windows/graphicsContext.h"
 
 namespace Engine {
+	/**
+\class WindowsWindow
+Used to generate a glfw window, implements components of a Window class
+*/
 	class WindowsWindow : public Window
 	{
 	private:

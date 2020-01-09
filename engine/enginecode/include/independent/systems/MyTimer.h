@@ -1,9 +1,14 @@
+/** \file MyTimer.h
+*/
 #pragma once
 #include <chrono>
 #include "system.h"
 #include "systems/MyLogger.h"
 namespace Engine {
-
+	/**
+\class MyTimer
+Responsible for timing all actions happening during runtime
+*/
 	class MyTimer : public System
 	{
 	private:

@@ -1,6 +1,12 @@
+/** \file Input.h
+*/
 #pragma once
 
 namespace Engine {
+	/**
+\class Input
+Base class for all input implementations
+*/
 	class Input
 	{
 	public:

@@ -27,30 +27,30 @@ namespace Engine {
 		Application(); //!< Constructor
 	private:
 		static Application* s_instance; //!< Singleton instance of the application
-		std::shared_ptr<MyLogger> mp_logger;
-		std::shared_ptr<MyTimer> mp_timer;
-		float TimeElapsedInSeconds;
-		float fps;
-		bool onWindowClose(WindowCloseEvent& e);
-		bool onResize(WindowResizeEvent& e);
-		bool onKeyPress(KeyPressedEvent& e);
-		bool onKeyRelease(KeyReleasedEvent& e);
-		bool onMouseButtonPress(MouseButtonPressedEvent& e);
-		bool onMouseButtonRelease(MouseButtonReleasedEvent& e);
-		bool onMouseScroll(MouseScrolledEvent& e);
-		bool onMouseMoved(MouseMovedEvent& e);
-		bool m_running = true;
-		std::unique_ptr<Window> m_Window;
-		static glm::ivec2 s_screenResolution; //!< Screen res
+		std::shared_ptr<MyLogger> mp_logger; //!< Shared Pointer to a logger
+		std::shared_ptr<MyTimer> mp_timer; //!< Shared Pointer to a timer
+		float TimeElapsedInSeconds; //!< Time Elapsed in seconds
+		float fps; //!< Frames Per Second
+		bool onWindowClose(WindowCloseEvent& e); //!< On Window Close Event
+		bool onResize(WindowResizeEvent& e); //!< On Window Resize Event
+		bool onKeyPress(KeyPressedEvent& e); //!< On Key Pressed Event
+		bool onKeyRelease(KeyReleasedEvent& e); //!< On Key Released Event
+		bool onMouseButtonPress(MouseButtonPressedEvent& e); //!< On Mouse Button Pressed Event
+		bool onMouseButtonRelease(MouseButtonReleasedEvent& e); //!< On Mouse Button Released Event
+		bool onMouseScroll(MouseScrolledEvent& e); //!< Mouse Scrolled Event
+		bool onMouseMoved(MouseMovedEvent& e); //!< Mouse Moved Event
+		bool m_running = true; //!< Bool to keep the application running
+		std::unique_ptr<Window> m_Window; //!< Pointer to a window class
+		static glm::ivec2 s_screenResolution; //!< Screen resolution
 		static float s_timestep; //!< last frame timestep
 
-		unsigned int m_VertexArray;
-		std::unique_ptr<Shader> m_Shader;
-		std::unique_ptr<VertexBuffer> m_VertexBuffer;
-		std::unique_ptr<IndexBuffer> m_IndexBuffer;
-		OrthographicCamera m_Camera;
+		unsigned int m_VertexArray; //!< Vertex Array
+		std::unique_ptr<Shader> m_Shader; //!< Pointer to a shader class
+		std::unique_ptr<VertexBuffer> m_VertexBuffer; //!< Pointer to a Vertex Buffer class
+		std::unique_ptr<IndexBuffer> m_IndexBuffer; //!< Pointer to a Index Buffer class
+		OrthographicCamera m_Camera; //!< Orthographic Camera
 
-
+//Code provided by SIMON COUPLAND
 #pragma region TempVars
 		// Temp stuff
 		unsigned int m_FCvertexArray; // Flat Colour VAO
@@ -74,8 +74,8 @@ namespace Engine {
 		inline static Application& getInstance() { return *s_instance; } //!< Instance getter from singleton pattern
 		void run(); //!< Main loop
 		void onEvent(EventBaseClass& e); //!< Called when an event happens
-		inline Window& GetWindow() { return *m_Window; }
-		inline static float getTimestep() { return s_timestep; }
+		inline Window& GetWindow() { return *m_Window; } //!< Window Getter
+		inline static float getTimestep() { return s_timestep; } //!< TimeStep Getter
 	};
 
 	// To be defined in users code

@@ -1,3 +1,5 @@
+/** \file WindowsInput.cpp
+*/
 #include "engine_pch.h"
 #include "include/independent/platform/windows/WindowsInput.h"
 #include "core/application.h"

@@ -1,9 +1,12 @@
+/** \file Shader.cpp
+*/
 #include "engine_pch.h"
 #include "windows/Shader.h"
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
 namespace Engine {
+	/*Taken from https://www.khronos.org/opengl/wiki/Shader_Compilation in the example section*/
 	Shader::Shader(const std::string & vertexSrc, const std::string & fragmentSrc)
 	{
 			// Create an empty vertex shader handle

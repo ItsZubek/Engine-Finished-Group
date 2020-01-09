@@ -1,8 +1,14 @@
+/** \file MouseEvents.h
+*/
 #pragma once
 #include "EventBaseClass.h"
 #include <sstream>
 
 namespace Engine {
+	/**
+\class MouseMovedEvent
+Handles the event of a mouse move
+*/
 	class MouseMovedEvent : public EventBaseClass
 	{
 	public:
@@ -24,6 +30,10 @@ namespace Engine {
 	private:
 		float m_MouseX, m_MouseY;
 	};
+	/**
+\class MouseScrolledEvent
+Responsible for using the mouse scroll event
+*/
 	class MouseScrolledEvent : public EventBaseClass
 	{
 	public:
@@ -45,6 +55,10 @@ namespace Engine {
 	private:
 		float m_xOffset, m_yOffset;
 	};
+	/**
+\class MouseButtonEvent
+Base class for mouse presses and releases
+*/
 	class MouseButtonEvent : public EventBaseClass
 	{
 	public:
@@ -58,6 +72,10 @@ namespace Engine {
 		int m_Button;
 
 	};
+	/**
+\class MouseButtonPressedEvent
+Responsible for Mouse presses
+*/
 	class MouseButtonPressedEvent : public MouseButtonEvent
 	{
 	public:
@@ -72,6 +90,10 @@ namespace Engine {
 		}
 		EVENT_CLASS_TYPE(MouseButtonPressed)
 	};
+	/**
+\class MouseButtonReleasedEvent
+Responsible for Mouse releases
+*/
 	class MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:

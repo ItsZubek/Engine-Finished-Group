@@ -1,3 +1,5 @@
+/** \file MouseButtonCodes.h
+*/
 #pragma once
 //From GLFW3.H
 #define ENGINE_MOUSE_BUTTON_1         0

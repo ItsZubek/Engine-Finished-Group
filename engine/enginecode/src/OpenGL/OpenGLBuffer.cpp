@@ -1,3 +1,5 @@
+/** \file OpenGLBuffer.cpp
+*/
 #include "engine_pch.h"
 #include "platform/OpenGL/OpenGLBuffer.h"
 #include <glad/glad.h>

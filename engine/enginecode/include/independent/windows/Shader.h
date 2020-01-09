@@ -1,9 +1,14 @@
+/** \file Shader.h
+*/
 #pragma once
 
 #include <string>
 #include <glm/glm.hpp>
 
 namespace Engine {
+	/**
+\Shader class
+*/
 	class Shader
 	{
 	public:

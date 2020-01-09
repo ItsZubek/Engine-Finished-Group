@@ -1,3 +1,5 @@
+/** \file OpenGLContext.cpp
+*/
 #include "engine_pch.h"
 #include "platform/OpenGL/OpenGLContext.h"
 #include "../glfw/include/GLFW/glfw3.h"

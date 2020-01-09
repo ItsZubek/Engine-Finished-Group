@@ -1,9 +1,14 @@
+/** \file OpenGLVertexBuffer.h
+*/
 #pragma once
 
 #include "windows/Buffer.h"
 
 namespace Engine {
-
+	/**
+\class OpenGLVertexBuffer
+Vertex Buffer for OpenGL
+*/
 	class OpenGLVertexBuffer : public VertexBuffer
 	{
 	public:
@@ -15,6 +20,10 @@ namespace Engine {
 		uint32_t m_RendererID;
 
 	};
+	/**
+\class OpenGLVertexBuffer
+Index Buffer for OpenGL
+*/
 	class OpenGLIndexBuffer : public IndexBuffer
 	{
 	public:

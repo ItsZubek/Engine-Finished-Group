@@ -1,8 +1,13 @@
+/** \file Buffer.h
+*/
+
 #pragma once
 
 
 namespace Engine {
-
+	/**
+\class Interface class for Vertex buffers
+*/
 	class VertexBuffer
 	{
 	public:
@@ -12,6 +17,9 @@ namespace Engine {
 
 		static VertexBuffer* Create(float* vertices, uint32_t size);
 	};
+	/**
+\class Interface class for Index buffers
+*/
 	class IndexBuffer
 	{
 	public:

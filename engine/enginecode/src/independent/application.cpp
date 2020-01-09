@@ -515,8 +515,6 @@ namespace Engine {
 				onEvent(e2);
 			}*/
 
-			auto x = Input::GetMouseX();
-			auto y = Input::GetMouseY();
 
 			//ENGINE_CORE_TRACE("{0}, {1}", x, y );
 			glClearColor(0.2f, 0.2f, 0.2f, 1);

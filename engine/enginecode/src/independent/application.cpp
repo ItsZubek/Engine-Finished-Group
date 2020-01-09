@@ -4,6 +4,7 @@
 #include "core/application.h"
 #include "systems/Input.h"
 #include <glad/glad.h>
+//#include "events/KeyEvents.h"
 
 
 #pragma region TempIncludes
@@ -44,11 +45,8 @@ namespace Engine {
 		glBindVertexArray(m_VertexArray);
 
 
-		float vertices[3 * 3] = {
-			-0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.0f,  0.5f, 0.0f
-		};
+
+
 		m_VertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
 
 
@@ -515,7 +513,7 @@ namespace Engine {
 				onEvent(e2);
 			}*/
 
-
+			
 			//ENGINE_CORE_TRACE("{0}, {1}", x, y );
 			glClearColor(0.2f, 0.2f, 0.2f, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
@@ -651,6 +649,8 @@ namespace Engine {
 
 	bool Application::onKeyPress(KeyPressedEvent& e)
 	{
+		if (e.GetKeyCode() == 65);
+		if (e.GetKeyCode() == 256) m_running = false;
 		ENGINE_CORE_TRACE("KeyPressed: {0}, RepeatCount: {1}", e.GetKeyCode(), e.GetRepeatCount());
 		return true;
 	}

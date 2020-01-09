@@ -49,6 +49,11 @@ namespace Engine {
 		std::unique_ptr<VertexBuffer> m_VertexBuffer; //!< Pointer to a Vertex Buffer class
 		std::unique_ptr<IndexBuffer> m_IndexBuffer; //!< Pointer to a Index Buffer class
 		OrthographicCamera m_Camera; //!< Orthographic Camera
+		float vertices[3 * 3] = {
+			-0.5f, -0.5f, 0.0f,
+			 0.5f, -0.5f, 0.0f,
+			 0.0f,  0.5f, 0.0f
+		};
 
 //Code provided by SIMON COUPLAND
 #pragma region TempVars

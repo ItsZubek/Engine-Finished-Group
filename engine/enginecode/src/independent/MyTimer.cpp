@@ -8,8 +8,8 @@ namespace Engine {
 
 	float MyTimer::ElapsedTime()
 	{
-		timePassed = endpoint - startPoint;
-		seconds = timePassed.count();
+		//timePassed = endpoint - startPoint;
+		seconds = (std::chrono::high_resolution_clock::now() - startPoint).count() * 0.000000001f;
 		return seconds;
 	}
 	void MyTimer::start(SystemSignal init, ...)

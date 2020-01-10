@@ -1,8 +1,9 @@
+#pragma once
+
 /** \file engine.h
 * A header file which includes relevant headers for development
 */
 
-#pragma once
 #include "systems/MyLogger.h"
 #include "systems/MyTimer.h"
 #include "systems/Input.h"

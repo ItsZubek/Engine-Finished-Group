@@ -46,14 +46,12 @@ namespace Engine {
 
 		unsigned int m_VertexArray; //!< Vertex Array
 		std::unique_ptr<Shader> m_Shader; //!< Pointer to a shader class
+		std::unique_ptr<Shader> m_ShaderFC; //!< Pointer to a shader class
+		std::unique_ptr<Shader> m_ShaderTP; //!< Pointer to a shader class
 		std::unique_ptr<VertexBuffer> m_VertexBuffer; //!< Pointer to a Vertex Buffer class
 		std::unique_ptr<IndexBuffer> m_IndexBuffer; //!< Pointer to a Index Buffer class
 		OrthographicCamera m_Camera; //!< Orthographic Camera
-		float vertices[3 * 3] = {
-			-0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.0f,  0.5f, 0.0f
-		};
+
 
 //Code provided by SIMON COUPLAND
 #pragma region TempVars
@@ -71,6 +69,9 @@ namespace Engine {
 		unsigned int m_textureSlots[2]; // Slot where the textures are stored
 		bool m_goingUp = false; // Is the cude going up?
 		float m_timeSummed = 10.f; // How much timer has elasped?
+
+		//glm::mat4 FCtranslation = glm::mat4(1.0f);
+		std::array<bool, 4> m_FCdirection = { false, false, false, false };
 #pragma endregion TempVars
 
 		

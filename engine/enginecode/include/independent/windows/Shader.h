@@ -18,6 +18,8 @@ namespace Engine {
 		void Bind() const;
 		void UnBind() const;
 		void UploadUniformMat4(const std::string& name, const glm::mat4& matrix);
+
+		uint32_t getRenderedID() const { return m_RendererID; }
 	private:
 		uint32_t m_RendererID;
 	};

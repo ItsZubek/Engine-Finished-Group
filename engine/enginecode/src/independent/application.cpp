@@ -45,17 +45,6 @@ namespace Engine {
 		glBindVertexArray(m_VertexArray);
 
 
-
-
-		m_VertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
-
-
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), nullptr);
-
-		unsigned int indices[3] = { 0,1,2 };
-		m_IndexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
-
 		std::string vertexSrc = R"(
 		#version 330 core
 
@@ -84,7 +73,7 @@ namespace Engine {
 		m_Shader.reset(new Shader(vertexSrc, fragmentSrc));
 
 		Application::s_screenResolution = glm::ivec2(m_Window->getWidth(), m_Window->getHeight());
-		/*
+		
 #pragma region TempSetup
 		//  Temporary set up code to be abstracted
 
@@ -127,6 +116,7 @@ namespace Engine {
 			0.5f,  0.5f, 0.5f, 0.2f, 0.2f, 0.8f,
 			0.5f,  -0.5f, 0.5f, 0.2f, 0.2f, 0.8f
 		};
+
 
 		glBufferData(GL_ARRAY_BUFFER, sizeof(FCvertices), FCvertices, GL_STATIC_DRAW);
 
@@ -180,74 +170,7 @@ namespace Engine {
 				}
 		)";
 
-		GLuint FCVertShader = glCreateShader(GL_VERTEX_SHADER);
-
-		const GLchar* source = FCvertSrc.c_str();
-		glShaderSource(FCVertShader, 1, &source, 0);
-		glCompileShader(FCVertShader);
-
-		GLint isCompiled = 0;
-		glGetShaderiv(FCVertShader, GL_COMPILE_STATUS, &isCompiled);
-		if (isCompiled == GL_FALSE)
-		{
-			GLint maxLength = 0;
-			glGetShaderiv(FCVertShader, GL_INFO_LOG_LENGTH, &maxLength);
-
-			std::vector<GLchar> infoLog(maxLength);
-			glGetShaderInfoLog(FCVertShader, maxLength, &maxLength, &infoLog[0]);
-			ENGINE_CORE_ERROR("Shader compile error: {0}", std::string(infoLog.begin(), infoLog.end()));
-
-			glDeleteShader(FCVertShader);
-			return;
-		}
-
-		GLuint FCFragShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-		source = FCFragSrc.c_str();
-		glShaderSource(FCFragShader, 1, &source, 0);
-		glCompileShader(FCFragShader);
-
-		glGetShaderiv(FCFragShader, GL_COMPILE_STATUS, &isCompiled);
-		if (isCompiled == GL_FALSE)
-		{
-			GLint maxLength = 0;
-			glGetShaderiv(FCFragShader, GL_INFO_LOG_LENGTH, &maxLength);
-
-			std::vector<GLchar> infoLog(maxLength);
-			glGetShaderInfoLog(FCFragShader, maxLength, &maxLength, &infoLog[0]);
-			ENGINE_CORE_ERROR("Shader compile error: {0}", std::string(infoLog.begin(), infoLog.end()));
-
-			glDeleteShader(FCFragShader);
-			glDeleteShader(FCVertShader);
-
-			return;
-		}
-
-		m_FCprogram = glCreateProgram();
-		glAttachShader(m_FCprogram, FCVertShader);
-		glAttachShader(m_FCprogram, FCFragShader);
-		glLinkProgram(m_FCprogram);
-
-		GLint isLinked = 0;
-		glGetProgramiv(m_FCprogram, GL_LINK_STATUS, (int*)&isLinked);
-		if (isLinked == GL_FALSE)
-		{
-			GLint maxLength = 0;
-			glGetProgramiv(m_FCprogram, GL_INFO_LOG_LENGTH, &maxLength);
-
-			std::vector<GLchar> infoLog(maxLength);
-			glGetProgramInfoLog(m_FCprogram, maxLength, &maxLength, &infoLog[0]);
-			ENGINE_CORE_ERROR("Shader linking error: {0}", std::string(infoLog.begin(), infoLog.end()));
-
-			glDeleteProgram(m_FCprogram);
-			glDeleteShader(FCVertShader);
-			glDeleteShader(FCFragShader);
-
-			return;
-		}
-
-		glDetachShader(m_FCprogram, FCVertShader);
-		glDetachShader(m_FCprogram, FCFragShader);
+		m_ShaderFC.reset(new Shader(FCvertSrc, FCFragSrc));
 
 		// Added textuer phong shader and cube
 
@@ -347,75 +270,8 @@ namespace Engine {
 				}
 		)";
 
-		GLuint TPVertShader = glCreateShader(GL_VERTEX_SHADER);
 
-		source = TPvertSrc.c_str();
-		glShaderSource(TPVertShader, 1, &source, 0);
-		glCompileShader(TPVertShader);
-
-		isCompiled = 0;
-		glGetShaderiv(TPVertShader, GL_COMPILE_STATUS, &isCompiled);
-		if (isCompiled == GL_FALSE)
-		{
-			GLint maxLength = 0;
-			glGetShaderiv(TPVertShader, GL_INFO_LOG_LENGTH, &maxLength);
-
-			std::vector<GLchar> infoLog(maxLength);
-			glGetShaderInfoLog(TPVertShader, maxLength, &maxLength, &infoLog[0]);
-			ENGINE_CORE_ERROR("Shader compile error: {0}", std::string(infoLog.begin(), infoLog.end()));
-
-			glDeleteShader(TPVertShader);
-			return;
-		}
-
-		GLuint TPFragShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-		source = TPFragSrc.c_str();
-		glShaderSource(TPFragShader, 1, &source, 0);
-		glCompileShader(TPFragShader);
-
-		glGetShaderiv(TPFragShader, GL_COMPILE_STATUS, &isCompiled);
-		if (isCompiled == GL_FALSE)
-		{
-			GLint maxLength = 0;
-			glGetShaderiv(TPFragShader, GL_INFO_LOG_LENGTH, &maxLength);
-
-			std::vector<GLchar> infoLog(maxLength);
-			glGetShaderInfoLog(TPFragShader, maxLength, &maxLength, &infoLog[0]);
-			ENGINE_CORE_ERROR("Shader compile error: {0}", std::string(infoLog.begin(), infoLog.end()));
-
-			glDeleteShader(TPFragShader);
-			glDeleteShader(TPVertShader);
-
-			return;
-		}
-
-		m_TPprogram = glCreateProgram();
-		glAttachShader(m_TPprogram, TPVertShader);
-		glAttachShader(m_TPprogram, TPFragShader);
-		glLinkProgram(m_TPprogram);
-
-		isLinked = 0;
-		glGetProgramiv(m_TPprogram, GL_LINK_STATUS, (int*)&isLinked);
-		if (isLinked == GL_FALSE)
-		{
-			GLint maxLength = 0;
-			glGetProgramiv(m_TPprogram, GL_INFO_LOG_LENGTH, &maxLength);
-
-			std::vector<GLchar> infoLog(maxLength);
-			glGetProgramInfoLog(m_TPprogram, maxLength, &maxLength, &infoLog[0]);
-			ENGINE_CORE_ERROR("Shader linking error: {0}", std::string(infoLog.begin(), infoLog.end()));
-
-			glDeleteProgram(m_TPprogram);
-			glDeleteShader(TPVertShader);
-			glDeleteShader(TPFragShader);
-
-			return;
-		}
-
-		glDetachShader(m_TPprogram, FCVertShader);
-		glDetachShader(m_TPprogram, FCFragShader);
-
+		m_ShaderTP.reset(new Shader(TPvertSrc, TPFragSrc));
 
 		glGenTextures(1, &m_letterTexture);
 		glActiveTexture(GL_TEXTURE0);
@@ -475,7 +331,7 @@ namespace Engine {
 		// End temporary code
 
 #pragma endregion TempSetup
-		*/
+		
 
 
 		if (s_instance == nullptr)
@@ -489,7 +345,6 @@ namespace Engine {
 	{
 
 		float accumulatedTime = 0.f;
-		ENGINE_CORE_INFO("Logger Initialized");
 		mp_timer->SetStartPoint();
 		mp_timer->SetFrameStart();
 
@@ -497,33 +352,12 @@ namespace Engine {
 
 		while (m_running)
 		{
-			/*mp_timer->SetFrameEnd();
-			mp_timer->FrameCounter();
-
-			fps = 1.0f / mp_timer->FrameCounter();
-			mp_timer->SetFrameStart();
-
-			ENGINE_CORE_TRACE("FPS: {0}", fps);
-			accumulatedTime += fps;
-			if (accumulatedTime > 10.f)
-
-				WindowResizeEvent e1(1024, 720);
-				onEvent(e1);
-				WindowCloseEvent e2;
-				onEvent(e2);
-			}*/
-
-			
-			//ENGINE_CORE_TRACE("{0}, {1}", x, y );
-			glClearColor(0.2f, 0.2f, 0.2f, 1);
-			glClear(GL_COLOR_BUFFER_BIT);
+			mp_timer->SetStartPoint();
 
 			m_Shader->Bind();
 			m_Shader->UploadUniformMat4("u_ViewProjection", m_Camera.GetViewProjectionMatrix());
 
-			glBindVertexArray(m_VertexArray);
-			glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
-/*
+
 #pragma region TempDrawCode
 			// Temporary draw code to be abstracted
 
@@ -543,14 +377,20 @@ namespace Engine {
 
 			if (m_goingUp)
 			{
-				FCtranslation = glm::translate(FCmodel, glm::vec3(0.0f, 0.2f * s_timestep, 0.0f));
+				//FCtranslation = glm::translate(FCmodel, glm::vec3(0.0f, 0.2f * s_timestep, 0.0f));
 				TPtranslation = glm::translate(TPmodel, glm::vec3(0.0f, -0.2f * s_timestep, 0.0f));
 			}
 			else
 			{
-				FCtranslation = glm::translate(FCmodel, glm::vec3(0.0f, -0.2f * s_timestep, 0.0f));
+				//FCtranslation = glm::translate(FCmodel, glm::vec3(0.0f, -0.2f * s_timestep, 0.0f));
 				TPtranslation = glm::translate(TPmodel, glm::vec3(0.0f, 0.2f * s_timestep, 0.0f));
 			}
+
+			FCtranslation = FCmodel;
+			if (m_FCdirection[1]) { FCtranslation = glm::translate(FCmodel, glm::vec3(-0.25f * s_timestep, 0.0f, 0.0f)); }
+			if (m_FCdirection[3]) { FCtranslation = glm::translate(FCmodel, glm::vec3(0.25f * s_timestep, 0.0f, 0.0f)); }
+			if (m_FCdirection[0]) { FCtranslation = glm::translate(FCmodel, glm::vec3(0.0f, 0.25f * s_timestep, 0.0f)); }
+			if (m_FCdirection[2]) { FCtranslation = glm::translate(FCmodel, glm::vec3(0.0f, -0.25f * s_timestep, 0.0f)); }
 
 			m_timeSummed += s_timestep;
 			if (m_timeSummed > 20.0f) {
@@ -565,9 +405,10 @@ namespace Engine {
 			// End of code to make the cube move.
 
 			glm::mat4 fcMVP = projection * view * FCmodel;
-			glUseProgram(m_FCprogram);
+			//glUseProgram(m_FCprogram);
+			m_ShaderFC->Bind();
 			glBindVertexArray(m_FCvertexArray);
-			GLuint MVPLoc = glGetUniformLocation(m_FCprogram, "u_MVP");
+			GLuint MVPLoc = glGetUniformLocation(m_ShaderFC->getRenderedID(), "u_MVP");
 			glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, &fcMVP[0][0]);
 			glDrawElements(GL_TRIANGLES, 3 * 12, GL_UNSIGNED_INT, nullptr);
 
@@ -576,8 +417,10 @@ namespace Engine {
 			if (m_goingUp) texSlot = m_textureSlots[0];
 			else texSlot = m_textureSlots[1];
 
-			glUseProgram(m_TPprogram);
+			//glUseProgram(m_TPprogram);
+			m_ShaderTP->Bind();
 			glBindVertexArray(m_TPvertexArray);
+			m_TPprogram = m_ShaderTP->getRenderedID();
 
 			MVPLoc = glGetUniformLocation(m_TPprogram, "u_MVP");
 			glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, &tpMVP[0][0]);
@@ -604,16 +447,13 @@ namespace Engine {
 
 			// End temporary code
 #pragma endregion TempDrawCode
-			*/
+			
 			
 
 			m_Window->onUpdate();
-
+			s_timestep = mp_timer->ElapsedTime();
 
 		}
-		//mp_timer->SetEndPoint();
-		//TimeElapsedInSeconds = mp_timer->ElapsedTime();
-		//ENGINE_CORE_WARN("Time Elapsed in Seconds {0}",TimeElapsedInSeconds);	
 	}
 
 	Application::~Application()
@@ -649,13 +489,20 @@ namespace Engine {
 
 	bool Application::onKeyPress(KeyPressedEvent& e)
 	{
-		if (e.GetKeyCode() == 65);
 		if (e.GetKeyCode() == 256) m_running = false;
+		if (e.GetKeyCode() == 65) { m_FCdirection[1] = true; }
+		if (e.GetKeyCode() == 68) { m_FCdirection[3] = true; }
+		if (e.GetKeyCode() == 87) { m_FCdirection[0] = true; }
+		if (e.GetKeyCode() == 83) { m_FCdirection[2] = true; }
 		ENGINE_CORE_TRACE("KeyPressed: {0}, RepeatCount: {1}", e.GetKeyCode(), e.GetRepeatCount());
 		return true;
 	}
 	bool Application::onKeyRelease(KeyReleasedEvent& e)
 	{
+		if (e.GetKeyCode() == 65) { m_FCdirection[1] = false; }
+		if (e.GetKeyCode() == 68) { m_FCdirection[3] = false; }
+		if (e.GetKeyCode() == 87) { m_FCdirection[0] = false; }
+		if (e.GetKeyCode() == 83) { m_FCdirection[2] = false; }
 		ENGINE_CORE_TRACE("KeyReleased: {0}", e.GetKeyCode());
 		return true;
 	}

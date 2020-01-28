@@ -42,7 +42,8 @@ project "Engine"
 		"vendor/Glad/include",
 		"vendor/glm/",
 		"vendor/stb_image",
-		"vendor/freetype2/include"
+		"vendor/freetype2/include",
+		"vendor/assimp/include"
 	}
 	
 	links 

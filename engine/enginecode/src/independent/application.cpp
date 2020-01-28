@@ -4,6 +4,7 @@
 #include "core/application.h"
 #include "systems/Input.h"
 #include <glad/glad.h>
+#include "systems/AssimpLoader.h"
 //#include "events/KeyEvents.h"
 
 
@@ -40,6 +41,8 @@ namespace Engine {
 		mp_timer->start();
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));
+		
+		
 
 		glCreateVertexArrays(1, &m_VertexArray);
 		glBindVertexArray(m_VertexArray);

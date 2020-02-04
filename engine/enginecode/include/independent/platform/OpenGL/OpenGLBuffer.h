@@ -21,7 +21,7 @@ Vertex Buffer for OpenGL
 
 	};
 	/**
-\class OpenGLVertexBuffer
+\class OpenGLIndexBuffer
 Index Buffer for OpenGL
 */
 	class OpenGLIndexBuffer : public IndexBuffer
@@ -36,5 +36,22 @@ Index Buffer for OpenGL
 		uint32_t m_RendererID;
 		uint32_t m_Count;
 
+	};
+
+	/**
+\class OpenGLVertexArray
+Vertex Array for OpenGL
+*/
+	class OpenGLVertexArray : public VertexArray
+	{
+	public:
+		OpenGLVertexArray();
+		void bind();
+		void unbind();
+		void setVertexBuffer();
+		void setIndexBuffer();
+		std::shared_ptr<VertexBuffer> getVertexBuffer();
+		std::shared_ptr<IndexBuffer> getIndexBuffer();
+		unsigned int getDrawCount();
 	};
 }

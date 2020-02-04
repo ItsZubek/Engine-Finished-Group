@@ -5,5 +5,5 @@
 
 namespace Engine {
 
-	RendererAPI Renderer::s_RendererAPI = RendererAPI::OpenGL;
+	Renderer::RendererAPI Renderer::s_RendererAPI = Renderer::RendererAPI::OpenGL;
 }

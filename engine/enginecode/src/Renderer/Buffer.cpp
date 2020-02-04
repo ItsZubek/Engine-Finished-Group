@@ -12,8 +12,8 @@ namespace Engine{
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::None: ENGINE_CORE_ERROR("API::NONE currently not supported"); return nullptr;
-		case RendererAPI::OpenGL: return new OpenGLVertexBuffer(vertices, size);
+		case Renderer::RendererAPI::None: ENGINE_CORE_ERROR("API::NONE currently not supported"); return nullptr;
+		case Renderer::RendererAPI::OpenGL: return new OpenGLVertexBuffer(vertices, size);
 
 		}
 
@@ -24,12 +24,18 @@ namespace Engine{
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::None: ENGINE_CORE_ERROR("API::NONE currently not supported"); return nullptr;
-		case RendererAPI::OpenGL: return new OpenGLIndexBuffer(indices, size);
+		case Renderer::RendererAPI::None: ENGINE_CORE_ERROR("API::NONE currently not supported"); return nullptr;
+		case Renderer::RendererAPI::OpenGL: return new OpenGLIndexBuffer(indices, size);
 
 		}
 
 		ENGINE_CORE_CRITICAL("Unknown API!");
 		return nullptr;
+	}
+
+	VertexArray * VertexArray::create()
+	{
+		case Renderer::RendererAPI::None: ENGINE_CORE_ERROR("API::NONE currently not supported"); return nullptr;
+		case Renderer::RendererAPI::OpenGL: return new OpenGLVertexArray(indices, size);
 	}
 }

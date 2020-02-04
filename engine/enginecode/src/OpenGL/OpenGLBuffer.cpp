@@ -53,4 +53,39 @@ namespace Engine {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	}
+
+	//Vertex Array
+
+	OpenGLVertexArray::OpenGLVertexArray()
+	{
+
+	}
+	void OpenGLVertexArray::bind()
+	{
+
+	}
+	void OpenGLVertexArray::unbind()
+	{
+
+	}
+	void OpenGLVertexArray::setVertexBuffer()
+	{
+
+	}
+	void OpenGLVertexArray::setIndexBuffer()
+	{
+
+	}
+	std::shared_ptr<VertexBuffer> OpenGLVertexArray::getVertexBuffer()
+	{
+
+	}
+	std::shared_ptr<IndexBuffer>  OpenGLVertexArray::getIndexBuffer()
+	{
+
+	}
+	unsigned int OpenGLVertexArray::getDrawCount()
+	{
+
+	}
 }

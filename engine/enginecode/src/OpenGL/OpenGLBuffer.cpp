@@ -11,7 +11,6 @@ namespace Engine {
 	OpenGLVertexBuffer::OpenGLVertexBuffer(float * vertices, uint32_t size)
 	{
 		glCreateBuffers(1, &m_RendererID);
-		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
 
 	}
@@ -58,34 +57,37 @@ namespace Engine {
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
-
+		glGenVertexArrays(1, &m_Renderer);
 	}
-	void OpenGLVertexArray::bind()
+	void OpenGLVertexArray::bind() const
 	{
-
+		glBindVertexArray(m_Renderer);
 	}
-	void OpenGLVertexArray::unbind()
+	void OpenGLVertexArray::unbind() const
 	{
-
+		glBindVertexArray(0);
 	}
-	void OpenGLVertexArray::setVertexBuffer()
+	void OpenGLVertexArray::setVertexBuffer() const
 	{
-
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(sizeof(float) * 3));
 	}
-	void OpenGLVertexArray::setIndexBuffer()
+	void OpenGLVertexArray::setIndexBuffer(const std::shared_ptr<IndexBuffer> indexBuffer)
 	{
-
+		indexBuffer->Bind();
 	}
-	std::shared_ptr<VertexBuffer> OpenGLVertexArray::getVertexBuffer()
+	std::shared_ptr<VertexBuffer> OpenGLVertexArray::getVertexBuffer() const
 	{
-
+		return m_VertexBuffer;
 	}
-	std::shared_ptr<IndexBuffer>  OpenGLVertexArray::getIndexBuffer()
+	std::shared_ptr<IndexBuffer>  OpenGLVertexArray::getIndexBuffer() const
 	{
-
+		return m_IndexBuffer;
 	}
-	unsigned int OpenGLVertexArray::getDrawCount()
+	unsigned int OpenGLVertexArray::getDrawCount() const
 	{
-
+		return m_IndexBuffer->GetCount();
 	}
 }

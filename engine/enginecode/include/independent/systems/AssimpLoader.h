@@ -1,6 +1,6 @@
 #pragma once
 
-#include <assimp/Importer.hpp>
+/*#include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
@@ -157,7 +157,7 @@ namespace Engine
 							AI_MATKEY_SHADER_TESSELATION
 							AI_MATKEY_SHADER_PRIMITIVE
 							AI_MATKEY_SHADER_COMPUTE
-*/
+
 		}
 
 		static void ASSIMPProcessNodeLog(aiNode *node, const aiScene *scene)
@@ -202,4 +202,4 @@ namespace Engine
 			ASSIMPProcessNodeLog(scene->mRootNode, scene);
 		}
 	}
-}
+}*/

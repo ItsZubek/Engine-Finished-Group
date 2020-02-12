@@ -35,7 +35,10 @@ namespace Engine{
 
 	VertexArray * VertexArray::create()
 	{
+		switch (Renderer::GetAPI())
+		{
 		case Renderer::RendererAPI::None: ENGINE_CORE_ERROR("API::NONE currently not supported"); return nullptr;
-		case Renderer::RendererAPI::OpenGL: return new OpenGLVertexArray(indices, size);
+		case Renderer::RendererAPI::OpenGL: return new OpenGLVertexArray();
+		}
 	}
 }

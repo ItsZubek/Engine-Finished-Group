@@ -13,9 +13,9 @@ Vertex Buffer for OpenGL
 	{
 	public:
 		OpenGLVertexBuffer(float* vertices, uint32_t size);
-		virtual ~OpenGLVertexBuffer();
-		virtual void Bind()const;
-		virtual void UnBind()const;
+		virtual ~OpenGLVertexBuffer() override;
+		virtual void Bind()const override;
+		virtual void UnBind()const override;
 	private:
 		uint32_t m_RendererID;
 
@@ -28,10 +28,10 @@ Index Buffer for OpenGL
 	{
 	public:
 		OpenGLIndexBuffer(uint32_t* indices, uint32_t size);
-		virtual ~OpenGLIndexBuffer();
-		virtual void Bind()const;
-		virtual void UnBind()const;
-		virtual uint32_t GetCount() const { return m_Count; }
+		virtual ~OpenGLIndexBuffer() override;
+		virtual void Bind()const override;
+		virtual void UnBind()const override;
+		virtual uint32_t GetCount() const override { return m_Count; }
 	private:
 		uint32_t m_RendererID;
 		uint32_t m_Count;
@@ -44,14 +44,18 @@ Vertex Array for OpenGL
 */
 	class OpenGLVertexArray : public VertexArray
 	{
+	private:
+		uint32_t m_Renderer;
+		std::shared_ptr<IndexBuffer> m_IndexBuffer;
+		std::shared_ptr<VertexBuffer> m_VertexBuffer;
 	public:
 		OpenGLVertexArray();
-		void bind();
-		void unbind();
-		void setVertexBuffer();
-		void setIndexBuffer();
-		std::shared_ptr<VertexBuffer> getVertexBuffer();
-		std::shared_ptr<IndexBuffer> getIndexBuffer();
-		unsigned int getDrawCount();
+		virtual void bind() const override;
+		virtual void unbind() const override;
+		virtual void setVertexBuffer() const override;
+		virtual void setIndexBuffer(const std::shared_ptr<IndexBuffer> indexBuffer) override;
+		virtual std::shared_ptr<VertexBuffer> getVertexBuffer() const override;
+		virtual std::shared_ptr<IndexBuffer> getIndexBuffer() const override;
+		virtual unsigned int getDrawCount() const override;
 	};
 }

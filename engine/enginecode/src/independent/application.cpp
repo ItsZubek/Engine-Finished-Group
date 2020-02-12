@@ -120,6 +120,8 @@ namespace Engine {
 			0.5f,  -0.5f, 0.5f, 0.2f, 0.2f, 0.8f
 		};
 
+		/*m_VertexBuffer.reset(VertexBuffer::Create(FCvertices, sizeof(FCvertices)));
+		m_VertexBuffer->Bind();*/
 
 		glBufferData(GL_ARRAY_BUFFER, sizeof(FCvertices), FCvertices, GL_STATIC_DRAW);
 
@@ -127,10 +129,6 @@ namespace Engine {
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0); // (pos 0 (pos), 3 floats, float, not normalised, 6 float between each data line, start at 0)
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(sizeof(float) * 3)); // (pos 1 (colour), 3 floats, float, not normalised, 6 float between each data line, start at 3)
-
-		glCreateBuffers(1, &m_FCindexBuffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_FCindexBuffer);
-
 
 		unsigned int indices[3 * 12] = {
 			2, 1, 0,
@@ -146,7 +144,11 @@ namespace Engine {
 			20, 21, 22,
 			22, 23, 20
 		};
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+		// Initiating the Index Buffer 
+		m_IndexBuffer.reset(IndexBuffer::Create(indices, 3 * 12));
+		m_IndexBuffer->Bind();
+		
 
 		std::string FCvertSrc = R"(
 				#version 440 core
@@ -425,7 +427,7 @@ namespace Engine {
 			glBindVertexArray(m_FCvertexArray);
 			GLuint MVPLoc = glGetUniformLocation(m_ShaderFC->getRenderedID(), "u_MVP");
 			glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, &fcMVP[0][0]);
-			glDrawElements(GL_TRIANGLES, 3 * 12, GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
 
 			glm::mat4 tpMVP = projection * view * TPmodel;
 			unsigned int texSlot;

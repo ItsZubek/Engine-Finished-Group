@@ -15,6 +15,9 @@ namespace Engine {
 		virtual void Bind() const = 0;
 		virtual void UnBind() const = 0;
 
+		virtual void setBufferLayout(const BufferLayout& layout) = 0;
+		virtual const BufferLayout& getBufferLayout() = 0;
+
 		static VertexBuffer* Create(float* vertices, uint32_t size);
 	};
 	/**
@@ -37,6 +40,8 @@ namespace Engine {
 */
 	class VertexArray
 	{
+	private:
+		
 	public:
 		virtual void bind() const = 0;
 		virtual void unbind() const = 0;

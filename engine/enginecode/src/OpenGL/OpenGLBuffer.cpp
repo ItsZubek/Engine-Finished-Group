@@ -69,15 +69,31 @@ namespace Engine {
 	}
 	void OpenGLVertexArray::setVertexBuffer() const
 	{
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(sizeof(float) * 3));
+		unsigned int index = 0;
+		for (const auto&  elements : m_VertexBuffer->getBufferLayout())
+		{
+			glEnableVertexAttribArray(index);
+			glVertexAttribPointer(index, ShaderDataTypeComponentCount(elements.m_datatype),
+				ShaderDataTypeToOpenGLType(elements.m_datatype)
+				, elements.m_normalised,
+				m_BufferLayout.getStride(),
+				(const void*)elements.m_offset);
+			index++;
+
+			glEnableVertexAttribArray(index);
+			glVertexAttribPointer(index, ShaderDataTypeComponentCount(elements.m_datatype),
+				ShaderDataTypeToOpenGLType(elements.m_datatype)
+				, elements.m_normalised,
+				m_BufferLayout.getStride(),
+				(const void*)elements.m_offset);
+			index++;
+		}
 	}
 	void OpenGLVertexArray::setIndexBuffer(const std::shared_ptr<IndexBuffer> indexBuffer)
 	{
 		indexBuffer->Bind();
 	}
+
 	std::shared_ptr<VertexBuffer> OpenGLVertexArray::getVertexBuffer() const
 	{
 		return m_VertexBuffer;

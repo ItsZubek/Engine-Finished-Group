@@ -17,8 +17,12 @@ Vertex Buffer for OpenGL
 		virtual ~OpenGLVertexBuffer() override;
 		virtual void Bind()const override;
 		virtual void UnBind()const override;
+
+		virtual void setBufferLayout(const BufferLayout& layout) override { m_BufferLayout = layout; }
+		virtual const BufferLayout& getBufferLayout() override { return m_BufferLayout; }
 	private:
 		uint32_t m_RendererID;
+		BufferLayout m_BufferLayout;
 
 	};
 	/**
@@ -43,12 +47,16 @@ Index Buffer for OpenGL
 \class OpenGLVertexArray
 Vertex Array for OpenGL
 */
+#include "windows/ShaderDataType.h"
+
 	class OpenGLVertexArray : public VertexArray
 	{
 	private:
 		uint32_t m_Renderer;
 		std::shared_ptr<IndexBuffer> m_IndexBuffer;
 		std::shared_ptr<VertexBuffer> m_VertexBuffer;
+		BufferLayout m_BufferLayout;
+		BufferElement m_BufferElement;
 	public:
 		OpenGLVertexArray();
 		virtual void bind() const override;

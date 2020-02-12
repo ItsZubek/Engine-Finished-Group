@@ -4,7 +4,8 @@
 
 #include "windows/Buffer.h"
 
-namespace Engine {
+namespace Engine 
+{
 	/**
 \class OpenGLVertexBuffer
 Vertex Buffer for OpenGL

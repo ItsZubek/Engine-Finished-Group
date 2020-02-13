@@ -79,14 +79,6 @@ namespace Engine {
 				m_BufferLayout.getStride(),
 				(const void*)elements.m_offset);
 			index++;
-
-			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(index, ShaderDataTypeComponentCount(elements.m_datatype),
-				ShaderDataTypeToOpenGLType(elements.m_datatype)
-				, elements.m_normalised,
-				m_BufferLayout.getStride(),
-				(const void*)elements.m_offset);
-			index++;
 		}
 	}
 	void OpenGLVertexArray::setIndexBuffer(const std::shared_ptr<IndexBuffer> indexBuffer)

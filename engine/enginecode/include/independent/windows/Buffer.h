@@ -16,7 +16,7 @@ namespace Engine {
 		virtual void UnBind() const = 0;
 
 		virtual void setBufferLayout(const BufferLayout& layout) = 0;
-		virtual const BufferLayout& getBufferLayout() = 0;
+		virtual const BufferLayout& getBufferLayout() const = 0;
 
 		static VertexBuffer* Create(float* vertices, uint32_t size);
 	};

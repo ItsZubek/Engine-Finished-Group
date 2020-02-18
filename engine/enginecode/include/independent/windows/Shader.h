@@ -24,6 +24,9 @@ namespace Engine {
 		virtual uint32_t getRenderedID() const = 0;
 
 		static Shader * create(const std::string& filepath);
-		static Shader * create(std::string& vertexFilePath, const std::string& fragmentFilePath)
+		static Shader * create(std::string& vertexFilePath, const std::string& fragmentFilePath);
+	protected:
+		uint32_t m_RendererID;
+
 	};
 }

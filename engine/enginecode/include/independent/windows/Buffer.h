@@ -2,9 +2,65 @@
 */
 
 #pragma once
+#include <vector>
+#include <initializer_list>
+#include <iterator>
 
+#include "ShaderDataType.h"
 
 namespace Engine {
+	/**
+\class for Buffer Element
+*/
+
+	class BufferElement
+	{
+	public:
+		ShaderDataType m_datatype;
+		unsigned int m_size;
+		unsigned int m_offset;
+		bool m_normalised;
+
+		BufferElement() {};
+		BufferElement(ShaderDataType dataType, bool normalised = false) : m_datatype(dataType), m_size(ShaderDataTypeSize(dataType)), m_offset(0), m_normalised(normalised) {};
+	};
+
+
+	/**
+	\class for Buffer Layout
+	*/
+
+	class BufferLayout
+	{
+	private:
+		std::vector<BufferElement> m_elements;
+		unsigned int m_stride;
+
+		void calcStrideandOffset()
+		{
+			unsigned int offset = 0;
+			m_stride = 0;
+			for (auto& elements : m_elements)
+			{
+				elements.m_offset = offset;
+				offset += elements.m_size;
+				m_stride += elements.m_size;
+			}
+		}
+	public:
+		BufferLayout() {};
+		BufferLayout(const std::initializer_list<BufferElement>& elements) : m_elements(elements)
+		{
+			calcStrideandOffset();
+		}
+
+		inline unsigned int getStride() const { return m_stride; }
+		std::vector<BufferElement>::iterator begin() { return m_elements.begin(); }
+		std::vector<BufferElement>::iterator end() { return m_elements.end(); }
+		std::vector<BufferElement>::const_iterator begin() const { return m_elements.begin(); }
+		std::vector<BufferElement>::const_iterator end() const { return m_elements.end(); }
+	};
+
 	/**
 \class Interface class for Vertex buffers
 */
@@ -41,7 +97,7 @@ namespace Engine {
 	class VertexArray
 	{
 	private:
-		
+
 	public:
 		virtual void bind() const = 0;
 		virtual void unbind() const = 0;
@@ -54,60 +110,9 @@ namespace Engine {
 		static VertexArray* create();
 	};
 
-	/**
-	\class for Buffer Element
-	*/
 
-#include "ShaderDataType.h"
 
-	class BufferElement
-	{
-	public:
-		ShaderDataType m_datatype;
-		unsigned int m_size;
-		unsigned int m_offset;
-		bool m_normalised;
 
-		BufferElement() {};
-		BufferElement(ShaderDataType dataType, bool normalised = false) : m_datatype(dataType), m_size(ShaderDataTypeSize(dataType)), m_offset(0), m_normalised(normalised) {};
-	};
-
-	/**
-	\class for Buffer Layout
-	*/
-#include <vector>
-#include <initializer_list>
-#include <iterator>
-	class BufferLayout
-	{
-	private:
-		std::vector<BufferElement> m_elements;
-		unsigned int m_stride;
-
-		void calcStrideandOffset()
-		{
-			unsigned int offset = 0;
-			m_stride = 0;
-			for (auto& elements : m_elements)
-			{
-				elements.m_offset = offset;
-				offset += elements.m_size;
-				m_stride += elements.m_size;
-			}
-		}
-	public:
-		BufferLayout() {};
-		BufferLayout(const std::initializer_list<BufferElement>& elements) : m_elements(elements)
-		{
-			calcStrideandOffset();
-		}
-
-		inline unsigned int getStride() const { return m_stride; }
-		std::vector<BufferElement>::iterator begin() { return m_elements.begin(); }
-		std::vector<BufferElement>::iterator end() { return m_elements.end(); }
-		std::vector<BufferElement>::const_iterator begin() const { return m_elements.begin(); }
-		std::vector<BufferElement>::const_iterator end() const { return m_elements.end(); }
-	};
 }
 
 

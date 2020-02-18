@@ -43,9 +43,9 @@ project "Engine"
 		"vendor/glm/",
 		"vendor/stb_image",
 		"vendor/freetype2/include",
-		"vendor/assimp/include"
-		"vendor/FMOD/core/inc"
-		"vendor/FMOD/fsbank/inc"
+		"vendor/assimp/include",
+		"vendor/FMOD/core/inc",
+		"vendor/FMOD/fsbank/inc",
 		"vendor/FMOD/studio/inc"
 	}
 	

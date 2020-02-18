@@ -18,8 +18,9 @@ Vertex Buffer for OpenGL
 		virtual void Bind()const override;
 		virtual void UnBind()const override;
 
-		virtual void setBufferLayout(const BufferLayout& layout) override { m_BufferLayout = layout; }
 		virtual const BufferLayout& getBufferLayout() const override { return m_BufferLayout; }
+		virtual void setBufferLayout(const BufferLayout& layout) override { m_BufferLayout = layout; }
+		
 	private:
 		uint32_t m_RendererID;
 		BufferLayout m_BufferLayout;

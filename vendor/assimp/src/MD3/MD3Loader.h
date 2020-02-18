@@ -173,7 +173,7 @@ struct ShaderDataBlock
 // ---------------------------------------------------------------------------
 /** @brief Tiny utility data structure to hold the data of a .shader file
  */
-struct 
+struct ShaderData
 {
     //! Shader data blocks
     std::list<ShaderDataBlock> blocks;

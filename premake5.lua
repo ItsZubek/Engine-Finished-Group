@@ -44,7 +44,6 @@ project "Engine"
 		"vendor/stb_image",
 		"vendor/freetype2/include",
 		"vendor/assimp/include"
-		"vendor/openAL/include"
 	}
 	
 	links 
@@ -53,7 +52,6 @@ project "Engine"
 		"Glad",
 		"Freetype",
 		"assimp"
-		"openAL"
 	}
 	
 	filter "system:windows"
@@ -232,4 +230,3 @@ group "Vendor"
 	include "vendor/zlib"
 	include "vendor/IrrXML"
 	include "vendor/assimp"
-	include "vendor/openAL"

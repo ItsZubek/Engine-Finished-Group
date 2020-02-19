@@ -49,6 +49,8 @@ namespace Engine {
 		std::unique_ptr<Shader> m_Shader; //!< Pointer to a shader class
 		std::unique_ptr<Shader> m_ShaderFC; //!< Pointer to a shader class
 		std::unique_ptr<Shader> m_ShaderTP; //!< Pointer to a shader class
+		std::shared_ptr<VertexArray> m_VertexArrayFC; //!< Pointer to a Vertex Array Class
+		std::shared_ptr<VertexArray> m_VertexArrayTP; //!< Pointer to a Vertex Array Class
 		std::shared_ptr<VertexBuffer> m_VertexBuffer; //!< Pointer to a Vertex Buffer class
 		std::shared_ptr<IndexBuffer> m_IndexBuffer; //!< Pointer to a Index Buffer class
 		OrthographicCamera m_Camera; //!< Orthographic Camera

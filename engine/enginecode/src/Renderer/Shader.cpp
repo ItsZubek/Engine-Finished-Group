@@ -5,9 +5,13 @@
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
-namespace Engine {
+#include "platform/OpenGL/OpenGLShader.h"
+#include "windows/Renderer.h"
+
+namespace Engine 
+{
 	/*Taken from https://www.khronos.org/opengl/wiki/Shader_Compilation in the example section*/
-	Shader::Shader(const std::string & vertexSrc, const std::string & fragmentSrc)
+	/*Shader::Shader(const std::string & vertexSrc, const std::string & fragmentSrc)
 	{
 			// Create an empty vertex shader handle
 			GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -127,5 +131,30 @@ namespace Engine {
 	{
 		GLint Location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniformMatrix4fv(Location, 1, GL_FALSE, glm::value_ptr(matrix));
+	}*/
+
+	Shader* Shader::create(const std::string& filepath)
+	{
+		switch (Renderer::GetAPI())
+		{
+		case Renderer::RendererAPI::None: ENGINE_CORE_ERROR("API::NONE currently not supported"); return nullptr;
+		case Renderer::RendererAPI::OpenGL: return new OpenGLShader(filepath);
+
+		}
+
+		ENGINE_CORE_CRITICAL("Unknown API!");
+		return nullptr;
+	}
+	Shader* Shader::create(std::string& vertexFilePath, const std::string& fragmentFilePath)
+	{
+		switch (Renderer::GetAPI())
+		{
+		case Renderer::RendererAPI::None: ENGINE_CORE_ERROR("API::NONE currently not supported"); return nullptr;
+		case Renderer::RendererAPI::OpenGL: return new OpenGLShader(vertexFilePath, fragmentFilePath);
+
+		}
+
+		ENGINE_CORE_CRITICAL("Unknown API!");
+		return nullptr;
 	}
 }

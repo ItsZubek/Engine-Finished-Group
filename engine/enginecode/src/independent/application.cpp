@@ -42,38 +42,6 @@ namespace Engine {
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));
 		
-		
-
-		glCreateVertexArrays(1, &m_VertexArray);
-		glBindVertexArray(m_VertexArray);
-
-
-		std::string vertexSrc = R"(
-		#version 330 core
-
-		layout(location = 0) in vec3 a_Position;
-
-		uniform mat4 u_ViewProjection;
-
-		void main()
-		{
-			gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
-		}
-
-		)";
-		std::string fragmentSrc = R"(
-		#version 330 core
-
-		layout(location = 0) out vec4 color;
-
-		void main()
-		{
-			color = vec4(1.0, 0.0, 0.0, 1.0);
-		}
-
-		)";
-
-		m_Shader.reset(new Shader(vertexSrc, fragmentSrc));
 
 		Application::s_screenResolution = glm::ivec2(m_Window->getWidth(), m_Window->getHeight());
 		
@@ -89,6 +57,12 @@ namespace Engine {
 
 		glGenVertexArrays(1, &m_FCvertexArray);
 		glBindVertexArray(m_FCvertexArray);
+
+		/*m_VertexArrayFC.reset(VertexArray::create());
+		m_VertexArrayFC->bind();
+		m_VertexArrayFC->setVertexBuffer();
+		/m_VertexArrayFC->setIndexBuffer(m_IndexBuffer);*/
+
 
 		glCreateBuffers(1, &m_FCvertexBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, m_FCvertexBuffer);
@@ -175,7 +149,77 @@ namespace Engine {
 				}
 		)";
 
-		m_ShaderFC.reset(new Shader(FCvertSrc, FCFragSrc));
+		GLuint FCVertShader = glCreateShader(GL_VERTEX_SHADER);
+
+		const GLchar* source = FCvertSrc.c_str();
+		glShaderSource(FCVertShader, 1, &source, 0);
+		glCompileShader(FCVertShader);
+
+		GLint isCompiled = 0;
+		glGetShaderiv(FCVertShader, GL_COMPILE_STATUS, &isCompiled);
+		if (isCompiled == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetShaderiv(FCVertShader, GL_INFO_LOG_LENGTH, &maxLength);
+
+			std::vector<GLchar> infoLog(maxLength);
+			glGetShaderInfoLog(FCVertShader, maxLength, &maxLength, &infoLog[0]);
+			 ENGINE_CORE_CRITICAL("Shader compile error: {0}", std::string(infoLog.begin(), infoLog.end()));
+
+			glDeleteShader(FCVertShader);
+			return;
+		}
+
+		GLuint FCFragShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+		source = FCFragSrc.c_str();
+		glShaderSource(FCFragShader, 1, &source, 0);
+		glCompileShader(FCFragShader);
+
+		glGetShaderiv(FCFragShader, GL_COMPILE_STATUS, &isCompiled);
+		if (isCompiled == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetShaderiv(FCFragShader, GL_INFO_LOG_LENGTH, &maxLength);
+
+			std::vector<GLchar> infoLog(maxLength);
+			glGetShaderInfoLog(FCFragShader, maxLength, &maxLength, &infoLog[0]);
+			 ENGINE_CORE_CRITICAL("Shader compile error: {0}", std::string(infoLog.begin(), infoLog.end()));
+
+			glDeleteShader(FCFragShader);
+			glDeleteShader(FCVertShader);
+
+			return;
+		}
+
+		m_FCprogram = glCreateProgram();
+		glAttachShader(m_FCprogram, FCVertShader);
+		glAttachShader(m_FCprogram, FCFragShader);
+		glLinkProgram(m_FCprogram);
+
+		GLint isLinked = 0;
+		glGetProgramiv(m_FCprogram, GL_LINK_STATUS, (int*)&isLinked);
+		if (isLinked == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetProgramiv(m_FCprogram, GL_INFO_LOG_LENGTH, &maxLength);
+
+			std::vector<GLchar> infoLog(maxLength);
+			glGetProgramInfoLog(m_FCprogram, maxLength, &maxLength, &infoLog[0]);
+			 ENGINE_CORE_CRITICAL("Shader linking error: {0}", std::string(infoLog.begin(), infoLog.end()));
+
+			glDeleteProgram(m_FCprogram);
+			glDeleteShader(FCVertShader);
+			glDeleteShader(FCFragShader);
+
+			return;
+		}
+
+		glDetachShader(m_FCprogram, FCVertShader);
+		glDetachShader(m_FCprogram, FCFragShader);
+
+		/*m_ShaderFC.reset(Shader::create("assets/shaders/flatColour.glsl"));
+		m_ShaderFC->Bind();*/
 
 		// Added textuer phong shader and cube
 
@@ -286,8 +330,77 @@ namespace Engine {
 				}
 		)";
 
+		GLuint TPVertShader = glCreateShader(GL_VERTEX_SHADER);
 
-		m_ShaderTP.reset(new Shader(TPvertSrc, TPFragSrc));
+		source = TPvertSrc.c_str();
+		glShaderSource(TPVertShader, 1, &source, 0);
+		glCompileShader(TPVertShader);
+
+		isCompiled = 0;
+		glGetShaderiv(TPVertShader, GL_COMPILE_STATUS, &isCompiled);
+		if (isCompiled == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetShaderiv(TPVertShader, GL_INFO_LOG_LENGTH, &maxLength);
+
+			std::vector<GLchar> infoLog(maxLength);
+			glGetShaderInfoLog(TPVertShader, maxLength, &maxLength, &infoLog[0]);
+			 ENGINE_CORE_CRITICAL("Shader compile error: {0}", std::string(infoLog.begin(), infoLog.end()));
+
+			glDeleteShader(TPVertShader);
+			return;
+		}
+
+		GLuint TPFragShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+		source = TPFragSrc.c_str();
+		glShaderSource(TPFragShader, 1, &source, 0);
+		glCompileShader(TPFragShader);
+
+		glGetShaderiv(TPFragShader, GL_COMPILE_STATUS, &isCompiled);
+		if (isCompiled == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetShaderiv(TPFragShader, GL_INFO_LOG_LENGTH, &maxLength);
+
+			std::vector<GLchar> infoLog(maxLength);
+			glGetShaderInfoLog(TPFragShader, maxLength, &maxLength, &infoLog[0]);
+			 ENGINE_CORE_CRITICAL("Shader compile error: {0}", std::string(infoLog.begin(), infoLog.end()));
+
+			glDeleteShader(TPFragShader);
+			glDeleteShader(TPVertShader);
+
+			return;
+		}
+
+		m_TPprogram = glCreateProgram();
+		glAttachShader(m_TPprogram, TPVertShader);
+		glAttachShader(m_TPprogram, TPFragShader);
+		glLinkProgram(m_TPprogram);
+
+		isLinked = 0;
+		glGetProgramiv(m_TPprogram, GL_LINK_STATUS, (int*)&isLinked);
+		if (isLinked == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetProgramiv(m_TPprogram, GL_INFO_LOG_LENGTH, &maxLength);
+
+			std::vector<GLchar> infoLog(maxLength);
+			glGetProgramInfoLog(m_TPprogram, maxLength, &maxLength, &infoLog[0]);
+			 ENGINE_CORE_CRITICAL("Shader linking error: {0}", std::string(infoLog.begin(), infoLog.end()));
+
+			glDeleteProgram(m_TPprogram);
+			glDeleteShader(TPVertShader);
+			glDeleteShader(TPFragShader);
+
+			return;
+		}
+
+		glDetachShader(m_TPprogram, FCVertShader);
+		glDetachShader(m_TPprogram, FCFragShader);
+
+		/*m_ShaderTP.reset(Shader::create("assets/shaders/texturedPhong.glsl"));
+		m_ShaderTP->Bind();*/
 
 		glGenTextures(1, &m_letterTexture);
 		glActiveTexture(GL_TEXTURE0);
@@ -371,8 +484,8 @@ namespace Engine {
 		{
 			mp_timer->SetStartPoint();
 
-			m_Shader->Bind();
-			m_Shader->UploadUniformMat4("u_ViewProjection", m_Camera.GetViewProjectionMatrix());
+			//m_Shader->Bind();
+			//m_Shader->UploadUniformMat4("u_ViewProjection", m_Camera.GetViewProjectionMatrix());
 
 
 #pragma region TempDrawCode
@@ -422,11 +535,15 @@ namespace Engine {
 			// End of code to make the cube move.
 
 			glm::mat4 fcMVP = projection * view * FCmodel;
-			//glUseProgram(m_FCprogram);
-			m_ShaderFC->Bind();
+			glUseProgram(m_FCprogram);
+			
 			glBindVertexArray(m_FCvertexArray);
-			GLuint MVPLoc = glGetUniformLocation(m_ShaderFC->getRenderedID(), "u_MVP");
+
+			GLuint MVPLoc = glGetUniformLocation(m_FCprogram, "u_MVP");
 			glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, &fcMVP[0][0]);
+
+			//m_ShaderFC->UploadUniformMat4("u_MVP", &fcMVP[0][0]);
+
 			glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
 
 			glm::mat4 tpMVP = projection * view * TPmodel;
@@ -434,31 +551,45 @@ namespace Engine {
 			if (m_goingUp) texSlot = m_textureSlots[0];
 			else texSlot = m_textureSlots[1];
 
-			//glUseProgram(m_TPprogram);
-			m_ShaderTP->Bind();
+			glUseProgram(m_TPprogram);
+	
 			glBindVertexArray(m_TPvertexArray);
-			m_TPprogram = m_ShaderTP->getRenderedID();
+			//m_TPprogram = m_ShaderTP->getRenderedID();
 
 			MVPLoc = glGetUniformLocation(m_TPprogram, "u_MVP");
 			glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, &tpMVP[0][0]);
 
+			//m_ShaderTP->UploadUniformMat4("u_MVP", &tpMVP[0][0]);
+
 			GLuint modelLoc = glGetUniformLocation(m_TPprogram, "u_model");
 			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &TPmodel[0][0]);
+
+			//m_ShaderTP->UploadUniformMat4("u_model", &TPmodel[0][0])
 
 			GLuint colLoc = glGetUniformLocation(m_TPprogram, "u_objectColour");
 			glUniform3f(colLoc, 0.2f, 0.8f, 0.5f);
 
+			//m_ShaderTP->uploadFloat3("u_objectColour", 0.2f, 0.8f, 0.5f);
+
 			GLuint lightColLoc = glGetUniformLocation(m_TPprogram, "u_lightColour");
 			glUniform3f(lightColLoc, 1.0f, 1.0f, 1.0f);
+
+			//m_ShaderTP->uploadFloat3("u_lightColour", 1.0f, 1.0f, 1.0f);
 
 			GLuint lightPosLoc = glGetUniformLocation(m_TPprogram, "u_lightPos");
 			glUniform3f(lightPosLoc, 1.0f, 4.0f, -6.0f);
 
+			//m_ShaderTP->uploadFloat3("u_lightPos", 1.0f, 4.0f, -6.0f);
+
 			GLuint viewPosLoc = glGetUniformLocation(m_TPprogram, "u_viewPos");
 			glUniform3f(viewPosLoc, 0.0f, 0.0f, -4.5f);
 
+			//m_ShaderTP->uploadFloat3("u_viewPos", 0.0f, 0.0f, -4.5f);
+
 			GLuint texDataLoc = glGetUniformLocation(m_TPprogram, "u_texData");
 			glUniform1i(texDataLoc, texSlot);
+
+			//m_ShaderTP->uploadInt("u_texData", texSlot);
 
 			glDrawElements(GL_TRIANGLES, 3 * 12, GL_UNSIGNED_INT, nullptr);
 

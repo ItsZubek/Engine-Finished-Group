@@ -14,12 +14,14 @@ namespace Engine
 
 		virtual void Bind() const override;
 		virtual void UnBind() const override;
-		virtual void UploadUniformMat4(const std::string& name, const glm::mat4& matrix) override;
+		virtual void UploadUniformMat4(const std::string& name, float* data) override;
 		virtual void uploadFloat3(const std::string& name, float a, float b, float c) override;
 		virtual void uploadInt(const std::string& name, int data) override;
 
 		void dispatchUniformUpload(ShaderDataType type, GLuint location, void* data);
 		BufferLayout getBufferLayout() const { return m_layout; } //!< gets the buffer layout for the shader
+
+		void compileAndLink(const std::string& vertexShaderSrc, const std::string& fragmentShaderSrc);
 
 		virtual uint32_t getRenderedID() const override { return m_RendererID; }
 	private:

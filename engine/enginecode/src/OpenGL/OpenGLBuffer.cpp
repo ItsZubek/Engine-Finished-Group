@@ -69,6 +69,10 @@ namespace Engine {
 	}
 	void OpenGLVertexArray::setVertexBuffer() const
 	{
+		glBindVertexArray(m_Renderer);
+
+		getVertexBuffer()->Bind();
+
 		unsigned int index = 0;
 		for (const auto&  elements : m_VertexBuffer->getBufferLayout())
 		{
@@ -83,7 +87,10 @@ namespace Engine {
 	}
 	void OpenGLVertexArray::setIndexBuffer(const std::shared_ptr<IndexBuffer> indexBuffer)
 	{
+		glBindVertexArray(m_Renderer);
 		indexBuffer->Bind();
+
+		m_IndexBuffer = indexBuffer;
 	}
 
 	std::shared_ptr<VertexBuffer> OpenGLVertexArray::getVertexBuffer() const

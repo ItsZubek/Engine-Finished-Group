@@ -55,17 +55,18 @@ namespace Engine {
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////Flat Colour Cube//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 		glGenVertexArrays(1, &m_FCvertexArray);
 		glBindVertexArray(m_FCvertexArray);
 
-		/*m_VertexArrayFC.reset(VertexArray::create());
-		m_VertexArrayFC->bind();
-		m_VertexArrayFC->setVertexBuffer();
-		/m_VertexArrayFC->setIndexBuffer(m_IndexBuffer);*/
+		//m_VertexArrayFC.reset(VertexArray::create());
+		
 
-
-		glCreateBuffers(1, &m_FCvertexBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, m_FCvertexBuffer);
+		/*glCreateBuffers(1, &m_FCvertexBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, m_FCvertexBuffer);*/
 
 		float FCvertices[6 * 24] = {
 			-0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.2f, // red square
@@ -94,8 +95,9 @@ namespace Engine {
 			0.5f,  -0.5f, 0.5f, 0.2f, 0.2f, 0.8f
 		};
 
-		/*m_VertexBuffer.reset(VertexBuffer::Create(FCvertices, sizeof(FCvertices)));
-		m_VertexBuffer->Bind();*/
+		m_VertexBufferFC.reset(VertexBuffer::Create(FCvertices, sizeof(FCvertices)));
+		m_VertexBufferFC->Bind();
+
 
 		glBufferData(GL_ARRAY_BUFFER, sizeof(FCvertices), FCvertices, GL_STATIC_DRAW);
 
@@ -119,109 +121,19 @@ namespace Engine {
 			22, 23, 20
 		};
 
+		//m_VertexArrayTP.reset(VertexArray::create());
+
 		// Initiating the Index Buffer 
-		m_IndexBuffer.reset(IndexBuffer::Create(indices, 3 * 12));
-		m_IndexBuffer->Bind();
+		m_IndexBufferFC.reset(IndexBuffer::Create(indices, 3 * 12));
+		m_IndexBufferFC->Bind();
 		
+		// Initiating the Shader
+		m_ShaderFC.reset(Shader::create("assets/shaders/flatColour.glsl"));
+		m_ShaderFC->Bind();
 
-		std::string FCvertSrc = R"(
-				#version 440 core
-			
-				layout(location = 0) in vec3 a_vertexPosition;
-				layout(location = 1) in vec3 a_vertexColour;
-				out vec3 fragmentColour;
-				uniform mat4 u_MVP;
-				void main()
-				{
-					fragmentColour = a_vertexColour;
-					gl_Position =  u_MVP * vec4(a_vertexPosition,1);
-				}
-			)";
-
-		std::string FCFragSrc = R"(
-				#version 440 core
-			
-				layout(location = 0) out vec4 colour;
-				in vec3 fragmentColour;
-				void main()
-				{
-					colour = vec4(fragmentColour, 1.0);
-				}
-		)";
-
-		GLuint FCVertShader = glCreateShader(GL_VERTEX_SHADER);
-
-		const GLchar* source = FCvertSrc.c_str();
-		glShaderSource(FCVertShader, 1, &source, 0);
-		glCompileShader(FCVertShader);
-
-		GLint isCompiled = 0;
-		glGetShaderiv(FCVertShader, GL_COMPILE_STATUS, &isCompiled);
-		if (isCompiled == GL_FALSE)
-		{
-			GLint maxLength = 0;
-			glGetShaderiv(FCVertShader, GL_INFO_LOG_LENGTH, &maxLength);
-
-			std::vector<GLchar> infoLog(maxLength);
-			glGetShaderInfoLog(FCVertShader, maxLength, &maxLength, &infoLog[0]);
-			 ENGINE_CORE_CRITICAL("Shader compile error: {0}", std::string(infoLog.begin(), infoLog.end()));
-
-			glDeleteShader(FCVertShader);
-			return;
-		}
-
-		GLuint FCFragShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-		source = FCFragSrc.c_str();
-		glShaderSource(FCFragShader, 1, &source, 0);
-		glCompileShader(FCFragShader);
-
-		glGetShaderiv(FCFragShader, GL_COMPILE_STATUS, &isCompiled);
-		if (isCompiled == GL_FALSE)
-		{
-			GLint maxLength = 0;
-			glGetShaderiv(FCFragShader, GL_INFO_LOG_LENGTH, &maxLength);
-
-			std::vector<GLchar> infoLog(maxLength);
-			glGetShaderInfoLog(FCFragShader, maxLength, &maxLength, &infoLog[0]);
-			 ENGINE_CORE_CRITICAL("Shader compile error: {0}", std::string(infoLog.begin(), infoLog.end()));
-
-			glDeleteShader(FCFragShader);
-			glDeleteShader(FCVertShader);
-
-			return;
-		}
-
-		m_FCprogram = glCreateProgram();
-		glAttachShader(m_FCprogram, FCVertShader);
-		glAttachShader(m_FCprogram, FCFragShader);
-		glLinkProgram(m_FCprogram);
-
-		GLint isLinked = 0;
-		glGetProgramiv(m_FCprogram, GL_LINK_STATUS, (int*)&isLinked);
-		if (isLinked == GL_FALSE)
-		{
-			GLint maxLength = 0;
-			glGetProgramiv(m_FCprogram, GL_INFO_LOG_LENGTH, &maxLength);
-
-			std::vector<GLchar> infoLog(maxLength);
-			glGetProgramInfoLog(m_FCprogram, maxLength, &maxLength, &infoLog[0]);
-			 ENGINE_CORE_CRITICAL("Shader linking error: {0}", std::string(infoLog.begin(), infoLog.end()));
-
-			glDeleteProgram(m_FCprogram);
-			glDeleteShader(FCVertShader);
-			glDeleteShader(FCFragShader);
-
-			return;
-		}
-
-		glDetachShader(m_FCprogram, FCVertShader);
-		glDetachShader(m_FCprogram, FCFragShader);
-
-		/*m_ShaderFC.reset(Shader::create("assets/shaders/flatColour.glsl"));
-		m_ShaderFC->Bind();*/
-
-		// Added textuer phong shader and cube
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////Textured Phong Cube////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		glGenVertexArrays(1, &m_TPvertexArray);
 		glBindVertexArray(m_TPvertexArray);
@@ -257,7 +169,7 @@ namespace Engine {
 			0.5f,  -0.5f, 0.5f,  1.f, 0.f, 0.f, 0.66f, 1.0f
 		};
 
-		glBufferData(GL_ARRAY_BUFFER, sizeof(TPvertices), TPvertices, GL_STATIC_DRAW);
+		//glBufferData(GL_ARRAY_BUFFER, sizeof(TPvertices), TPvertices, GL_STATIC_DRAW);
 
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0); // (pos 0 (pos), 3 floats, float, not normalised, 6 float between each data line, start at 0)
@@ -266,141 +178,17 @@ namespace Engine {
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(sizeof(float) * 6)); // (pos 1 (normal), 3 floats, float, not normalised, 6 float between each data line, start at 3)
 
-		glCreateBuffers(1, &m_TPindexBuffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_TPindexBuffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+		// Iinitiating the Vertex Buffer
+		m_VertexBufferTP.reset(VertexBuffer::Create(TPvertices, sizeof(TPvertices)));
+		m_VertexBufferTP->Bind();
 
-		std::string TPvertSrc = R"(
-				#version 440 core
-			
-				layout(location = 0) in vec3 a_vertexPosition;
-				layout(location = 1) in vec3 a_vertexNormal;
-				layout(location = 2) in vec2 a_texCoord;
+		// Initiating the Index Buffer
+		m_IndexBufferTP.reset(IndexBuffer::Create(indices, 3 * 12));
+		m_IndexBufferTP->Bind();
 
-				out vec3 fragmentPos;
-				out vec3 normal;
-				out vec2 texCoord;
-
-				uniform mat4 u_model;
-				uniform mat4 u_MVP;
-
-				void main()
-				{
-					fragmentPos = vec3(u_model * vec4(a_vertexPosition, 1.0));
-
-					normal = mat3(transpose(inverse(u_model))) * a_vertexNormal;
-
-					texCoord = vec2(a_texCoord.x, a_texCoord.y);
-
-					gl_Position =  u_MVP * vec4(a_vertexPosition,1.0);
-				}
-			)";
-
-		std::string TPFragSrc = R"(
-				#version 440 core
-			
-				layout(location = 0) out vec4 colour;
-
-				in vec3 normal;
-				in vec3 fragmentPos;
-				in vec2 texCoord;
-				
-
-				uniform vec3 u_lightPos; 
-				uniform vec3 u_viewPos; 
-				uniform vec3 u_lightColour;
-
-				uniform sampler2D u_texData;
-
-				void main()
-				{
-					float ambientStrength = 0.4;
-					vec3 ambient = ambientStrength * u_lightColour;
-					vec3 norm = normalize(normal);
-					vec3 lightDir = normalize(u_lightPos - fragmentPos);
-					float diff = max(dot(norm, lightDir), 0.0);
-					vec3 diffuse = diff * u_lightColour;
-					float specularStrength = 0.8;
-					vec3 viewDir = normalize(u_viewPos - fragmentPos);
-					vec3 reflectDir = reflect(-lightDir, norm);  
-					float spec = pow(max(dot(viewDir, reflectDir), 0.0), 64);
-					vec3 specular = specularStrength * spec * u_lightColour;  
-					
-					colour = vec4((ambient + diffuse + specular), 1.0) * texture(u_texData, texCoord);
-				}
-		)";
-
-		GLuint TPVertShader = glCreateShader(GL_VERTEX_SHADER);
-
-		source = TPvertSrc.c_str();
-		glShaderSource(TPVertShader, 1, &source, 0);
-		glCompileShader(TPVertShader);
-
-		isCompiled = 0;
-		glGetShaderiv(TPVertShader, GL_COMPILE_STATUS, &isCompiled);
-		if (isCompiled == GL_FALSE)
-		{
-			GLint maxLength = 0;
-			glGetShaderiv(TPVertShader, GL_INFO_LOG_LENGTH, &maxLength);
-
-			std::vector<GLchar> infoLog(maxLength);
-			glGetShaderInfoLog(TPVertShader, maxLength, &maxLength, &infoLog[0]);
-			 ENGINE_CORE_CRITICAL("Shader compile error: {0}", std::string(infoLog.begin(), infoLog.end()));
-
-			glDeleteShader(TPVertShader);
-			return;
-		}
-
-		GLuint TPFragShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-		source = TPFragSrc.c_str();
-		glShaderSource(TPFragShader, 1, &source, 0);
-		glCompileShader(TPFragShader);
-
-		glGetShaderiv(TPFragShader, GL_COMPILE_STATUS, &isCompiled);
-		if (isCompiled == GL_FALSE)
-		{
-			GLint maxLength = 0;
-			glGetShaderiv(TPFragShader, GL_INFO_LOG_LENGTH, &maxLength);
-
-			std::vector<GLchar> infoLog(maxLength);
-			glGetShaderInfoLog(TPFragShader, maxLength, &maxLength, &infoLog[0]);
-			 ENGINE_CORE_CRITICAL("Shader compile error: {0}", std::string(infoLog.begin(), infoLog.end()));
-
-			glDeleteShader(TPFragShader);
-			glDeleteShader(TPVertShader);
-
-			return;
-		}
-
-		m_TPprogram = glCreateProgram();
-		glAttachShader(m_TPprogram, TPVertShader);
-		glAttachShader(m_TPprogram, TPFragShader);
-		glLinkProgram(m_TPprogram);
-
-		isLinked = 0;
-		glGetProgramiv(m_TPprogram, GL_LINK_STATUS, (int*)&isLinked);
-		if (isLinked == GL_FALSE)
-		{
-			GLint maxLength = 0;
-			glGetProgramiv(m_TPprogram, GL_INFO_LOG_LENGTH, &maxLength);
-
-			std::vector<GLchar> infoLog(maxLength);
-			glGetProgramInfoLog(m_TPprogram, maxLength, &maxLength, &infoLog[0]);
-			 ENGINE_CORE_CRITICAL("Shader linking error: {0}", std::string(infoLog.begin(), infoLog.end()));
-
-			glDeleteProgram(m_TPprogram);
-			glDeleteShader(TPVertShader);
-			glDeleteShader(TPFragShader);
-
-			return;
-		}
-
-		glDetachShader(m_TPprogram, FCVertShader);
-		glDetachShader(m_TPprogram, FCFragShader);
-
-		/*m_ShaderTP.reset(Shader::create("assets/shaders/texturedPhong.glsl"));
-		m_ShaderTP->Bind();*/
+		// Initiating the Shader
+		m_ShaderTP.reset(Shader::create("assets/shaders/texturedPhong.glsl"));
+		m_ShaderTP->Bind();
 
 		glGenTextures(1, &m_letterTexture);
 		glActiveTexture(GL_TEXTURE0);
@@ -535,63 +323,41 @@ namespace Engine {
 			// End of code to make the cube move.
 
 			glm::mat4 fcMVP = projection * view * FCmodel;
-			glUseProgram(m_FCprogram);
+
+			m_ShaderFC->Bind();
 			
 			glBindVertexArray(m_FCvertexArray);
 
-			GLuint MVPLoc = glGetUniformLocation(m_FCprogram, "u_MVP");
-			glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, &fcMVP[0][0]);
+			m_ShaderFC->UploadUniformMat4("u_MVP", &fcMVP[0][0]);
 
-			//m_ShaderFC->UploadUniformMat4("u_MVP", &fcMVP[0][0]);
-
-			glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, m_IndexBufferFC->GetCount(), GL_UNSIGNED_INT, nullptr);
 
 			glm::mat4 tpMVP = projection * view * TPmodel;
 			unsigned int texSlot;
 			if (m_goingUp) texSlot = m_textureSlots[0];
 			else texSlot = m_textureSlots[1];
 
-			glUseProgram(m_TPprogram);
+
+			m_ShaderTP->Bind();
 	
 			glBindVertexArray(m_TPvertexArray);
-			//m_TPprogram = m_ShaderTP->getRenderedID();
+			
 
-			MVPLoc = glGetUniformLocation(m_TPprogram, "u_MVP");
-			glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, &tpMVP[0][0]);
+			m_ShaderTP->UploadUniformMat4("u_MVP", &tpMVP[0][0]);
 
-			//m_ShaderTP->UploadUniformMat4("u_MVP", &tpMVP[0][0]);
+			m_ShaderTP->UploadUniformMat4("u_model", &TPmodel[0][0]);
 
-			GLuint modelLoc = glGetUniformLocation(m_TPprogram, "u_model");
-			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &TPmodel[0][0]);
+			m_ShaderTP->uploadFloat3("u_objectColour", 0.2f, 0.8f, 0.5f);
 
-			//m_ShaderTP->UploadUniformMat4("u_model", &TPmodel[0][0])
+			m_ShaderTP->uploadFloat3("u_lightColour", 1.0f, 1.0f, 1.0f);
 
-			GLuint colLoc = glGetUniformLocation(m_TPprogram, "u_objectColour");
-			glUniform3f(colLoc, 0.2f, 0.8f, 0.5f);
+			m_ShaderTP->uploadFloat3("u_lightPos", 1.0f, 4.0f, -6.0f);
 
-			//m_ShaderTP->uploadFloat3("u_objectColour", 0.2f, 0.8f, 0.5f);
+			m_ShaderTP->uploadFloat3("u_viewPos", 0.0f, 0.0f, -4.5f);
 
-			GLuint lightColLoc = glGetUniformLocation(m_TPprogram, "u_lightColour");
-			glUniform3f(lightColLoc, 1.0f, 1.0f, 1.0f);
+			m_ShaderTP->uploadInt("u_texData", texSlot);
 
-			//m_ShaderTP->uploadFloat3("u_lightColour", 1.0f, 1.0f, 1.0f);
-
-			GLuint lightPosLoc = glGetUniformLocation(m_TPprogram, "u_lightPos");
-			glUniform3f(lightPosLoc, 1.0f, 4.0f, -6.0f);
-
-			//m_ShaderTP->uploadFloat3("u_lightPos", 1.0f, 4.0f, -6.0f);
-
-			GLuint viewPosLoc = glGetUniformLocation(m_TPprogram, "u_viewPos");
-			glUniform3f(viewPosLoc, 0.0f, 0.0f, -4.5f);
-
-			//m_ShaderTP->uploadFloat3("u_viewPos", 0.0f, 0.0f, -4.5f);
-
-			GLuint texDataLoc = glGetUniformLocation(m_TPprogram, "u_texData");
-			glUniform1i(texDataLoc, texSlot);
-
-			//m_ShaderTP->uploadInt("u_texData", texSlot);
-
-			glDrawElements(GL_TRIANGLES, 3 * 12, GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, m_IndexBufferTP->GetCount() , GL_UNSIGNED_INT, nullptr);
 
 			// End temporary code
 #pragma endregion TempDrawCode

@@ -1,6 +1,6 @@
 #pragma once
 
-/*#include <assimp/Importer.hpp>
+#include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
@@ -145,7 +145,7 @@ namespace Engine
 			if (AI_SUCCESS == material->Get(AI_MATKEY_COLOR_REFLECTIVE, colorValue)) ENGINE_CORE_INFO("Material reflective colour: {0}, {1}, {2}", colorValue.r, colorValue.g, colorValue.b);
 			if (AI_SUCCESS == material->Get(AI_MATKEY_COLOR_TRANSPARENT, colorValue)) ENGINE_CORE_INFO("Material tranparent colour: {0}, {1}, {2}", colorValue.r, colorValue.g, colorValue.b);
 
-			/* Omitted material keys:
+			/*Omitted material keys:
 							AI_MATKEY_BLEND_FUNC
 							AI_MATKEY_OPACITY
 							AI_MATKEY_BUMPSCALING
@@ -157,6 +157,7 @@ namespace Engine
 							AI_MATKEY_SHADER_TESSELATION
 							AI_MATKEY_SHADER_PRIMITIVE
 							AI_MATKEY_SHADER_COMPUTE
+			*/
 
 		}
 
@@ -202,4 +203,4 @@ namespace Engine
 			ASSIMPProcessNodeLog(scene->mRootNode, scene);
 		}
 	}
-}*/
+}

@@ -62,12 +62,6 @@ namespace Engine {
 		glGenVertexArrays(1, &m_FCvertexArray);
 		glBindVertexArray(m_FCvertexArray);
 
-		//m_VertexArrayFC.reset(VertexArray::create());
-		
-
-		/*glCreateBuffers(1, &m_FCvertexBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, m_FCvertexBuffer);*/
-
 		float FCvertices[6 * 24] = {
 			-0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.2f, // red square
 			 0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.2f,
@@ -95,11 +89,9 @@ namespace Engine {
 			0.5f,  -0.5f, 0.5f, 0.2f, 0.2f, 0.8f
 		};
 
+		// Initiating the Vertex Buffer 
 		m_VertexBufferFC.reset(VertexBuffer::Create(FCvertices, sizeof(FCvertices)));
-		m_VertexBufferFC->Bind();
-
-
-		glBufferData(GL_ARRAY_BUFFER, sizeof(FCvertices), FCvertices, GL_STATIC_DRAW);
+		
 
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0); // (pos 0 (pos), 3 floats, float, not normalised, 6 float between each data line, start at 0)
@@ -121,7 +113,8 @@ namespace Engine {
 			22, 23, 20
 		};
 
-		//m_VertexArrayTP.reset(VertexArray::create());
+		// Intiating the Vertex Array
+		m_VertexArrayFC.reset(VertexArray::create());
 
 		// Initiating the Index Buffer 
 		m_IndexBufferFC.reset(IndexBuffer::Create(indices, 3 * 12));
@@ -137,10 +130,6 @@ namespace Engine {
 
 		glGenVertexArrays(1, &m_TPvertexArray);
 		glBindVertexArray(m_TPvertexArray);
-
-		glCreateBuffers(1, &m_TPvertexBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, m_TPvertexBuffer);
-
 
 		float TPvertices[8 * 24] = {
 			-0.5f, -0.5f, -0.5f, 0.f, 0.f, -1.f, 0.33f, 0.5f,
@@ -169,7 +158,9 @@ namespace Engine {
 			0.5f,  -0.5f, 0.5f,  1.f, 0.f, 0.f, 0.66f, 1.0f
 		};
 
-		//glBufferData(GL_ARRAY_BUFFER, sizeof(TPvertices), TPvertices, GL_STATIC_DRAW);
+
+		// Iinitiating the Vertex Buffer
+		m_VertexBufferTP.reset(VertexBuffer::Create(TPvertices, sizeof(TPvertices)));
 
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0); // (pos 0 (pos), 3 floats, float, not normalised, 6 float between each data line, start at 0)
@@ -178,10 +169,7 @@ namespace Engine {
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(sizeof(float) * 6)); // (pos 1 (normal), 3 floats, float, not normalised, 6 float between each data line, start at 3)
 
-		// Iinitiating the Vertex Buffer
-		m_VertexBufferTP.reset(VertexBuffer::Create(TPvertices, sizeof(TPvertices)));
-		m_VertexBufferTP->Bind();
-
+		
 		// Initiating the Index Buffer
 		m_IndexBufferTP.reset(IndexBuffer::Create(indices, 3 * 12));
 		m_IndexBufferTP->Bind();
@@ -272,9 +260,6 @@ namespace Engine {
 		{
 			mp_timer->SetStartPoint();
 
-			//m_Shader->Bind();
-			//m_Shader->UploadUniformMat4("u_ViewProjection", m_Camera.GetViewProjectionMatrix());
-
 
 #pragma region TempDrawCode
 			// Temporary draw code to be abstracted
@@ -326,8 +311,10 @@ namespace Engine {
 
 			m_ShaderFC->Bind();
 			
+//			m_VertexArrayFC->bind();
 			glBindVertexArray(m_FCvertexArray);
 
+			// Uploads the Flat Colour Uniform to the Shader
 			m_ShaderFC->UploadUniformMat4("u_MVP", &fcMVP[0][0]);
 
 			glDrawElements(GL_TRIANGLES, m_IndexBufferFC->GetCount(), GL_UNSIGNED_INT, nullptr);
@@ -342,6 +329,7 @@ namespace Engine {
 	
 			glBindVertexArray(m_TPvertexArray);
 			
+			// Uploads the Textured Phong Uniforms to the Shader
 
 			m_ShaderTP->UploadUniformMat4("u_MVP", &tpMVP[0][0]);
 

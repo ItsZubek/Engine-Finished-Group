@@ -62,7 +62,7 @@ Vertex Array for OpenGL
 		OpenGLVertexArray();
 		virtual void bind() const override;
 		virtual void unbind() const override;
-		virtual void setVertexBuffer() const override;
+		virtual void setVertexBuffer(std::shared_ptr<VertexBuffer> vertexBuffer) const override;
 		virtual void setIndexBuffer(const std::shared_ptr<IndexBuffer> indexBuffer) override;
 		virtual std::shared_ptr<VertexBuffer> getVertexBuffer() const override;
 		virtual std::shared_ptr<IndexBuffer> getIndexBuffer() const override;

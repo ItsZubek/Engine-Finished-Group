@@ -58,7 +58,7 @@ namespace Engine {
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
-		glGenVertexArrays(1, &m_Renderer);
+		glCreateVertexArrays(1, &m_Renderer);
 	}
 	void OpenGLVertexArray::bind() const
 	{
@@ -68,23 +68,25 @@ namespace Engine {
 	{
 		glBindVertexArray(0);
 	}
-	void OpenGLVertexArray::setVertexBuffer() const
+	void OpenGLVertexArray::setVertexBuffer(const std::shared_ptr<VertexBuffer> vertexBuffer) const
 	{
 		glBindVertexArray(m_Renderer);
 
-		getVertexBuffer()->Bind();
+		vertexBuffer->Bind();
 
 		unsigned int index = 0;
-		for (const auto&  elements : m_VertexBuffer->getBufferLayout())
+		const auto layout = vertexBuffer->getBufferLayout();
+		for (const auto&  elements : layout)
 		{
 			glEnableVertexAttribArray(index);
 			glVertexAttribPointer(index, ShaderDataTypeComponentCount(elements.m_datatype),
 				ShaderDataTypeToOpenGLType(elements.m_datatype)
 				, elements.m_normalised,
-				m_BufferLayout.getStride(),
+				layout.getStride(),
 				(const void*)elements.m_offset);
 			index++;
 		}
+
 	}
 	void OpenGLVertexArray::setIndexBuffer(const std::shared_ptr<IndexBuffer> indexBuffer)
 	{

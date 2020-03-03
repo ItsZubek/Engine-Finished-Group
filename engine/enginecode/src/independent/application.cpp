@@ -59,9 +59,6 @@ namespace Engine {
 		//////////////////////////////////////////////////////Flat Colour Cube//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		glGenVertexArrays(1, &m_FCvertexArray);
-		glBindVertexArray(m_FCvertexArray);
-
 		float FCvertices[6 * 24] = {
 			-0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.2f, // red square
 			 0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.2f,
@@ -90,23 +87,20 @@ namespace Engine {
 		};
 
 		// Intiating the Vertex Array
-		//m_VertexArrayFC.reset(VertexArray::create());
+		m_VertexArrayFC.reset(VertexArray::create());
 
 		// Initiating the Vertex Buffer 
 		m_VertexBufferFC.reset(VertexBuffer::Create(FCvertices, sizeof(FCvertices)));
-
-		// Initiating the Buffer Layout
-		BufferLayout FCBufferLayout = { { ShaderDataType::Float3 }, { ShaderDataType::Float3 }, { ShaderDataType::Float2 } };
-
-		m_VertexBufferFC->setBufferLayout(FCBufferLayout);
-
-		//m_VertexArrayFC->setVertexBuffer(m_VertexBufferFC);
 		
 
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0); // (pos 0 (pos), 3 floats, float, not normalised, 6 float between each data line, start at 0)
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(sizeof(float) * 3)); // (pos 1 (colour), 3 floats, float, not normalised, 6 float between each data line, start at 3)
+		// Initiating the Buffer Layout
+		BufferLayout FCBufferLayout = { { ShaderDataType::Float3 }, { ShaderDataType::Float3 } };
+
+		// Adds the Buffer Layout to the Vertex Buffer
+		m_VertexBufferFC->setBufferLayout(FCBufferLayout);
+
+		//Sets the Buffer Layout
+		m_VertexArrayFC->setVertexBuffer(m_VertexBufferFC);
 		
 		unsigned int indices[3 * 12] = {
 			2, 1, 0,
@@ -128,7 +122,7 @@ namespace Engine {
 		// Initiating the Index Buffer 
 		m_IndexBufferFC.reset(IndexBuffer::Create(indices, 3 * 12));
 		m_IndexBufferFC->Bind();
-		//m_VertexArrayFC->setIndexBuffer(m_IndexBufferFC);
+		m_VertexArrayFC->setIndexBuffer(m_IndexBufferFC);
 		
 		// Initiating the Shader
 		m_ShaderFC.reset(Shader::create("assets/shaders/flatColour.glsl"));
@@ -137,9 +131,6 @@ namespace Engine {
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////Textured Phong Cube////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		glGenVertexArrays(1, &m_TPvertexArray);
-		glBindVertexArray(m_TPvertexArray);
 
 		float TPvertices[8 * 24] = {
 			-0.5f, -0.5f, -0.5f, 0.f, 0.f, -1.f, 0.33f, 0.5f,
@@ -168,21 +159,25 @@ namespace Engine {
 			0.5f,  -0.5f, 0.5f,  1.f, 0.f, 0.f, 0.66f, 1.0f
 		};
 
+		// Initiating the Vertex Array
+		m_VertexArrayTP.reset(VertexArray::create());
 
 		// Iinitiating the Vertex Buffer
 		m_VertexBufferTP.reset(VertexBuffer::Create(TPvertices, sizeof(TPvertices)));
 
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0); // (pos 0 (pos), 3 floats, float, not normalised, 6 float between each data line, start at 0)
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(sizeof(float) * 3)); // (pos 1 (normal), 3 floats, float, not normalised, 6 float between each data line, start at 3)
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(sizeof(float) * 6)); // (pos 1 (normal), 3 floats, float, not normalised, 6 float between each data line, start at 3)
+		// Initiating the Buffer Layout
+		BufferLayout TPBufferLayout = { { ShaderDataType::Float3 }, { ShaderDataType::Float3 }, {ShaderDataType::Float2} };
 
+		// Adds the Buffer Layout to the Vertex Buffer
+		m_VertexBufferTP->setBufferLayout(TPBufferLayout);
+
+		//Sets the Buffer Layout
+		m_VertexArrayTP->setVertexBuffer(m_VertexBufferTP);
 		
 		// Initiating the Index Buffer
 		m_IndexBufferTP.reset(IndexBuffer::Create(indices, 3 * 12));
 		m_IndexBufferTP->Bind();
+		m_VertexArrayTP->setIndexBuffer(m_IndexBufferTP);
 
 		// Initiating the Shader
 		m_ShaderTP.reset(Shader::create("assets/shaders/texturedPhong.glsl"));
@@ -286,7 +281,7 @@ namespace Engine {
 			);
 
 			// Code to make the cube move, you can ignore this more or less.
-			glm::mat4 FCtranslation, TPtranslation, assimpModel;
+			glm::mat4 FCtranslation, TPtranslation;
 
 			if (m_goingUp)
 			{
@@ -319,10 +314,10 @@ namespace Engine {
 
 			glm::mat4 fcMVP = projection * view * FCmodel;
 			
-			//Binds the Shader abd Vertex Array for Flat Colour
+			//Binds the Shader and Vertex Array for Flat Colour
 			m_ShaderFC->Bind();
-			//m_VertexArrayFC->bind();
-			glBindVertexArray(m_FCvertexArray);
+			m_VertexArrayFC->bind();
+
 			// Uploads the Flat Colour Uniform to the Shader
 			m_ShaderFC->UploadUniformMat4("u_MVP", &fcMVP[0][0]);
 
@@ -333,10 +328,10 @@ namespace Engine {
 			if (m_goingUp) texSlot = m_textureSlots[0];
 			else texSlot = m_textureSlots[1];
 
-
+			//Binds the Shader and Vertex Array for Textured Phong
 			m_ShaderTP->Bind();
-	
-			glBindVertexArray(m_TPvertexArray);
+			m_VertexArrayTP->bind();
+			
 			
 			// Uploads the Textured Phong Uniforms to the Shader
 

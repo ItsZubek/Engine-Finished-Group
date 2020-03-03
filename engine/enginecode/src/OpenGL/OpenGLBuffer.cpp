@@ -87,6 +87,7 @@ namespace Engine {
 			index++;
 		}
 
+		
 	}
 	void OpenGLVertexArray::setIndexBuffer(const std::shared_ptr<IndexBuffer> indexBuffer)
 	{

@@ -23,6 +23,7 @@ namespace Engine {
 
 		BufferElement() {};
 		BufferElement(ShaderDataType dataType, bool normalised = false) : m_datatype(dataType), m_size(ShaderDataTypeSize(dataType)), m_offset(0), m_normalised(normalised) {};
+		
 	};
 
 

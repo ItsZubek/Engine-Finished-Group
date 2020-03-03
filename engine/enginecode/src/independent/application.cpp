@@ -59,8 +59,8 @@ namespace Engine {
 		//////////////////////////////////////////////////////Flat Colour Cube//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		/*glGenVertexArrays(1, &m_FCvertexArray);
-		glBindVertexArray(m_FCvertexArray);*/
+		glGenVertexArrays(1, &m_FCvertexArray);
+		glBindVertexArray(m_FCvertexArray);
 
 		float FCvertices[6 * 24] = {
 			-0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.2f, // red square
@@ -90,7 +90,7 @@ namespace Engine {
 		};
 
 		// Intiating the Vertex Array
-		m_VertexArrayFC.reset(VertexArray::create());
+		//m_VertexArrayFC.reset(VertexArray::create());
 
 		// Initiating the Vertex Buffer 
 		m_VertexBufferFC.reset(VertexBuffer::Create(FCvertices, sizeof(FCvertices)));
@@ -100,14 +100,14 @@ namespace Engine {
 
 		m_VertexBufferFC->setBufferLayout(FCBufferLayout);
 
-		m_VertexArrayFC->setVertexBuffer(m_VertexBufferFC);
+		//m_VertexArrayFC->setVertexBuffer(m_VertexBufferFC);
 		
 
-		/*glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0); // (pos 0 (pos), 3 floats, float, not normalised, 6 float between each data line, start at 0)
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(sizeof(float) * 3)); // (pos 1 (colour), 3 floats, float, not normalised, 6 float between each data line, start at 3)*/
-
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(sizeof(float) * 3)); // (pos 1 (colour), 3 floats, float, not normalised, 6 float between each data line, start at 3)
+		
 		unsigned int indices[3 * 12] = {
 			2, 1, 0,
 			0, 3, 2,
@@ -128,7 +128,7 @@ namespace Engine {
 		// Initiating the Index Buffer 
 		m_IndexBufferFC.reset(IndexBuffer::Create(indices, 3 * 12));
 		m_IndexBufferFC->Bind();
-		m_VertexArrayFC->setIndexBuffer(m_IndexBufferFC);
+		//m_VertexArrayFC->setIndexBuffer(m_IndexBufferFC);
 		
 		// Initiating the Shader
 		m_ShaderFC.reset(Shader::create("assets/shaders/flatColour.glsl"));
@@ -321,8 +321,8 @@ namespace Engine {
 			
 			//Binds the Shader abd Vertex Array for Flat Colour
 			m_ShaderFC->Bind();
-			m_VertexArrayFC->bind();
-
+			//m_VertexArrayFC->bind();
+			glBindVertexArray(m_FCvertexArray);
 			// Uploads the Flat Colour Uniform to the Shader
 			m_ShaderFC->UploadUniformMat4("u_MVP", &fcMVP[0][0]);
 

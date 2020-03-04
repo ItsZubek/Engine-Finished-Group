@@ -11,7 +11,9 @@
 #include <glm/glm.hpp>
 #include "windows/Shader.h"
 #include "windows/Buffer.h"
+#include "windows/Texture.h"
 #include "windows/OrthographicCamera.h"
+#include "systems/AssimpLoader.h"
 
 
 namespace Engine {
@@ -45,8 +47,6 @@ namespace Engine {
 		static glm::ivec2 s_screenResolution; //!< Screen resolution
 		static float s_timestep; //!< last frame timestep
 
-		unsigned int m_VertexArray; //!< Vertex Array
-
 		std::shared_ptr<Shader> m_ShaderFC; //!< Pointer to a shader class
 		std::shared_ptr<Shader> m_ShaderTP; //!< Pointer to a shader class
 
@@ -61,18 +61,16 @@ namespace Engine {
 
 		OrthographicCamera m_Camera; //!< Orthographic Camera
 
+		// Used For Assimp
+		/*std::shared_ptr<aiScene> m_ModelScene;
+		std::shared_ptr<aiMesh> m_ModelMesh;
+		std::shared_ptr<aiNode> m_ModelNode;
+		*/
+		std::shared_ptr<Texture> m_TextureTP;
 
 //Code provided by SIMON COUPLAND
 #pragma region TempVars
 		// Temp stuff
-		unsigned int m_FCvertexArray; // Flat Colour VAO
-		unsigned int m_FCvertexBuffer;// Flat Colour VBO
-		unsigned int m_TPvertexArray; // Textured Phong VAO
-		unsigned int m_TPvertexBuffer;// Textured Phong VBO
-		unsigned int m_FCindexBuffer; // Index buffer for colour cube
-		unsigned int m_TPindexBuffer; // Index buffer for texture Phong cube
-		unsigned int m_FCprogram; // Flat colour shader ID
-		unsigned int m_TPprogram; // Textured Phong shader ID
 		unsigned int m_numberTexture; // Texture ID
 		unsigned int m_letterTexture; // Texture ID
 		unsigned int m_textureSlots[2]; // Slot where the textures are stored

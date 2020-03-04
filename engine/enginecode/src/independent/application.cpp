@@ -183,57 +183,9 @@ namespace Engine {
 		m_ShaderTP.reset(Shader::create("assets/shaders/texturedPhong.glsl"));
 		m_ShaderTP->Bind();
 
-		glGenTextures(1, &m_letterTexture);
-		glActiveTexture(GL_TEXTURE0);
-		m_textureSlots[0] = 0;
-		glBindTexture(GL_TEXTURE_2D, m_letterTexture);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		int width, height, channels;
-
-		unsigned char *data = stbi_load("assets/textures/letterCube.png", &width, &height, &channels, 0);
-		if (data)
-		{
-			if (channels == 3) glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-			else if (channels == 4) glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-			else return;
-			glGenerateMipmap(GL_TEXTURE_2D);
-		}
-		else
-		{
-			return;
-		}
-		stbi_image_free(data);
-
-		glGenTextures(1, &m_numberTexture);
-		glActiveTexture(GL_TEXTURE0 + 1);
-		m_textureSlots[1] = 1;
-		glBindTexture(GL_TEXTURE_2D, m_numberTexture);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		data = stbi_load("assets/textures/numberCube.png", &width, &height, &channels, 0);
-		if (data)
-		{
-			if (channels == 3) glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-			else if (channels == 4) glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-			else return;
-			glGenerateMipmap(GL_TEXTURE_2D);
-		}
-		else
-		{
-			return;
-		}
-		stbi_image_free(data);
+		// Initiating the Textures
+		m_TextureTP.reset(Texture::createFromFile("assets/textures/letterCube.png"));
+		m_TextureTP.reset(Texture::createFromFile("assets/textures/numberCube.png"));
 
 		FCmodel = glm::translate(glm::mat4(1), glm::vec3(1.5, 0, 3));
 		TPmodel = glm::translate(glm::mat4(1), glm::vec3(-1.5, 0, 3));
@@ -324,9 +276,11 @@ namespace Engine {
 			glDrawElements(GL_TRIANGLES, m_IndexBufferFC->GetCount(), GL_UNSIGNED_INT, nullptr);
 
 			glm::mat4 tpMVP = projection * view * TPmodel;
-			unsigned int texSlot;
-			if (m_goingUp) texSlot = m_textureSlots[0];
-			else texSlot = m_textureSlots[1];
+			//m_TextureTP->getSlot();
+			unsigned int textureSlot;
+			if (m_goingUp) m_TextureTP->setSlot(0);
+			else  m_TextureTP->setSlot(1);
+
 
 			//Binds the Shader and Vertex Array for Textured Phong
 			m_ShaderTP->Bind();
@@ -347,7 +301,7 @@ namespace Engine {
 
 			m_ShaderTP->uploadFloat3("u_viewPos", 0.0f, 0.0f, -4.5f);
 
-			m_ShaderTP->uploadInt("u_texData", texSlot);
+			m_ShaderTP->uploadInt("u_texData", m_TextureTP->getSlot() /*textureSlot*/ );
 
 			glDrawElements(GL_TRIANGLES, m_IndexBufferTP->GetCount() , GL_UNSIGNED_INT, nullptr);
 

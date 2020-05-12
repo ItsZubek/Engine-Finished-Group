@@ -43,7 +43,8 @@ project "Engine"
 		"vendor/glm/",
 		"vendor/stb_image",
 		"vendor/freetype2/include",
-		"vendor/assimp/include"
+		"vendor/assimp/include",
+		"vendor/ImGui"
 	}
 	
 	links 
@@ -51,7 +52,8 @@ project "Engine"
 		"GLFW",
 		"Glad",
 		"Freetype",
-		"assimp"
+		"assimp",
+		"ImGui"
 	}
 	
 	filter "system:windows"
@@ -97,7 +99,8 @@ project "Sandbox"
 		"engine/precompiled/",
 		"vendor/Glad/include",
 		"vendor/glm/",
-		"vendor/spdlog/include"
+		"vendor/spdlog/include",
+		"vendor/ImGui"
 	}
 
 	links
@@ -153,7 +156,8 @@ project "Sandbox"
 			"vendor/Glad/include",
 			"vendor/glm/",
 			"vendor/stb_image",
-			"vendor/freetype2/include"
+			"vendor/freetype2/include",
+			"vendor/ImGui"
 			
 		}
 
@@ -194,13 +198,15 @@ project "Spike"
 		"vendor/glm/",
 		"vendor/assimp/include",
 		"vendor/Glad/include",
+		"vendor/ImGui"
 	}
 	
 	links 
 	{
 		"Freetype",
 		"assimp",
-		"Glad"
+		"Glad",
+		"ImGui"
 	}
 	
 
@@ -231,4 +237,4 @@ group "Vendor"
 	include "vendor/zlib"
 	include "vendor/IrrXML"
 	include "vendor/assimp"
-	
+	include "vendor/ImGui"

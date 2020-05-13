@@ -13,3 +13,6 @@
 [submodule "vendor/openAL"]
 	path = vendor/openAL
 	url = https://github.com/kcat/openal-soft.git
+[submodule "vendor/box2d"]
+	path = vendor/box2d
+	url = https://github.com/erincatto/box2d.git

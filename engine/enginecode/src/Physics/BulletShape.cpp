@@ -1,11 +1,11 @@
 
 #include "engine_pch.h"
-#include "Physics/PlayerShape.h"
+#include "Physics/BulletShape.h"
 #include <glad/glad.h>
 
 namespace Engine
 {
-	PlayerShape::PlayerShape(b2World* world, const b2Vec2& position, const b2Vec2& size, const float& orientation) //!< Complete contructor
+	BulletShape::BulletShape(b2World* world, const b2Vec2& position, const b2Vec2& size, const float& orientation)
 	{
 		b2BodyDef l_bodyDef; // defines the body
 		b2PolygonShape l_shape; // Defines the shape
@@ -27,10 +27,9 @@ namespace Engine
 
 		m_body->CreateFixture(&l_fixtureDef); //creates fixture
 		m_body->SetLinearDamping(0.2f); // adds movement to the body
-
 	}
 
-	void PlayerShape::drawShape(b2Vec2* vertices, b2Vec2 centre, float angle)
+	void BulletShape::draw(b2Vec2 vertices, b2Vec2 centre, float angle)
 	{
 		glColor3f(1, 0, 0);
 		glPushMatrix();
@@ -46,7 +45,7 @@ namespace Engine
 		glPopMatrix();
 	}
 
-	void PlayerShape::update()
+	void BulletShape::update()
 	{
 		b2Vec2 pos = m_body->GetPosition(); // updates body position
 		glVertex2f(pos.x, pos.y); // sets body position to new position
@@ -54,7 +53,7 @@ namespace Engine
 		glRotatef(angle, pos.x, pos.y, 0); //updates the rotation of the shape
 	}
 
-	void PlayerShape::Movement(b2Vec2 movement)
+	void BulletShape::Movement(b2Vec2 movement)
 	{
 		m_body->ApplyLinearImpulseToCenter(movement, true);
 	}

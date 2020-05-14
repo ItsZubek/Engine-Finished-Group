@@ -17,6 +17,7 @@
 
 #include <vector>
 #include "Physics/PlayerShape.h"
+#include "Physics/EnemyShape.h"
 
 
 
@@ -77,7 +78,8 @@ namespace Engine {
 		b2World* boxWorld = nullptr;
 		b2Vec2 m_gravity = b2Vec2(0.f, 0.f);
 
-		std::shared_ptr<PlayerShape> m_Player; //!< the player in the game
+		PlayerShape m_Player; //!< the player in the game
+		std::vector<EnemyShape> m_Enemies; //!< Vector full of enemies
 		//b2Vec2 m_vertices;
 		const int m_iVelIterations = 7;
 		const int m_iPosIterations = 5;

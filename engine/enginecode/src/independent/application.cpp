@@ -33,11 +33,11 @@ namespace Engine {
 	glm::mat4 FCmodel, TPmodel;
 #pragma endregion TempGlobalVars
 
-	Application::Application(): m_Camera(-2.0f, 2.0f, -2.0f, 2.0f)
+	Application::Application() : m_Camera(-2.0f, 2.0f, -2.0f, 2.0f)
 	{
 		
 		boxWorld = new b2World(m_gravity);
-		m_Player = std::make_shared<PlayerShape>();
+		
 		
 		mp_logger = std::make_shared<MyLogger>();
 		mp_logger->start();
@@ -45,6 +45,7 @@ namespace Engine {
 		mp_timer->start();
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));
+		
 
 
 		Application::s_screenResolution = glm::ivec2(m_Window->getWidth(), m_Window->getHeight());
@@ -59,12 +60,23 @@ namespace Engine {
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////Box2D Shapes//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		m_Player = PlayerShape(boxWorld,b2Vec2(0.5f, 1.f), b2Vec2(1.f,2.f), 0.f);
+
+		m_Enemies.resize(4);
+		m_Enemies[0] = EnemyShape(boxWorld, b2Vec2(-1.5, 0), b2Vec2(1, 1), 0.f);
+		m_Enemies[1] = EnemyShape(boxWorld, b2Vec2(-1.5, 0), b2Vec2(1, 1), 0.f);
+		m_Enemies[2] = EnemyShape(boxWorld, b2Vec2(-1.5, 0), b2Vec2(1, 1), 0.f);
+		m_Enemies[3] = EnemyShape(boxWorld, b2Vec2(-1.5, 0), b2Vec2(1, 1), 0.f);
 		
 		
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////Flat Colour Cube//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		float FCvertices[6 * 24] = {
 			-0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.2f, // red square
@@ -254,7 +266,7 @@ namespace Engine {
 			}
 			*/
 
-			glDrawElements(GL_QUADS, shapes->GetFixtureList()->GetShape()->GetChildCount(), GL_UNSIGNED_INT, nullptr);
+			//glDrawElements(GL_QUADS, shapes->GetFixtureList()->GetShape()->GetChildCount(), GL_UNSIGNED_INT, nullptr);
 
 			glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f); // Basic 4:3 camera
 
@@ -354,6 +366,9 @@ namespace Engine {
 		mp_logger->stop();
 		mp_logger.reset();
 		mp_timer->stop();
+
+		delete boxWorld;
+		boxWorld = nullptr;
 	}
 
 	void Application::onEvent(EventBaseClass& e)
@@ -387,8 +402,8 @@ namespace Engine {
 		if (e.GetKeyCode() == 68) { m_FCdirection[3] = true; }
 		if (e.GetKeyCode() == 87) { m_FCdirection[0] = true; }
 		if (e.GetKeyCode() == 83) { m_FCdirection[2] = true; }
-		if (e.GetKeyCode() == 65) { m_Player->Movement(b2Vec2(-2.f, 0.f)); }
-		if (e.GetKeyCode() == 68) { m_Player->Movement(b2Vec2(2.f, 0.f)); }
+		if (e.GetKeyCode() == 65) { m_Player.Movement(b2Vec2(-2.f, 0.f)); }
+		if (e.GetKeyCode() == 68) { m_Player.Movement(b2Vec2(2.f, 0.f)); }
 		ENGINE_CORE_TRACE("KeyPressed: {0}, RepeatCount: {1}", e.GetKeyCode(), e.GetRepeatCount());
 		return true;
 	}

@@ -5,13 +5,13 @@
 
 namespace Engine
 {
-	EnemyShape::EnemyShape(b2World* world, const b2Vec2& position, const b2Vec2& size, float& orientation)
+	EnemyShape::EnemyShape(b2World* world, const b2Vec2& position, const b2Vec2& size, const float& orientation)
 	{
 		b2BodyDef l_bodyDef; // defines the body
 		b2PolygonShape l_shape; // Defines the shape
 		b2FixtureDef l_fixtureDef; // sets the fixture of the shape
 
-		l_bodyDef.type = b2_dynamicBody;
+		l_bodyDef.type = b2_staticBody;
 		l_bodyDef.position.Set(position.x * m_Pixel2Meters, position.y * m_Pixel2Meters); // sets the position of the object as a parameter
 		l_bodyDef.angle = orientation * DEG2RAD; // sets the direction the object is facing
 
@@ -26,12 +26,12 @@ namespace Engine
 		l_fixtureDef.shape = &l_shape; // sets fixture as the shape
 
 		m_body->CreateFixture(&l_fixtureDef); //creates fixture
-		m_body->SetLinearDamping(0.2f); // adds movement to the body
+		
 	}
 
 	void EnemyShape::draw(b2Vec2 vertices, b2Vec2 centre, float angle)
 	{
-		glColor3f(1, 0, 0);
+		glColor3f(0, 1, 0);
 		glPushMatrix();
 		glTranslatef(centre.x * m_Meters2Pixel, centre.y * m_Meters2Pixel, 0);
 		glRotatef(angle * DEG2RAD, 0, 0, 1);
@@ -39,7 +39,7 @@ namespace Engine
 		glBegin(GL_QUADS);
 		for (int i = 4; i < 4; i++)
 		{
-			glVertex2f(vertices[i].x * m_Meters2Pixel, vertices[i].y * m_Meters2Pixel);
+			glVertex2f(vertices.x * m_Meters2Pixel, vertices.y * m_Meters2Pixel);
 		}
 		glEnd();
 		glPopMatrix();

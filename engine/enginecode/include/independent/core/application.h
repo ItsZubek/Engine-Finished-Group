@@ -13,7 +13,13 @@
 #include "windows/Buffer.h"
 #include "windows/Texture.h"
 #include "windows/OrthographicCamera.h"
-#include "systems/AssimpLoader.h"
+#include <Box2D/Box2D.h>
+
+#include <vector>
+#include "Physics/PlayerShape.h"
+
+
+
 
 
 namespace Engine {
@@ -67,6 +73,19 @@ namespace Engine {
 		std::shared_ptr<aiNode> m_ModelNode;
 		*/
 		std::shared_ptr<Texture> m_TextureTP;
+
+		b2World* boxWorld = nullptr;
+		b2Vec2 m_gravity = b2Vec2(0.f, 0.f);
+
+		std::shared_ptr<PlayerShape> m_Player; //!< the player in the game
+		//b2Vec2 m_vertices;
+		const int m_iVelIterations = 7;
+		const int m_iPosIterations = 5;
+
+		
+		
+		
+
 
 //Code provided by SIMON COUPLAND
 #pragma region TempVars

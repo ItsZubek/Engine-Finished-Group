@@ -43,7 +43,8 @@ project "Engine"
 		"vendor/glm/",
 		"vendor/stb_image",
 		"vendor/freetype2/include",
-		"vendor/assimp/include"
+		"vendor/assimp/include",
+		"vendor/Box2D"
 	}
 	
 	links 
@@ -52,6 +53,7 @@ project "Engine"
 		"Glad",
 		"Freetype",
 		"assimp"
+		
 	}
 	
 	filter "system:windows"
@@ -68,11 +70,21 @@ project "Engine"
 		defines "NG_DEBUG"
 		runtime "Debug"
 		symbols "On"
+		libdirs 
+        {
+            "../../vendor/Box2D/x64/Debug"
+        }
+		
 
 	filter "configurations:Release"
 		defines "NG_RELEASE"
 		runtime "Release"
 		optimize "On"
+		libdirs 
+        {
+            "../../vendor/Box2D/x64/Release"
+        }
+		
 
 project "Sandbox"
 	location "sandbox"
@@ -97,12 +109,14 @@ project "Sandbox"
 		"engine/precompiled/",
 		"vendor/Glad/include",
 		"vendor/glm/",
-		"vendor/spdlog/include"
+		"vendor/spdlog/include",
+		"vendor/Box2D"
 	}
 
 	links
 	{
-		"Engine"
+		"Engine",
+		"Box2D"
 	}
 
 	filter "system:windows"
@@ -118,11 +132,19 @@ project "Sandbox"
 		defines "NG_DEBUG"
 		runtime "Debug"
 		symbols "On"
+		libdirs 
+        {
+            "./vendor/Box2D/x64/Debug"
+        }
 
 	filter "configurations:Release"
 		defines "NG_RELEASE"
 		runtime "Release"
 		optimize "On"
+		libdirs 
+        {
+            "./vendor/Box2D/x64/Release"
+        }
 
  project "EngineTests"
 		location "engineTests"
@@ -165,10 +187,18 @@ project "Sandbox"
 		filter "configurations:Debug"
 			runtime "Debug"
 			symbols "On"
+			libdirs 
+        {
+            "../../vendor/Box2D/x64/Debug"
+        }
 
 		filter "configurations:Release"
 			runtime "Release"
 			optimize "On"
+		libdirs 
+        {
+            "../../vendor/Box2D/x64/Release"
+        }
 
 project "Spike"
 	location "spike"

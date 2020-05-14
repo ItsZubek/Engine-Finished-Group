@@ -17,6 +17,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+
 #pragma endregion TempIncludes
 
 
@@ -32,9 +33,12 @@ namespace Engine {
 	glm::mat4 FCmodel, TPmodel;
 #pragma endregion TempGlobalVars
 
-	Application::Application()
-		: m_Camera(-2.0f, 2.0f, -2.0f, 2.0f)
+	Application::Application(): m_Camera(-2.0f, 2.0f, -2.0f, 2.0f)
 	{
+		
+		boxWorld = new b2World(m_gravity);
+		m_Player = std::make_shared<PlayerShape>();
+		
 		mp_logger = std::make_shared<MyLogger>();
 		mp_logger->start();
 		mp_timer = std::make_shared<MyTimer>();
@@ -54,6 +58,9 @@ namespace Engine {
 		// Enabling backface culling to ensure triangle vertices are correct ordered (CCW)
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
+
+		
+		
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////Flat Colour Cube//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -216,6 +223,7 @@ namespace Engine {
 		while (m_running)
 		{
 			mp_timer->SetStartPoint();
+			boxWorld->Step(s_timestep, m_iVelIterations, m_iPosIterations);
 
 
 #pragma region TempDrawCode
@@ -223,6 +231,30 @@ namespace Engine {
 
 			glClearColor(0.8f, 0.8f, 0.8f, 1);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glLoadIdentity();
+
+			///////////////////////////////////////////////////////////////////////////////////////
+			/////////////////////////////////// Draw Box2D Shape //////////////////////////////////
+			///////////////////////////////////////////////////////////////////////////////////////
+			/*b2Body* shapes = boxWorld->GetBodyList();
+			//b2Vec2 m_vertices[4];
+			while (shapes)
+			{
+				for (int i = 0; i < 4; i++)
+				{
+					m_vertices[i] = ((b2PolygonShape*)shapes->GetFixtureList()->GetShape())->GetChildCount();
+					m_Player->drawShape(m_vertices, shapes->GetWorldCenter(), shapes->GetAngle());
+					b2Fixture shape = 
+					
+					shapes = shapes->GetNext();
+				
+				}
+				
+				
+			}
+			
+
+			glDrawElements(GL_QUADS, shapes->GetFixtureList()->GetShape()->GetChildCount(), GL_UNSIGNED_INT, nullptr);*/
 
 			glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f); // Basic 4:3 camera
 
@@ -304,6 +336,7 @@ namespace Engine {
 			m_ShaderTP->uploadInt("u_texData", m_TextureTP->getSlot() /*textureSlot*/ );
 
 			glDrawElements(GL_TRIANGLES, m_IndexBufferTP->GetCount() , GL_UNSIGNED_INT, nullptr);
+			
 
 			// End temporary code
 #pragma endregion TempDrawCode

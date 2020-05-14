@@ -252,9 +252,9 @@ namespace Engine {
 				
 				
 			}
-			
+			*/
 
-			glDrawElements(GL_QUADS, shapes->GetFixtureList()->GetShape()->GetChildCount(), GL_UNSIGNED_INT, nullptr);*/
+			glDrawElements(GL_QUADS, shapes->GetFixtureList()->GetShape()->GetChildCount(), GL_UNSIGNED_INT, nullptr);
 
 			glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f); // Basic 4:3 camera
 

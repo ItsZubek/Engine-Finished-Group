@@ -45,4 +45,17 @@ namespace Engine
 		glEnd();
 		glPopMatrix();
 	}
+
+	void PlayerShape::update()
+	{
+		b2Vec2 pos = m_body->GetPosition(); // updates body position
+		glVertex2f(pos.x, pos.y); // sets body position to new position
+		float angle = m_body->GetAngle() * RAD2DEG; // sets angle of shape
+		glRotatef(angle, pos.x, pos.y, 0); //updates the rotation of the shape
+	}
+
+	void PlayerShape::Movement(b2Vec2 movement)
+	{
+		m_body->ApplyLinearImpulseToCenter(movement, true);
+	}
 }

@@ -387,6 +387,8 @@ namespace Engine {
 		if (e.GetKeyCode() == 68) { m_FCdirection[3] = true; }
 		if (e.GetKeyCode() == 87) { m_FCdirection[0] = true; }
 		if (e.GetKeyCode() == 83) { m_FCdirection[2] = true; }
+		if (e.GetKeyCode() == 65) { m_Player->Movement(b2Vec2(-2.f, 0.f)); }
+		if (e.GetKeyCode() == 68) { m_Player->Movement(b2Vec2(2.f, 0.f)); }
 		ENGINE_CORE_TRACE("KeyPressed: {0}, RepeatCount: {1}", e.GetKeyCode(), e.GetRepeatCount());
 		return true;
 	}

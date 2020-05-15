@@ -64,13 +64,28 @@ namespace Engine {
 		//////////////////////////////////////////////////////Box2D Shapes//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+		// Shape the player will control
 		m_Player = PlayerShape(boxWorld,b2Vec2(0.5f, 1.f), b2Vec2(1.f,2.f), 0.f);
 
+		// Enemies to attack the player
 		m_Enemies.resize(4);
 		m_Enemies[0] = EnemyShape(boxWorld, b2Vec2(-1.5, 0), b2Vec2(1, 1), 0.f);
 		m_Enemies[1] = EnemyShape(boxWorld, b2Vec2(-1.5, 0), b2Vec2(1, 1), 0.f);
 		m_Enemies[2] = EnemyShape(boxWorld, b2Vec2(-1.5, 0), b2Vec2(1, 1), 0.f);
 		m_Enemies[3] = EnemyShape(boxWorld, b2Vec2(-1.5, 0), b2Vec2(1, 1), 0.f);
+
+		// Bullets to destroy the eemy
+		m_Bullets.resize(10);
+		m_Bullets[0] = BulletShape(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
+		m_Bullets[1] = BulletShape(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
+		m_Bullets[2] = BulletShape(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
+		m_Bullets[3] = BulletShape(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
+		m_Bullets[4] = BulletShape(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
+		m_Bullets[5] = BulletShape(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
+		m_Bullets[6] = BulletShape(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
+		m_Bullets[7] = BulletShape(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
+		m_Bullets[8] = BulletShape(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
+		m_Bullets[9] = BulletShape(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
 		
 		
 
@@ -245,6 +260,15 @@ namespace Engine {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glLoadIdentity();
 
+			// Update the position of the player
+			m_Player.update();
+
+			// Update the position of all the bullets
+			for (int i = m_Bullets.begin; i < m_Bullets.max_size(); i++)
+			{
+				m_Bullets[i].update();
+			}
+
 			///////////////////////////////////////////////////////////////////////////////////////
 			/////////////////////////////////// Draw Box2D Shape //////////////////////////////////
 			///////////////////////////////////////////////////////////////////////////////////////
@@ -404,6 +428,7 @@ namespace Engine {
 		if (e.GetKeyCode() == 83) { m_FCdirection[2] = true; }
 		if (e.GetKeyCode() == 65) { m_Player.Movement(b2Vec2(-2.f, 0.f)); }
 		if (e.GetKeyCode() == 68) { m_Player.Movement(b2Vec2(2.f, 0.f)); }
+		if (e.GetKeyCode() == 32) { m_Bullets[0].Movement(b2Vec2(0.f, 2.f)); }
 		ENGINE_CORE_TRACE("KeyPressed: {0}, RepeatCount: {1}", e.GetKeyCode(), e.GetRepeatCount());
 		return true;
 	}

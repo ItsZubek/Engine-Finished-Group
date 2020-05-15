@@ -18,6 +18,7 @@
 #include <vector>
 #include "Physics/PlayerShape.h"
 #include "Physics/EnemyShape.h"
+#include "Physics/BulletShape.h"
 
 
 
@@ -79,6 +80,7 @@ namespace Engine {
 		b2Vec2 m_gravity = b2Vec2(0.f, 0.f);
 
 		PlayerShape m_Player; //!< the player in the game
+		std::vector<BulletShape> m_Bullets; //!< Bullets for the player to destroy enemies
 		std::vector<EnemyShape> m_Enemies; //!< Vector full of enemies
 		//b2Vec2 m_vertices;
 		const int m_iVelIterations = 7;

@@ -19,6 +19,7 @@
 #include "Physics/PlayerShape.h"
 #include "Physics/EnemyShape.h"
 #include "Physics/BulletShape.h"
+#include "Physics/Collisions.h"
 
 
 
@@ -85,6 +86,8 @@ namespace Engine {
 		//b2Vec2 m_vertices;
 		const int m_iVelIterations = 7;
 		const int m_iPosIterations = 5;
+
+		Collisions m_CollisionListener; //!< used to detect contatc between two shapes
 
 		
 		

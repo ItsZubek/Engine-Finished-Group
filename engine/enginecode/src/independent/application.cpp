@@ -87,7 +87,12 @@ namespace Engine {
 		m_Bullets[8] = BulletShape(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
 		m_Bullets[9] = BulletShape(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
 		
-		
+		// Gets the data for the object and returns it back to the collision listener to check for collisions between two shapes
+		m_Player.setUserData(new std::pair<std::string, void*>(typeid(decltype(m_Player)).name(), &m_Player));
+		for (BulletShape& bullets : m_Bullets) bullets.setUserData(new std::pair<std::string, void*>(typeid(decltype(bullets)).name(), &bullets));
+		for (EnemyShape& enemies : m_Enemies) enemies.setUserData(new std::pair<std::string, void*>(typeid(decltype(enemies)).name(), &enemies));
+
+		boxWorld->SetContactListener(&m_CollisionListener); // attaches collision listener to the box2D world
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////Flat Colour Cube//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -5,19 +5,19 @@
 
 namespace Engine
 {
-	BulletShape::BulletShape(b2World* world, const b2Vec2& position, const b2Vec2& size, const float& orientation)
+	void BulletShape::bullet(b2World* world, const b2Vec2& position, const b2Vec2& size, const float& orientation)
 	{
 		b2BodyDef l_bodyDef; // defines the body
 		b2PolygonShape l_shape; // Defines the shape
 		b2FixtureDef l_fixtureDef; // sets the fixture of the shape
 
 		l_bodyDef.type = b2_dynamicBody;
-		l_bodyDef.position.Set(position.x * m_Pixel2Meters, position.y * m_Pixel2Meters); // sets the position of the object as a parameter
+		l_bodyDef.position.Set(position.x * PX2M, position.y * PX2M); // sets the position of the object as a parameter
 		l_bodyDef.angle = orientation * DEG2RAD; // sets the direction the object is facing
 
 		m_body = world->CreateBody(&l_bodyDef); // sets the body to appear in the world
 
-		l_shape.SetAsBox(m_Pixel2Meters * size.x * 0.5f, m_Pixel2Meters * size.y * 0.5f);
+		l_shape.SetAsBox(PX2M * size.x * 0.5f, PX2M * size.y * 0.5f);
 		l_shape.m_radius = 0.0f;
 
 		l_fixtureDef.density = m_Density; // adds mass to the shape
@@ -33,13 +33,13 @@ namespace Engine
 	{
 		glColor3f(1, 0, 0);
 		glPushMatrix();
-		glTranslatef(centre.x * m_Meters2Pixel, centre.y * m_Meters2Pixel, 0);
+		glTranslatef(centre.x * M2PX, centre.y * M2PX, 0);
 		glRotatef(angle * DEG2RAD, 0, 0, 1);
 		glPopMatrix();
 		glBegin(GL_QUADS);
 		for (int i = 4; i < 4; i++)
 		{
-			glVertex2f(vertices[i].x * m_Meters2Pixel, vertices[i].y * m_Meters2Pixel);
+			glVertex2f(vertices.x * M2PX, vertices.y * M2PX);
 		}
 		glEnd();
 		glPopMatrix();
@@ -53,7 +53,7 @@ namespace Engine
 		glRotatef(angle, pos.x, pos.y, 0); //updates the rotation of the shape
 	}
 
-	void BulletShape::Movement(b2Vec2 movement)
+	void BulletShape::movement(b2Vec2 movement)
 	{
 		m_body->ApplyLinearImpulseToCenter(movement, true);
 	}

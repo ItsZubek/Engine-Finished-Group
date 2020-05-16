@@ -5,9 +5,12 @@
 #define DEG2RAD 0.017453f
 #define RAD2DEG 57.29577f
 
+//#define PX2M 1 / 60 //0.0002645833f
+//#define M2PX 60 //3779.5280352161f
+
+
 namespace Engine
 {
-
 	class Object
 	{
 	protected:
@@ -16,8 +19,10 @@ namespace Engine
 		float m_Friction = 0.4f; //!< friction used to slow objects down 
 		float m_Restitution = 0.6f; //!< bouncyness of stuff
 
-		const float m_Pixel2Meters = 20; //!< converts pixel to meters for size
-		const float m_Meters2Pixel = 1 / m_Pixel2Meters; //!< converts meters to pixel for size
+		const float M2PX = 60;
+		const float PX2M = 1 / M2PX;
+
+		
 	public:
 		void setUserData(void* data) { m_body->SetUserData(data); }; //!< \fn Set the user data of the body
 	};

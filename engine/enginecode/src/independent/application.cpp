@@ -65,34 +65,34 @@ namespace Engine {
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		// Shape the player will control
-		m_Player = PlayerShape(boxWorld,b2Vec2(0.5f, 1.f), b2Vec2(1.f,2.f), 0.f);
+		m_Player.player(boxWorld, b2Vec2(300, 200), b2Vec2(20, 20), 0.f);
 
 		// Enemies to attack the player
-		m_Enemies.resize(4);
-		m_Enemies[0] = EnemyShape(boxWorld, b2Vec2(-1.5, 0), b2Vec2(1, 1), 0.f);
-		m_Enemies[1] = EnemyShape(boxWorld, b2Vec2(-1.5, 0), b2Vec2(1, 1), 0.f);
-		m_Enemies[2] = EnemyShape(boxWorld, b2Vec2(-1.5, 0), b2Vec2(1, 1), 0.f);
-		m_Enemies[3] = EnemyShape(boxWorld, b2Vec2(-1.5, 0), b2Vec2(1, 1), 0.f);
-
+		/*m_Enemies.resize(4);
+		m_Enemies[0].enemy(boxWorld, b2Vec2(-1.5, 0), b2Vec2(1, 1), 0.f);
+		m_Enemies[1].enemy(boxWorld, b2Vec2(-1.5, 0), b2Vec2(1, 1), 0.f);
+		m_Enemies[2].enemy(boxWorld, b2Vec2(-1.5, 0), b2Vec2(1, 1), 0.f);
+		m_Enemies[3].enemy(boxWorld, b2Vec2(-1.5, 0), b2Vec2(1, 1), 0.f);
+					
 		// Bullets to destroy the eemy
 		m_Bullets.resize(10);
-		m_Bullets[0] = BulletShape(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
-		m_Bullets[1] = BulletShape(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
-		m_Bullets[2] = BulletShape(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
-		m_Bullets[3] = BulletShape(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
-		m_Bullets[4] = BulletShape(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
-		m_Bullets[5] = BulletShape(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
-		m_Bullets[6] = BulletShape(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
-		m_Bullets[7] = BulletShape(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
-		m_Bullets[8] = BulletShape(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
-		m_Bullets[9] = BulletShape(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
+		m_Bullets[0].bullet(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
+		m_Bullets[1].bullet(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
+		m_Bullets[2].bullet(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
+		m_Bullets[3].bullet(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
+		m_Bullets[4].bullet(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
+		m_Bullets[5].bullet(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
+		m_Bullets[6].bullet(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
+		m_Bullets[7].bullet(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
+		m_Bullets[8].bullet(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
+		m_Bullets[9].bullet(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
 		
 		// Gets the data for the object and returns it back to the collision listener to check for collisions between two shapes
 		m_Player.setUserData(new std::pair<std::string, void*>(typeid(decltype(m_Player)).name(), &m_Player));
 		for (BulletShape& bullets : m_Bullets) bullets.setUserData(new std::pair<std::string, void*>(typeid(decltype(bullets)).name(), &bullets));
 		for (EnemyShape& enemies : m_Enemies) enemies.setUserData(new std::pair<std::string, void*>(typeid(decltype(enemies)).name(), &enemies));
 
-		boxWorld->SetContactListener(&m_CollisionListener); // attaches collision listener to the box2D world
+		boxWorld->SetContactListener(&m_CollisionListener); // attaches collision listener to the box2D world*/
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////Flat Colour Cube//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -198,6 +198,9 @@ namespace Engine {
 			0.5f,  -0.5f, 0.5f,  1.f, 0.f, 0.f, 0.66f, 1.0f
 		};
 
+		
+		
+
 		// Initiating the Vertex Array
 		m_VertexArrayTP.reset(VertexArray::create());
 
@@ -260,42 +263,24 @@ namespace Engine {
 
 #pragma region TempDrawCode
 			// Temporary draw code to be abstracted
+			
 
 			glClearColor(0.8f, 0.8f, 0.8f, 1);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glLoadIdentity();
-
-			// Update the position of the player
-			m_Player.update();
-
-			// Update the position of all the bullets
-			for (int i = m_Bullets.begin; i < m_Bullets.max_size(); i++)
-			{
-				m_Bullets[i].update();
-			}
-
-			///////////////////////////////////////////////////////////////////////////////////////
-			/////////////////////////////////// Draw Box2D Shape //////////////////////////////////
-			///////////////////////////////////////////////////////////////////////////////////////
-			/*b2Body* shapes = boxWorld->GetBodyList();
-			//b2Vec2 m_vertices[4];
-			while (shapes)
+			
+			b2Body* tmp = boxWorld->GetBodyList();
+			b2Vec2 points[4];
+			while (tmp)
 			{
 				for (int i = 0; i < 4; i++)
 				{
-					m_vertices[i] = ((b2PolygonShape*)shapes->GetFixtureList()->GetShape())->GetChildCount();
-					m_Player->drawShape(m_vertices, shapes->GetWorldCenter(), shapes->GetAngle());
-					b2Fixture shape = 
-					
-					shapes = shapes->GetNext();
-				
+					points[i] = ((b2PolygonShape*)tmp->GetFixtureList()->GetShape())->m_vertices[i];
+					m_Player.draw(points, tmp->GetWorldCenter(), m_Player.getBody()->GetAngle());
+					tmp = tmp->GetNext();
 				}
-				
-				
 			}
-			*/
 
-			//glDrawElements(GL_QUADS, shapes->GetFixtureList()->GetShape()->GetChildCount(), GL_UNSIGNED_INT, nullptr);
+			
 
 			glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f); // Basic 4:3 camera
 
@@ -431,9 +416,9 @@ namespace Engine {
 		if (e.GetKeyCode() == 68) { m_FCdirection[3] = true; }
 		if (e.GetKeyCode() == 87) { m_FCdirection[0] = true; }
 		if (e.GetKeyCode() == 83) { m_FCdirection[2] = true; }
-		if (e.GetKeyCode() == 65) { m_Player.Movement(b2Vec2(-2.f, 0.f)); }
-		if (e.GetKeyCode() == 68) { m_Player.Movement(b2Vec2(2.f, 0.f)); }
-		if (e.GetKeyCode() == 32) { m_Bullets[0].Movement(b2Vec2(0.f, 2.f)); }
+		if (e.GetKeyCode() == 65) { m_Player.movement(b2Vec2(-2.f, 0.f)); }
+		if (e.GetKeyCode() == 68) { m_Player.movement(b2Vec2(2.f, 0.f)); }
+		if (e.GetKeyCode() == 32) { m_Bullets[0].movement(b2Vec2(0.f, 2.f)); }
 		ENGINE_CORE_TRACE("KeyPressed: {0}, RepeatCount: {1}", e.GetKeyCode(), e.GetRepeatCount());
 		return true;
 	}
@@ -448,6 +433,7 @@ namespace Engine {
 	}
 	bool Application::onMouseButtonPress(MouseButtonPressedEvent& e)
 	{
+			
 		ENGINE_CORE_TRACE("MouseButtonPressed: {0}", e.GetMouseButton());
 		return true;
 	}

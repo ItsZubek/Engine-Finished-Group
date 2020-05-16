@@ -1,18 +1,20 @@
 #pragma once
 
 #include "Object.h"
+#include <Box2D/Box2D.h>
 
 namespace Engine
 {
 
+
 	class PlayerShape : public Object
 	{
-
 	public:
-		PlayerShape() {}; //!< default Constructor
-		PlayerShape(b2World* world, const b2Vec2& position, const b2Vec2& size, const float& orientation); //!< Complete Constructor 
-		void drawShape(b2Vec2* vertices, b2Vec2 centre, float angle); //!< draws a shape
-		void update(); //!< Update rendering infomation 
-		void Movement(b2Vec2 movement); //!< moves the player by a given force
+		PlayerShape() {}; //!< Default Constructor
+		b2Body* player(b2World* world, const b2Vec2& position, const b2Vec2& size, const float& orientation);
+		void draw(b2Vec2* points, b2Vec2 centre, float angle); //!< draws the shape
+		void update(); //!< updates the position of the shape
+		void movement(b2Vec2 movement); //!< moves the player
+		b2Body* getBody() { return m_body; }
 	};
 }

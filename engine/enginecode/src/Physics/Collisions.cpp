@@ -25,13 +25,13 @@ namespace Engine
 			if (dataB.first == typeid(EnemyShape).name())
 			{
 				//if contact between a dynamic circle and a sensor
-				BulletShape* bullet = static_cast<BulletShape*>(dataA.second);
-				if (bullet != nullptr)
+				EnemyShape* enemies = static_cast<EnemyShape*>(dataA.second);
+				if (enemies != nullptr)
 				{
-					if (bullet->getFillColor() == sf::Color::Yellow)
+					/*if (enemies)
 					{
 						// Do something when collision Happens
-					}
+					}*/
 				}
 			}
 		}
@@ -40,13 +40,13 @@ namespace Engine
 			if (dataA.first == typeid(EnemyShape).name())
 			{
 				//if contact between a dynamic circle and a sensor
-				BulletShape* bullet = static_cast<BulletShape*>(dataA.second);
-				if (bullet != nullptr)
+				EnemyShape* enemies = static_cast<EnemyShape*>(dataA.second);
+				if (enemies != nullptr)
 				{
-					if (bullet-> == sf::Color::Yellow)
+					/*if (enemies-> == sf::Color::Yellow)
 					{
 						// do something when collision Happens
-					}
+					}*/
 					
 				}
 			}
@@ -70,8 +70,8 @@ namespace Engine
 			if (dataB.first == typeid(EnemyShape).name())
 			{
 				// if end of contact between circle and sensor 
-				BulletShape* bullet = static_cast<BulletShape*>(dataA.second);
-				if (bullet != nullptr)
+				EnemyShape* enemies = static_cast<EnemyShape*>(dataA.second);
+				if (enemies != nullptr)
 				{
 					// do somthing after the collision happens
 				}
@@ -80,8 +80,8 @@ namespace Engine
 			{
 				if (dataB.first == typeid(EnemyShape).name())
 				{
-					BulletShape* bullet = static_cast<BulletShape*>(dataA.second);
-					if (bullet != nullptr)
+					EnemyShape* enemies = static_cast<EnemyShape*>(dataA.second);
+					if (enemies != nullptr)
 					{
 						// do somthing afther the collision happens
 					}

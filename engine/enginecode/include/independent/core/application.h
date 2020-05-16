@@ -70,11 +70,6 @@ namespace Engine {
 
 		OrthographicCamera m_Camera; //!< Orthographic Camera
 
-		// Used For Assimp
-		/*std::shared_ptr<aiScene> m_ModelScene;
-		std::shared_ptr<aiMesh> m_ModelMesh;
-		std::shared_ptr<aiNode> m_ModelNode;
-		*/
 		std::shared_ptr<Texture> m_TextureTP;
 
 		b2World* boxWorld = nullptr;
@@ -83,7 +78,7 @@ namespace Engine {
 		PlayerShape m_Player; //!< the player in the game
 		std::vector<BulletShape> m_Bullets; //!< Bullets for the player to destroy enemies
 		std::vector<EnemyShape> m_Enemies; //!< Vector full of enemies
-		//b2Vec2 m_vertices;
+		
 		const int m_iVelIterations = 7;
 		const int m_iPosIterations = 5;
 

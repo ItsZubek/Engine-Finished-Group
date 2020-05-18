@@ -45,6 +45,7 @@ project "Engine"
 		"vendor/freetype2/include",
 		"vendor/assimp/include",
 		"vendor/Box2D"
+		"vendor/ImGui"
 	}
 	
 	links 
@@ -52,8 +53,8 @@ project "Engine"
 		"GLFW",
 		"Glad",
 		"Freetype",
-		"assimp"
-		
+		"assimp",
+		"ImGui"
 	}
 	
 	filter "system:windows"
@@ -111,6 +112,7 @@ project "Sandbox"
 		"vendor/glm/",
 		"vendor/spdlog/include",
 		"vendor/Box2D"
+		"vendor/ImGui"
 	}
 
 	links
@@ -175,7 +177,8 @@ project "Sandbox"
 			"vendor/Glad/include",
 			"vendor/glm/",
 			"vendor/stb_image",
-			"vendor/freetype2/include"
+			"vendor/freetype2/include",
+			"vendor/ImGui"
 			
 		}
 
@@ -224,13 +227,15 @@ project "Spike"
 		"vendor/glm/",
 		"vendor/assimp/include",
 		"vendor/Glad/include",
+		"vendor/ImGui"
 	}
 	
 	links 
 	{
 		"Freetype",
 		"assimp",
-		"Glad"
+		"Glad",
+		"ImGui"
 	}
 	
 
@@ -261,4 +266,4 @@ group "Vendor"
 	include "vendor/zlib"
 	include "vendor/IrrXML"
 	include "vendor/assimp"
-	
+	include "vendor/ImGui"

@@ -44,7 +44,7 @@ project "Engine"
 		"vendor/stb_image",
 		"vendor/freetype2/include",
 		"vendor/assimp/include",
-		"vendor/Box2D"
+		"vendor/Box2D",
 		"vendor/ImGui"
 	}
 	
@@ -111,7 +111,7 @@ project "Sandbox"
 		"vendor/Glad/include",
 		"vendor/glm/",
 		"vendor/spdlog/include",
-		"vendor/Box2D"
+		"vendor/Box2D",
 		"vendor/ImGui"
 	}
 

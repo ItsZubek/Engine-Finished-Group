@@ -34,7 +34,7 @@ namespace Engine
 
 	void PlayerShape::draw(b2Vec2* points, b2Vec2 centre, float angle)
 	{
-		glColor3f(1, 0, 0);
+		glColor3f(0.8f, 0.2f, 0.2f);
 
 		glPushMatrix();
 		glTranslatef(centre.x * M2PX, centre.y * M2PX, 0);
@@ -46,6 +46,16 @@ namespace Engine
 		}
 		glEnd();
 		glPopMatrix();
+
+		/*b2Vec2 pos;
+		pos = m_body->GetPosition();
+		glTranslatef(pos.x * M2PX, pos.y * M2PX, 0);
+		glBegin(GL_QUADS);
+		glVertex2f(2.5f, -1.5f);
+		glVertex2f(1.5f, -1.5f);
+		glVertex2f(1.5f, -1.4f);
+		glVertex2f(2.5f, -1.4f);
+		glEnd();*/
 
 	}
 

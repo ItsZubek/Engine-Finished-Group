@@ -65,7 +65,7 @@ namespace Engine {
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		// Shape the player will control
-		m_Player.player(boxWorld, b2Vec2(300, 200), b2Vec2(20, 20), 0.f);
+		m_Player.player(boxWorld, b2Vec2(0.5f, 0.5f), b2Vec2(20, 20), 0.f);
 
 		// Enemies to attack the player
 		/*m_Enemies.resize(4);
@@ -231,7 +231,7 @@ namespace Engine {
 
 		FCmodel = glm::translate(glm::mat4(1), glm::vec3(1.5, 0, 3));
 		TPmodel = glm::translate(glm::mat4(1), glm::vec3(-1.5, 0, 3));
-
+		
 		// End temporary code
 
 #pragma endregion TempSetup
@@ -279,13 +279,16 @@ namespace Engine {
 					tmp = tmp->GetNext();
 				}
 			}
-
+			
+			// Draw the player to the screen
+			//m_Player.draw();
+			m_Player.update();
 			
 
 			glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f); // Basic 4:3 camera
 
 			glm::mat4 view = glm::lookAt(
-				glm::vec3(0.0f, 0.0f, -4.5f), // Camera is at (0.0,0.0,-4.5), in World Space
+				glm::vec3(0.0f, 0.0f, -1), // Camera is at (0.0,0.0,-4.5), in World Space
 				glm::vec3(0.f, 0.f, 0.f), // and looks at the origin
 				glm::vec3(0.f, 1.f, 0.f)  // Standing straight  up
 			);
@@ -293,23 +296,9 @@ namespace Engine {
 			// Code to make the cube move, you can ignore this more or less.
 			glm::mat4 FCtranslation, TPtranslation;
 
-			if (m_goingUp)
-			{
-				//FCtranslation = glm::translate(FCmodel, glm::vec3(0.0f, 0.2f * s_timestep, 0.0f));
-				TPtranslation = glm::translate(TPmodel, glm::vec3(0.0f, -0.2f * s_timestep, 0.0f));
-			}
-			else
-			{
-				//FCtranslation = glm::translate(FCmodel, glm::vec3(0.0f, -0.2f * s_timestep, 0.0f));
-				TPtranslation = glm::translate(TPmodel, glm::vec3(0.0f, 0.2f * s_timestep, 0.0f));
-			}
 
 			FCtranslation = FCmodel;
-			if (m_FCdirection[1]) { FCtranslation = glm::translate(FCmodel, glm::vec3(-0.25f * s_timestep, 0.0f, 0.0f)); }
-			if (m_FCdirection[3]) { FCtranslation = glm::translate(FCmodel, glm::vec3(0.25f * s_timestep, 0.0f, 0.0f)); }
-			if (m_FCdirection[0]) { FCtranslation = glm::translate(FCmodel, glm::vec3(0.0f, 0.25f * s_timestep, 0.0f)); }
-			if (m_FCdirection[2]) { FCtranslation = glm::translate(FCmodel, glm::vec3(0.0f, -0.25f * s_timestep, 0.0f)); }
-
+			
 			m_timeSummed += s_timestep;
 			if (m_timeSummed > 20.0f) {
 				m_timeSummed = 0.f;
@@ -318,7 +307,7 @@ namespace Engine {
 
 
 			FCmodel = glm::rotate(FCtranslation, glm::radians(20.f) * s_timestep, glm::vec3(0.f, 1.f, 0.f)); // Spin the cube at 20 degrees per second
-			TPmodel = glm::rotate(TPtranslation, glm::radians(-20.f) * s_timestep, glm::vec3(0.f, 1.f, 0.f)); // Spin the cube at 20 degrees per second
+			//TPmodel = glm::rotate(TPtranslation, glm::radians(20.f), glm::vec3(0.f, 1.f, 0.f)); // Spin the cube at 20 degrees per second
 
 			// End of code to make the cube move.
 
@@ -329,9 +318,9 @@ namespace Engine {
 			m_VertexArrayFC->bind();
 
 			// Uploads the Flat Colour Uniform to the Shader
-			m_ShaderFC->UploadUniformMat4("u_MVP", &fcMVP[0][0]);
+			//m_ShaderFC->UploadUniformMat4("u_MVP", &fcMVP[0][0]);
 
-			glDrawElements(GL_TRIANGLES, m_IndexBufferFC->GetCount(), GL_UNSIGNED_INT, nullptr);
+			//glDrawElements(GL_TRIANGLES, m_IndexBufferFC->GetCount(), GL_UNSIGNED_INT, nullptr);
 
 			glm::mat4 tpMVP = projection * view * TPmodel;
 			//m_TextureTP->getSlot();
@@ -353,7 +342,7 @@ namespace Engine {
 
 			m_ShaderTP->uploadFloat3("u_objectColour", 0.2f, 0.8f, 0.5f);
 
-			m_ShaderTP->uploadFloat3("u_lightColour", 1.0f, 1.0f, 1.0f);
+			m_ShaderTP->uploadFloat3("u_lightColour", 255.f, 0.0f, 0.f);
 
 			m_ShaderTP->uploadFloat3("u_lightPos", 1.0f, 4.0f, -6.0f);
 
@@ -361,7 +350,7 @@ namespace Engine {
 
 			m_ShaderTP->uploadInt("u_texData", m_TextureTP->getSlot() /*textureSlot*/ );
 
-			glDrawElements(GL_TRIANGLES, m_IndexBufferTP->GetCount() , GL_UNSIGNED_INT, nullptr);
+			//glDrawElements(GL_TRIANGLES, m_IndexBufferTP->GetCount() , GL_UNSIGNED_INT, nullptr);
 			
 
 			// End temporary code

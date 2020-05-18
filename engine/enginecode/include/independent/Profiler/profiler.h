@@ -31,7 +31,7 @@ namespace Engine
 
 			m_Stopped = true;
 
-			std::cout << "Duration: " << (end - start) << std::endl;
+			std::cout << "Duration: " << (end - start) << "ms" << std::endl;
 		};
 		~Profiler()
 		{

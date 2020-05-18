@@ -27,7 +27,11 @@
 
 
 
-namespace Engine {
+namespace Engine 
+{
+	
+
+
 	Application* Application::s_instance = nullptr;
 	float Application::s_timestep = 0.f;
 	glm::ivec2 Application::s_screenResolution = glm::ivec2(0, 0);
@@ -220,7 +224,7 @@ namespace Engine {
 	}
 	void Application::run()
 	{
-		
+		//Profiler profile("Application::run");
 
 		float accumulatedTime = 0.f;
 		mp_timer->SetStartPoint();

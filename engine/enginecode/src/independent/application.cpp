@@ -35,7 +35,8 @@ namespace Engine {
 
 	Application::Application(): m_Camera(-2.0f, 2.0f, -2.0f, 2.0f)
 	{
-		
+		m_audio.Start();
+		m_audio.LoadSound("Audio/audioAssets2/movie_1.mp3", false, true, false, 0.25f, 10000.f);
 		boxWorld = new b2World(m_gravity);
 		m_Player = std::make_shared<PlayerShape>();
 		
@@ -271,6 +272,7 @@ namespace Engine {
 			{
 				//FCtranslation = glm::translate(FCmodel, glm::vec3(0.0f, 0.2f * s_timestep, 0.0f));
 				TPtranslation = glm::translate(TPmodel, glm::vec3(0.0f, -0.2f * s_timestep, 0.0f));
+				m_audio.PlaySound("Audio / audioAssets2 / movie_1.mp3", glm::vec3(0, 0, 0), 30);
 			}
 			else
 			{
@@ -345,6 +347,7 @@ namespace Engine {
 
 			m_Window->onUpdate();
 			s_timestep = mp_timer->ElapsedTime();
+			m_audio.Update();
 
 		}
 	}

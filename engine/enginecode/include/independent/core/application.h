@@ -14,6 +14,7 @@
 #include "windows/Texture.h"
 #include "windows/OrthographicCamera.h"
 #include <Box2D/Box2D.h>
+#include "Audio/AudioManager.h"
 
 #include <vector>
 #include "Physics/PlayerShape.h"
@@ -38,6 +39,8 @@ namespace Engine {
 		static Application* s_instance; //!< Singleton instance of the application
 		std::shared_ptr<MyLogger> mp_logger; //!< Shared Pointer to a logger
 		std::shared_ptr<MyTimer> mp_timer; //!< Shared Pointer to a timer
+		AudioManager m_audio;
+
 		float TimeElapsedInSeconds; //!< Time Elapsed in seconds
 		float fps; //!< Frames Per Second
 		bool onWindowClose(WindowCloseEvent& e); //!< On Window Close Event

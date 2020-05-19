@@ -50,10 +50,6 @@ private:
 	std::shared_ptr<Engine::PlayerShape> m_Player; //!< the player in the game
 
 	
-
-	//Code provided by SIMON COUPLAND
-#pragma region TempVars
-		// Temp stuff
 	unsigned int m_numberTexture; // Texture ID
 	unsigned int m_letterTexture; // Texture ID
 	unsigned int m_textureSlots[2]; // Slot where the textures are stored

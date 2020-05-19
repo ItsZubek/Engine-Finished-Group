@@ -4,7 +4,6 @@
 
 void GameLayer::OnAttach()
 {
-
 	m_Player = std::make_shared<Engine::PlayerShape>();
 
 	//  Temporary set up code to be abstracted
@@ -154,6 +153,7 @@ void GameLayer::OnAttach()
 	FCmodel = glm::translate(glm::mat4(1), glm::vec3(1.5, 0, 3));
 	TPmodel = glm::translate(glm::mat4(1), glm::vec3(-1.5, 0, 3));
 
+	
 }
 
 void GameLayer::OnDetach()

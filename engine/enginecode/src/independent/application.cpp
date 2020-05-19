@@ -42,17 +42,13 @@ namespace Engine
 			s_instance = this;
 		}
 
-		mp_logger = std::make_shared<MyLogger>();
+		mp_logger.reset(new MyLogger());
 		mp_logger->start();
-
-		mp_timer = std::make_shared<MyTimer>();
+		ENGINE_CORE_INFO("Logging Initalised");
+		mp_timer.reset(new MyTimer());
 		mp_timer->start();
-
-		m_Window = std::shared_ptr<Window>(Window::Create());
-		m_Window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));
-
-		Application::s_screenResolution = glm::ivec2(m_Window->getWidth(), m_Window->getHeight());
-
+		ENGINE_CORE_INFO("Timer Initalised");
+		
 		m_layerStack.reset(new LayerStack());
 		
 		boxWorld = new b2World(m_gravity);
@@ -60,16 +56,14 @@ namespace Engine
 		mp_imgui = std::shared_ptr<Imgui>(ImguiGLFW::initialise());
 
 
-		
+		m_Window = std::shared_ptr<Window>(Window::Create());
+		m_Window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));
 
-#pragma region TempSetup
-		
-		// End temporary code
-
-#pragma endregion TempSetup
-		
+		Application::s_screenResolution = glm::ivec2(m_Window->getWidth(), m_Window->getHeight());
 
 		mp_imgui->gen(m_Window);
+
+		mp_timer->ElapsedTime();
 
 	}
 	void Application::run()

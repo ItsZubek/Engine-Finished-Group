@@ -11,14 +11,13 @@
 #include "events/MouseEvents.h"
 #include "events/WindowEvents.h"
 
+#include "imgui.h"
 #include <glm/glm.hpp>
 
 #include "Layer/LayerStack.h"
 
 #include <Box2D/Box2D.h>
 #include "UI/imgui_impl.h"
-#include "imgui.h"
-
 
 
 
@@ -49,7 +48,7 @@ namespace Engine {
 
 		bool m_running = true; //!< Is the application running?
 		
-		std::shared_ptr<imgui> mp_imgui; //!< Shared Pointer to ImGui
+		std::shared_ptr<Imgui> mp_imgui; //!< Shared Pointer to ImGui
 
 		b2World* boxWorld = nullptr;
 		b2Vec2 m_gravity = b2Vec2(0.f, 0.f);

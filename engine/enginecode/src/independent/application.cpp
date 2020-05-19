@@ -224,7 +224,7 @@ namespace Engine
 	}
 	void Application::run()
 	{
-		//Profiler profile("Application::run");
+		Profiler profile("void Application::run()");
 
 		float accumulatedTime = 0.f;
 		mp_timer->SetStartPoint();

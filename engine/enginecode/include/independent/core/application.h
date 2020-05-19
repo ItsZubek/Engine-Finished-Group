@@ -17,7 +17,7 @@
 #include "UI/imgui_impl.h"
 #include <Box2D/Box2D.h>
 
-//#include "Profiler/Profiler.h"
+#include "Profiler/Profiler.h"
 
 #include <vector>
 #include "Physics/PlayerShape.h"

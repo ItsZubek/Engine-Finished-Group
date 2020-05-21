@@ -1,4 +1,5 @@
 #include "..\include\GameLayer.h"
+#include "Profiler/profiler.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -168,6 +169,8 @@ void GameLayer::OnDetach()
 
 void GameLayer::OnUpdate(float timestep)
 {
+	Engine::Profiler profiler("GameLayer::OnUpdate");
+	 
 	glClearColor(0.8f, 0.8f, 0.8f, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
@@ -214,44 +217,51 @@ void GameLayer::OnUpdate(float timestep)
 
 	glm::mat4 fcMVP = projection * view * FCmodel;
 
+	{
+		Engine::Profiler profiler("Flat Colour Cube");
+
 	//Binds the Shader and Vertex Array for Flat Colour
 	m_ShaderFC->Bind();
 	m_VertexArrayFC->bind();
 
 	// Uploads the Flat Colour Uniform to the Shader
 	m_ShaderFC->UploadUniformMat4("u_MVP", &fcMVP[0][0]);
-
-	glDrawElements(GL_TRIANGLES, m_IndexBufferFC->GetCount(), GL_UNSIGNED_INT, nullptr);
+		
+		
+		glDrawElements(GL_TRIANGLES, m_IndexBufferFC->GetCount(), GL_UNSIGNED_INT, nullptr);
+	}
 
 	glm::mat4 tpMVP = projection * view * TPmodel;
 	//m_TextureTP->getSlot();
 	unsigned int textureSlot;
 	if (m_goingUp) m_TextureTP->setSlot(0);
 	else  m_TextureTP->setSlot(1);
+	
+	{
+		Engine::Profiler profiler("Textured Phong Cube");
+		//Binds the Shader and Vertex Array for Textured Phong
+		m_ShaderTP->Bind();
+		m_VertexArrayTP->bind();
 
 
-	//Binds the Shader and Vertex Array for Textured Phong
-	m_ShaderTP->Bind();
-	m_VertexArrayTP->bind();
+		// Uploads the Textured Phong Uniforms to the Shader
 
+		m_ShaderTP->UploadUniformMat4("u_MVP", &tpMVP[0][0]);
 
-	// Uploads the Textured Phong Uniforms to the Shader
+		m_ShaderTP->UploadUniformMat4("u_model", &TPmodel[0][0]);
 
-	m_ShaderTP->UploadUniformMat4("u_MVP", &tpMVP[0][0]);
+		m_ShaderTP->uploadFloat3("u_objectColour", 0.2f, 0.8f, 0.5f);
 
-	m_ShaderTP->UploadUniformMat4("u_model", &TPmodel[0][0]);
+		m_ShaderTP->uploadFloat3("u_lightColour", 1.0f, 1.0f, 1.0f);
 
-	m_ShaderTP->uploadFloat3("u_objectColour", 0.2f, 0.8f, 0.5f);
+		m_ShaderTP->uploadFloat3("u_lightPos", 1.0f, 4.0f, -6.0f);
 
-	m_ShaderTP->uploadFloat3("u_lightColour", 1.0f, 1.0f, 1.0f);
+		m_ShaderTP->uploadFloat3("u_viewPos", 0.0f, 0.0f, -4.5f);
 
-	m_ShaderTP->uploadFloat3("u_lightPos", 1.0f, 4.0f, -6.0f);
+		m_ShaderTP->uploadInt("u_texData", m_TextureTP->getSlot() /*textureSlot*/);
 
-	m_ShaderTP->uploadFloat3("u_viewPos", 0.0f, 0.0f, -4.5f);
-
-	m_ShaderTP->uploadInt("u_texData", m_TextureTP->getSlot() /*textureSlot*/);
-
-	glDrawElements(GL_TRIANGLES, m_IndexBufferTP->GetCount(), GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, m_IndexBufferTP->GetCount(), GL_UNSIGNED_INT, nullptr);
+	}
 }
 
 void GameLayer::OnEvent(Engine::EventBaseClass& e)

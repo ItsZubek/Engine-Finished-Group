@@ -2,7 +2,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-void GameLayer::OnAttach()
+GameLayer::GameLayer(const std::string& name) : Layer(name), m_Camera(-2.0f, 2.0f, -2.0f, 2.0f)
 {
 	m_Player = std::make_shared<Engine::PlayerShape>();
 
@@ -152,6 +152,11 @@ void GameLayer::OnAttach()
 
 	FCmodel = glm::translate(glm::mat4(1), glm::vec3(1.5, 0, 3));
 	TPmodel = glm::translate(glm::mat4(1), glm::vec3(-1.5, 0, 3));
+}
+
+void GameLayer::OnAttach()
+{
+	
 
 	
 }
@@ -166,31 +171,6 @@ void GameLayer::OnUpdate(float timestep)
 	glClearColor(0.8f, 0.8f, 0.8f, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
-
-	
-
-	///////////////////////////////////////////////////////////////////////////////////////
-			/////////////////////////////////// Draw Box2D Shape //////////////////////////////////
-			///////////////////////////////////////////////////////////////////////////////////////
-			/*b2Body* shapes = boxWorld->GetBodyList();
-			//b2Vec2 m_vertices[4];
-			while (shapes)
-			{
-				for (int i = 0; i < 4; i++)
-				{
-					m_vertices[i] = ((b2PolygonShape*)shapes->GetFixtureList()->GetShape())->GetChildCount();
-					m_Player->drawShape(m_vertices, shapes->GetWorldCenter(), shapes->GetAngle());
-					b2Fixture shape =
-
-					shapes = shapes->GetNext();
-
-				}
-
-
-			}
-
-
-			glDrawElements(GL_QUADS, shapes->GetFixtureList()->GetShape()->GetChildCount(), GL_UNSIGNED_INT, nullptr);*/
 
 	glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f); // Basic 4:3 camera
 

@@ -60,7 +60,7 @@ private:
 	std::array<bool, 4> m_FCdirection = { false, false, false, false };
 
 public:
-	GameLayer(const std::string& name = "Layer") : Layer(name), m_Camera(-2.0f, 2.0f, -2.0f, 2.0f) {};
+	GameLayer(const std::string& name = "Layer");
 	void OnAttach() override;
 	void OnDetach() override;
 	void OnUpdate(float timestep) override;

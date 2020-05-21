@@ -75,14 +75,14 @@ namespace Engine {
 		b2World* boxWorld = nullptr;
 		b2Vec2 m_gravity = b2Vec2(0.f, 0.f);
 
-		PlayerShape m_Player; //!< the player in the game
-		std::vector<BulletShape> m_Bullets; //!< Bullets for the player to destroy enemies
+		std::shared_ptr<PlayerShape> m_Player; //!< the player in the game
+		std::shared_ptr<std::vector<BulletShape>> m_Bullets; //!< Bullets for the player to destroy enemies
 		std::vector<EnemyShape> m_Enemies; //!< Vector full of enemies
 		
 		const int m_iVelIterations = 7;
 		const int m_iPosIterations = 5;
 
-		Collisions m_CollisionListener; //!< used to detect contatc between two shapes
+		Collisions m_CollisionListener; //!< used to detect contatc between two shapes3
 
 		
 		

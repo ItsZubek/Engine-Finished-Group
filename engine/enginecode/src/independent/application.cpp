@@ -12,8 +12,7 @@
 // temp includes
 #include <glad/glad.h>
 #include <gl/GL.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
@@ -23,7 +22,8 @@
 
 
 
-namespace Engine {
+namespace Engine 
+{
 	Application* Application::s_instance = nullptr;
 	float Application::s_timestep = 0.f;
 	glm::ivec2 Application::s_screenResolution = glm::ivec2(0, 0);
@@ -37,7 +37,6 @@ namespace Engine {
 	{
 		
 		boxWorld = new b2World(m_gravity);
-		
 		
 		mp_logger = std::make_shared<MyLogger>();
 		mp_logger->start();
@@ -57,42 +56,37 @@ namespace Engine {
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
 		// Enabling backface culling to ensure triangle vertices are correct ordered (CCW)
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
+		//glEnable(GL_CULL_FACE);
+		//glCullFace(GL_BACK);
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////Box2D Shapes//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		// Shape the player will control
-		m_Player.player(boxWorld, b2Vec2(0.5f, 0.5f), b2Vec2(20, 20), 0.f);
+		m_Player = std::make_shared<PlayerShape>(boxWorld, b2Vec2(2, 2), b2Vec2(5, 5), 0.f);
 
-		// Enemies to attack the player
-		/*m_Enemies.resize(4);
-		m_Enemies[0].enemy(boxWorld, b2Vec2(-1.5, 0), b2Vec2(1, 1), 0.f);
-		m_Enemies[1].enemy(boxWorld, b2Vec2(-1.5, 0), b2Vec2(1, 1), 0.f);
-		m_Enemies[2].enemy(boxWorld, b2Vec2(-1.5, 0), b2Vec2(1, 1), 0.f);
-		m_Enemies[3].enemy(boxWorld, b2Vec2(-1.5, 0), b2Vec2(1, 1), 0.f);
-					
-		// Bullets to destroy the eemy
-		m_Bullets.resize(10);
-		m_Bullets[0].bullet(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
-		m_Bullets[1].bullet(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
-		m_Bullets[2].bullet(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
-		m_Bullets[3].bullet(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
-		m_Bullets[4].bullet(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
-		m_Bullets[5].bullet(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
-		m_Bullets[6].bullet(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
-		m_Bullets[7].bullet(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
-		m_Bullets[8].bullet(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
-		m_Bullets[9].bullet(boxWorld, b2Vec2(0.5f, 1.f), b2Vec2(0.5, 0.5), 0.f);
+		b2Vec2* m_vertices = ((b2PolygonShape*)m_Player->getBody()->GetFixtureList()->GetShape())->m_vertices; // Gets the vertices of the body
+		unsigned int m_count = ((b2PolygonShape*)m_Player->getBody()->GetFixtureList()->GetShape())->m_count; // Gets the indices of the body
+		 
+		float Box2DVertices[3 * 4] =
+		{
+			m_vertices[0].x, m_vertices[0].y, 0.f,
+			m_vertices[1].x, m_vertices[1].y, 0.f,
+			m_vertices[2].x, m_vertices[2].y, 0.f,
+			m_vertices[3].x, m_vertices[3].y, 0.f
+		
+		};
+
+		unsigned int Box2DIndices[4] = { 0,1,2,3 };
 		
 		// Gets the data for the object and returns it back to the collision listener to check for collisions between two shapes
-		m_Player.setUserData(new std::pair<std::string, void*>(typeid(decltype(m_Player)).name(), &m_Player));
-		for (BulletShape& bullets : m_Bullets) bullets.setUserData(new std::pair<std::string, void*>(typeid(decltype(bullets)).name(), &bullets));
-		for (EnemyShape& enemies : m_Enemies) enemies.setUserData(new std::pair<std::string, void*>(typeid(decltype(enemies)).name(), &enemies));
+		m_Player->setUserData(new std::pair<std::string, void*>(typeid(decltype(m_Player)).name(), &m_Player));
+		
 
-		boxWorld->SetContactListener(&m_CollisionListener); // attaches collision listener to the box2D world*/
+		boxWorld->SetContactListener(&m_CollisionListener); // attaches collision listener to the box2D world
+
+		
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////Flat Colour Cube//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -205,7 +199,7 @@ namespace Engine {
 		m_VertexArrayTP.reset(VertexArray::create());
 
 		// Iinitiating the Vertex Buffer
-		m_VertexBufferTP.reset(VertexBuffer::Create(TPvertices, sizeof(TPvertices)));
+		m_VertexBufferTP.reset(VertexBuffer::Create(Box2DVertices, sizeof(Box2DVertices)));
 
 		// Initiating the Buffer Layout
 		BufferLayout TPBufferLayout = { { ShaderDataType::Float3 }, { ShaderDataType::Float3 }, {ShaderDataType::Float2} };
@@ -217,7 +211,7 @@ namespace Engine {
 		m_VertexArrayTP->setVertexBuffer(m_VertexBufferTP);
 		
 		// Initiating the Index Buffer
-		m_IndexBufferTP.reset(IndexBuffer::Create(indices, 3 * 12));
+		m_IndexBufferTP.reset(IndexBuffer::Create(Box2DIndices, 4));
 		m_IndexBufferTP->Bind();
 		m_VertexArrayTP->setIndexBuffer(m_IndexBufferTP);
 
@@ -228,6 +222,8 @@ namespace Engine {
 		// Initiating the Textures
 		m_TextureTP.reset(Texture::createFromFile("assets/textures/letterCube.png"));
 		m_TextureTP.reset(Texture::createFromFile("assets/textures/numberCube.png"));
+
+		
 
 		FCmodel = glm::translate(glm::mat4(1), glm::vec3(1.5, 0, 3));
 		TPmodel = glm::translate(glm::mat4(1), glm::vec3(-1.5, 0, 3));
@@ -265,30 +261,14 @@ namespace Engine {
 			// Temporary draw code to be abstracted
 			
 
-			glClearColor(0.8f, 0.8f, 0.8f, 1);
+			glClearColor(0.1f, 0.1f, 0.1f, 1);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
-			b2Body* tmp = boxWorld->GetBodyList();
-			b2Vec2 points[4];
-			while (tmp)
-			{
-				for (int i = 0; i < 4; i++)
-				{
-					points[i] = ((b2PolygonShape*)tmp->GetFixtureList()->GetShape())->m_vertices[i];
-					m_Player.draw(points, tmp->GetWorldCenter(), m_Player.getBody()->GetAngle());
-					tmp = tmp->GetNext();
-				}
-			}
-			
-			// Draw the player to the screen
-			//m_Player.draw();
-			m_Player.update();
-			
-
+		
 			glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f); // Basic 4:3 camera
 
 			glm::mat4 view = glm::lookAt(
-				glm::vec3(0.0f, 0.0f, -1), // Camera is at (0.0,0.0,-4.5), in World Space
+				glm::vec3(0.0f, 0.0f, -14.5), // Camera is at (0.0,0.0,-4.5), in World Space
 				glm::vec3(0.f, 0.f, 0.f), // and looks at the origin
 				glm::vec3(0.f, 1.f, 0.f)  // Standing straight  up
 			);
@@ -298,6 +278,7 @@ namespace Engine {
 
 
 			FCtranslation = FCmodel;
+			TPtranslation = TPmodel;
 			
 			m_timeSummed += s_timestep;
 			if (m_timeSummed > 20.0f) {
@@ -307,7 +288,7 @@ namespace Engine {
 
 
 			FCmodel = glm::rotate(FCtranslation, glm::radians(20.f) * s_timestep, glm::vec3(0.f, 1.f, 0.f)); // Spin the cube at 20 degrees per second
-			//TPmodel = glm::rotate(TPtranslation, glm::radians(20.f), glm::vec3(0.f, 1.f, 0.f)); // Spin the cube at 20 degrees per second
+			TPmodel = glm::rotate(TPtranslation, glm::radians(20.f) * s_timestep, glm::vec3(0.f, 1.f, 0.f)); // Spin the cube at 20 degrees per second
 
 			// End of code to make the cube move.
 
@@ -318,9 +299,11 @@ namespace Engine {
 			m_VertexArrayFC->bind();
 
 			// Uploads the Flat Colour Uniform to the Shader
-			//m_ShaderFC->UploadUniformMat4("u_MVP", &fcMVP[0][0]);
+			m_ShaderFC->UploadUniformMat4("u_MVP", &fcMVP[0][0]);
 
-			//glDrawElements(GL_TRIANGLES, m_IndexBufferFC->GetCount(), GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, m_IndexBufferFC->GetCount(), GL_UNSIGNED_INT, nullptr);
+
+			 //m_Player->draw(projection, view, FCmodel);
 
 			glm::mat4 tpMVP = projection * view * TPmodel;
 			//m_TextureTP->getSlot();
@@ -348,9 +331,9 @@ namespace Engine {
 
 			m_ShaderTP->uploadFloat3("u_viewPos", 0.0f, 0.0f, -4.5f);
 
-			m_ShaderTP->uploadInt("u_texData", m_TextureTP->getSlot() /*textureSlot*/ );
+			m_ShaderTP->uploadInt("u_texData", m_TextureTP->getSlot() );
 
-			//glDrawElements(GL_TRIANGLES, m_IndexBufferTP->GetCount() , GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_QUADS, m_IndexBufferTP->GetCount() , GL_UNSIGNED_INT, nullptr);
 			
 
 			// End temporary code
@@ -405,9 +388,7 @@ namespace Engine {
 		if (e.GetKeyCode() == 68) { m_FCdirection[3] = true; }
 		if (e.GetKeyCode() == 87) { m_FCdirection[0] = true; }
 		if (e.GetKeyCode() == 83) { m_FCdirection[2] = true; }
-		if (e.GetKeyCode() == 65) { m_Player.movement(b2Vec2(-2.f, 0.f)); }
-		if (e.GetKeyCode() == 68) { m_Player.movement(b2Vec2(2.f, 0.f)); }
-		if (e.GetKeyCode() == 32) { m_Bullets[0].movement(b2Vec2(0.f, 2.f)); }
+
 		ENGINE_CORE_TRACE("KeyPressed: {0}, RepeatCount: {1}", e.GetKeyCode(), e.GetRepeatCount());
 		return true;
 	}

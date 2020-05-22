@@ -17,6 +17,7 @@
 #include <stb_image.h>
 
 
+
 #pragma endregion TempIncludes
 
 
@@ -71,7 +72,7 @@ namespace Engine
 		 
 		float Box2DVertices[3 * 4] =
 		{
-			m_vertices[0].x, m_vertices[0].y, 0.f,
+			m_vertices[0].x , m_vertices[0].y, 0.f,
 			m_vertices[1].x, m_vertices[1].y, 0.f,
 			m_vertices[2].x, m_vertices[2].y, 0.f,
 			m_vertices[3].x, m_vertices[3].y, 0.f
@@ -85,6 +86,43 @@ namespace Engine
 		
 
 		boxWorld->SetContactListener(&m_CollisionListener); // attaches collision listener to the box2D world
+
+		/*float TPvertices[8 * 4] = {
+		-0.5f, -0.5f, -0.5f, 0.f, 0.f, -1.f, 0.33f, 0.5f,
+		 0.5f, -0.5f, -0.5f, 0.f, 0.f, -1.f, 0.f, 0.5f,
+		 0.5f,  0.5f, -0.5f, 0.f, 0.f, -1.f, 0.f, 0.f,
+		-0.5f,  0.5f, -0.5f, 0.f, 0.f, -1.f, 0.33f, 0.f,
+		};*/
+
+		unsigned int box2Dindices[4] = { 0,1,2,3 };
+
+		// Initiating the Vertex Array
+		m_VertexArrayTP.reset(VertexArray::create());
+
+		// Initiating the Vertex Buffer
+		m_VertexBufferTP.reset(VertexBuffer::Create(Box2DVertices, sizeof(Box2DVertices)));
+
+		// Initiating the Buffer Layout
+		BufferLayout TPBufferLayout = { { ShaderDataType::Float3 }, { ShaderDataType::Float3 }, { ShaderDataType::Float2 } };
+
+		// Adds the Buffer Layout to the Vertex Buffer
+		m_VertexBufferTP->setBufferLayout(TPBufferLayout);
+
+		//Sets the Buffer Layout
+		m_VertexArrayTP->setVertexBuffer(m_VertexBufferTP);
+
+		// Initiating the Index Buffer
+		m_IndexBufferTP.reset(IndexBuffer::Create(box2Dindices, m_count));
+		m_IndexBufferTP->Bind();
+		m_VertexArrayTP->setIndexBuffer(m_IndexBufferTP);
+
+		// Initiating the Shader
+		m_ShaderTP.reset(Engine::Shader::create("assets/shaders/texturedPhong.glsl"));
+		m_ShaderTP->Bind();
+
+		// Initiating the Textures
+		m_TextureTP.reset(Texture::createFromFile("assets/textures/letterCube.png"));
+		m_TextureTP.reset(Texture::createFromFile("assets/textures/numberCube.png"));
 
 		
 
@@ -151,6 +189,7 @@ namespace Engine
 		};
 
 		
+		
 
 		// Initiating the Index Buffer 
 		m_IndexBufferFC.reset(IndexBuffer::Create(indices, 3 * 12));
@@ -164,64 +203,6 @@ namespace Engine
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////Textured Phong Cube////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		float TPvertices[8 * 24] = {
-			-0.5f, -0.5f, -0.5f, 0.f, 0.f, -1.f, 0.33f, 0.5f,
-			 0.5f, -0.5f, -0.5f, 0.f, 0.f, -1.f, 0.f, 0.5f,
-			 0.5f,  0.5f, -0.5f, 0.f, 0.f, -1.f, 0.f, 0.f,
-			-0.5f,  0.5f, -0.5f, 0.f, 0.f, -1.f, 0.33f, 0.f,
-			-0.5f, -0.5f, 0.5f,  0.f, 0.f, 1.f, 0.33f, 0.5f,
-			 0.5f, -0.5f, 0.5f,  0.f, 0.f, 1.f, 0.66f, 0.5f,
-			 0.5f,  0.5f, 0.5f,  0.f, 0.f, 1.f, 0.66f, 0.f,
-			-0.5f,  0.5f, 0.5f,  0.f, 0.f, 1.f, 0.33, 0.f,
-			-0.5f, -0.5f, -0.5f, 0.f, -1.f, 0.f, 1.f, 0.f,
-			 0.5f, -0.5f, -0.5f, 0.f, -1.f, 0.f, 0.66f, 0.f,
-			 0.5f, -0.5f, 0.5f,  0.f, -1.f, 0.f, 0.66f, 0.5f,
-			-0.5f, -0.5f, 0.5f,  0.f, -1.f, 0.f, 1.0f, 0.5f,
-			-0.5f, 0.5f, -0.5f,  0.f, 1.f, 0.f, 0.33f, 1.0f,
-			 0.5f, 0.5f, -0.5f,  0.f, 1.f, 0.f, 0.f, 1.0f,
-			 0.5f, 0.5f, 0.5f, 0.f, 1.f, 0.f, 0.f, 0.5f,
-			-0.5f, 0.5f, 0.5f,   0.f, 1.f, 0.f, 0.3f, 0.5f,
-			-0.5f, -0.5f, -0.5f, -1.f, 0.f, 0.f, 0.33f, 1.0f,
-			-0.5f,  0.5f, -0.5f, -1.f, 0.f, 0.f, 0.33f, 0.5f,
-			-0.5f,  0.5f, 0.5f,  -1.f, 0.f, 0.f, 0.66f, 0.5f,
-			-0.5f,  -0.5f, 0.5f, -1.f, 0.f, 0.f, 0.66f, 1.0f,
-			0.5f, -0.5f, -0.5f,  1.f, 0.f, 0.f, 1.0f, 1.0f,
-			0.5f,  0.5f, -0.5f,  1.f, 0.f, 0.f, 1.0f, 0.5f,
-			0.5f,  0.5f, 0.5f, 1.f, 0.f, 0.f,  0.66f, 0.5f,
-			0.5f,  -0.5f, 0.5f,  1.f, 0.f, 0.f, 0.66f, 1.0f
-		};
-
-		
-		
-
-		// Initiating the Vertex Array
-		m_VertexArrayTP.reset(VertexArray::create());
-
-		// Iinitiating the Vertex Buffer
-		m_VertexBufferTP.reset(VertexBuffer::Create(Box2DVertices, sizeof(Box2DVertices)));
-
-		// Initiating the Buffer Layout
-		BufferLayout TPBufferLayout = { { ShaderDataType::Float3 }, { ShaderDataType::Float3 }, {ShaderDataType::Float2} };
-
-		// Adds the Buffer Layout to the Vertex Buffer
-		m_VertexBufferTP->setBufferLayout(TPBufferLayout);
-
-		//Sets the Buffer Layout
-		m_VertexArrayTP->setVertexBuffer(m_VertexBufferTP);
-		
-		// Initiating the Index Buffer
-		m_IndexBufferTP.reset(IndexBuffer::Create(Box2DIndices, 4));
-		m_IndexBufferTP->Bind();
-		m_VertexArrayTP->setIndexBuffer(m_IndexBufferTP);
-
-		// Initiating the Shader
-		m_ShaderTP.reset(Shader::create("assets/shaders/texturedPhong.glsl"));
-		m_ShaderTP->Bind();
-
-		// Initiating the Textures
-		m_TextureTP.reset(Texture::createFromFile("assets/textures/letterCube.png"));
-		m_TextureTP.reset(Texture::createFromFile("assets/textures/numberCube.png"));
 
 		
 
@@ -288,7 +269,7 @@ namespace Engine
 
 
 			FCmodel = glm::rotate(FCtranslation, glm::radians(20.f) * s_timestep, glm::vec3(0.f, 1.f, 0.f)); // Spin the cube at 20 degrees per second
-			TPmodel = glm::rotate(TPtranslation, glm::radians(20.f) * s_timestep, glm::vec3(0.f, 1.f, 0.f)); // Spin the cube at 20 degrees per second
+			//TPmodel = glm::rotate(TPtranslation, glm::radians(20.f) * s_timestep, glm::vec3(0.f, 1.f, 0.f)); // Spin the cube at 20 degrees per second
 
 			// End of code to make the cube move.
 
@@ -306,17 +287,17 @@ namespace Engine
 			 //m_Player->draw(projection, view, FCmodel);
 
 			glm::mat4 tpMVP = projection * view * TPmodel;
+			
 			//m_TextureTP->getSlot();
 			unsigned int textureSlot;
 			if (m_goingUp) m_TextureTP->setSlot(0);
 			else  m_TextureTP->setSlot(1);
 
-
 			//Binds the Shader and Vertex Array for Textured Phong
 			m_ShaderTP->Bind();
 			m_VertexArrayTP->bind();
-			
-			
+
+
 			// Uploads the Textured Phong Uniforms to the Shader
 
 			m_ShaderTP->UploadUniformMat4("u_MVP", &tpMVP[0][0]);
@@ -325,16 +306,16 @@ namespace Engine
 
 			m_ShaderTP->uploadFloat3("u_objectColour", 0.2f, 0.8f, 0.5f);
 
-			m_ShaderTP->uploadFloat3("u_lightColour", 255.f, 0.0f, 0.f);
+			m_ShaderTP->uploadFloat3("u_lightColour", 1.0f, 1.0f, 1.0f);
 
 			m_ShaderTP->uploadFloat3("u_lightPos", 1.0f, 4.0f, -6.0f);
 
 			m_ShaderTP->uploadFloat3("u_viewPos", 0.0f, 0.0f, -4.5f);
 
-			m_ShaderTP->uploadInt("u_texData", m_TextureTP->getSlot() );
+			m_ShaderTP->uploadInt("u_texData", m_TextureTP->getSlot() /*textureSlot*/);
 
 			glDrawElements(GL_QUADS, m_IndexBufferTP->GetCount() , GL_UNSIGNED_INT, nullptr);
-			
+
 
 			// End temporary code
 #pragma endregion TempDrawCode

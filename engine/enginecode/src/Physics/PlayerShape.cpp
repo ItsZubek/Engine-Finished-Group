@@ -52,7 +52,7 @@ namespace Engine
 		
 	}
 
-	void PlayerShape::draw(glm::mat4 projection, glm::mat4 view, glm::mat4 model)
+	/*void PlayerShape::draw(glm::mat4 projection, glm::mat4 view, glm::mat4 model)
 	{
 		
 
@@ -62,9 +62,9 @@ namespace Engine
 		m_Shader->Bind();
 		m_VAO->bind();
 
-		m_Shader->UploadUniformMat4("u_MVP", &MVP[0][0]);
+		m_Shader->UploadUniformMat4("u_MVP", MVP);
 
-		m_Shader->UploadUniformMat4("u_model", &model[0][0]);
+		m_Shader->UploadUniformMat4("u_model", model);
 
 		m_Shader->uploadFloat3("u_objectColour", 0.2f, 0.8f, 0.5f);
 
@@ -88,5 +88,5 @@ namespace Engine
 	void PlayerShape::movement(b2Vec2 movement)
 	{
 		m_body->ApplyLinearImpulseToCenter(movement, true);
-	}
+	}*/
 }

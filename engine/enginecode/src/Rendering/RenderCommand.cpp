@@ -1,8 +1,13 @@
 
 #include "engine_pch.h"
-#include "Rendering\RenderCommand.h"
 #include "windows/Renderer.h"
 #include "systems/MyLogger.h"
+
+#include "Rendering\RenderCommand.h"
+#include "platform/OpenGL/Rendering/OpenGLClearDepthColourBufferCommand.h"
+#include "platform/OpenGL/Rendering/OpenGLSetClearColourCommand.h"
+#include "platform/OpenGL/Rendering/OpenGLSetDepthTestLessCommand.h"
+#include "platform/OpenGL/Rendering/OpenGLSetBackFaceCullingCommand.h"
 
 namespace Engine
 {
@@ -18,7 +23,7 @@ namespace Engine
 			return new OpenGLClearDepthColourBufferCommand();
 		}
 	}
-	RenderCommand* RenderCommand::ClearColourCommand(float r, float g, float b, float a)
+	RenderCommand* RenderCommand::SetClearColourCommand(float r, float g, float b, float a)
 	{
 		if (Renderer::GetAPI() == Renderer::RendererAPI::None)
 		{
@@ -27,7 +32,7 @@ namespace Engine
 
 		if (Renderer::GetAPI() == Renderer::RendererAPI::OpenGL)
 		{
-			return new OpenGLClearColourCommand(float r, float g, float b, float a);
+			return new OpenGLSetClearColourCommand(r,g,b,a);
 		}
 	}
 	RenderCommand* RenderCommand::SetDepthTestLessCommand(bool enabled)
@@ -39,7 +44,7 @@ namespace Engine
 
 		if (Renderer::GetAPI() == Renderer::RendererAPI::OpenGL)
 		{
-			return new OpenGLSetDepthTestLessCommand(bool enabled);
+			return new OpenGLSetDepthTestLessCommand(enabled);
 		}
 	}
 	RenderCommand* RenderCommand::SetBackFaceCullingCommand(bool enabled)
@@ -51,7 +56,7 @@ namespace Engine
 
 		if (Renderer::GetAPI() == Renderer::RendererAPI::OpenGL)
 		{
-			return new OpenGLSetBackFaceCullingCommand(bool enabled);
+			return new OpenGLSetBackFaceCullingCommand(enabled);
 		}
 	}
 }

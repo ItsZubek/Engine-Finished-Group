@@ -1,5 +1,8 @@
  #pragma once
 
+#include "Rendering/RenderCommand.h"
+#include "windows/Material.h"
+
 namespace Engine
 {
 
@@ -7,7 +10,7 @@ namespace Engine
 	{
 	public:
 		virtual void actionCommand(RenderCommand* command) = 0; //!< Action for rendering
-		virtual void beginScene(const SceneData& sceneData) = 0;
+		//virtual void beginScene(const SceneData& sceneData) = 0;
 		virtual void endScene() = 0; //!< End of scene
 		virtual void submit(const std::shared_ptr<Material>& material) = 0;
 		virtual void flush() = 0; //!< Draw Everything

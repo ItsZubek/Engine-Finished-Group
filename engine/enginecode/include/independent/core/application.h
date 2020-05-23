@@ -21,6 +21,10 @@
 #include "Physics/BulletShape.h"
 #include "Physics/Collisions.h"
 
+#include "windows/Material.h"
+#include "Rendering/Rendering.h"
+#include "Rendering/Render2D.h"
+
 
 
 
@@ -56,6 +60,9 @@ namespace Engine {
 		static glm::ivec2 s_screenResolution; //!< Screen resolution
 		static float s_timestep; //!< last frame timestep
 
+		bool m_DTLess;
+		bool m_BFCulling;
+
 		std::shared_ptr<Shader> m_ShaderFC; //!< Pointer to a shader class
 		std::shared_ptr<Shader> m_ShaderTP; //!< Pointer to a shader class
 
@@ -67,6 +74,12 @@ namespace Engine {
 
 		std::shared_ptr<IndexBuffer> m_IndexBufferFC; //!< Pointer to a Index Buffer class
 		std::shared_ptr<IndexBuffer> m_IndexBufferTP; //!< Pointer to a Index Buffer class
+
+		std::shared_ptr<Render2D> m_Renderer;
+
+
+		std::shared_ptr<Material> m_Cube; //!< sets a cube
+		
 
 		OrthographicCamera m_Camera; //!< Orthographic Camera
 

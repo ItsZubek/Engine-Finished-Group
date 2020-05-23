@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Rendering.h"
+
 
 namespace Engine
 {
@@ -9,9 +9,9 @@ namespace Engine
 	public:
 		virtual void action() = 0;
 
-		RenderCommand* ClearDepthColourBufferCommand();
-		RenderCommand* ClearColourCommand(float r, float g, float b, float a);
-		RenderCommand* SetDepthTestLessCommand(bool enabled);
-		RenderCommand* SetBackFaceCullingCommand(bool enabled);
+		static RenderCommand* ClearDepthColourBufferCommand();
+		static RenderCommand* SetClearColourCommand(float r, float g, float b, float a);
+		static RenderCommand* SetDepthTestLessCommand(bool enabled);
+		static RenderCommand* SetBackFaceCullingCommand(bool enabled);
 	};
 }

@@ -16,7 +16,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+#include "Rendering/RenderCommand.h"
 
+#include "platform/OpenGL/Rendering/OpenGLMaterial.h"
 
 #pragma endregion TempIncludes
 
@@ -36,7 +38,6 @@ namespace Engine
 
 	Application::Application() : m_Camera(-2.0f, 2.0f, -2.0f, 2.0f)
 	{
-		
 		boxWorld = new b2World(m_gravity);
 		
 		mp_logger = std::make_shared<MyLogger>();
@@ -50,164 +51,58 @@ namespace Engine
 
 		Application::s_screenResolution = glm::ivec2(m_Window->getWidth(), m_Window->getHeight());
 
+		
+		//m_Renderer->BeginScene(m_Camera);
+
 #pragma region TempSetup
 		//  Temporary set up code to be abstracted
 
 		// Enable standard depth detest (Z-buffer)
+		
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
+
 		// Enabling backface culling to ensure triangle vertices are correct ordered (CCW)
-		//glEnable(GL_CULL_FACE);
-		//glCullFace(GL_BACK);
 
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		//////////////////////////////////////////////////////Box2D Shapes//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		// Shape the player will control
-		m_Player = std::make_shared<PlayerShape>(boxWorld, b2Vec2(2, 2), b2Vec2(5, 5), 0.f);
-
-		b2Vec2* m_vertices = ((b2PolygonShape*)m_Player->getBody()->GetFixtureList()->GetShape())->m_vertices; // Gets the vertices of the body
-		unsigned int m_count = ((b2PolygonShape*)m_Player->getBody()->GetFixtureList()->GetShape())->m_count; // Gets the indices of the body
-		 
-		float Box2DVertices[3 * 4] =
-		{
-			m_vertices[0].x , m_vertices[0].y, 0.f,
-			m_vertices[1].x, m_vertices[1].y, 0.f,
-			m_vertices[2].x, m_vertices[2].y, 0.f,
-			m_vertices[3].x, m_vertices[3].y, 0.f
-		
-		};
-
-		unsigned int Box2DIndices[4] = { 0,1,2,3 };
-		
-		// Gets the data for the object and returns it back to the collision listener to check for collisions between two shapes
-		m_Player->setUserData(new std::pair<std::string, void*>(typeid(decltype(m_Player)).name(), &m_Player));
-		
-
-		boxWorld->SetContactListener(&m_CollisionListener); // attaches collision listener to the box2D world
-
-		/*float TPvertices[8 * 4] = {
-		-0.5f, -0.5f, -0.5f, 0.f, 0.f, -1.f, 0.33f, 0.5f,
-		 0.5f, -0.5f, -0.5f, 0.f, 0.f, -1.f, 0.f, 0.5f,
-		 0.5f,  0.5f, -0.5f, 0.f, 0.f, -1.f, 0.f, 0.f,
-		-0.5f,  0.5f, -0.5f, 0.f, 0.f, -1.f, 0.33f, 0.f,
-		};*/
-
-		unsigned int box2Dindices[4] = { 0,1,2,3 };
-
-		// Initiating the Vertex Array
-		m_VertexArrayTP.reset(VertexArray::create());
-
-		// Initiating the Vertex Buffer
-		m_VertexBufferTP.reset(VertexBuffer::Create(Box2DVertices, sizeof(Box2DVertices)));
-
-		// Initiating the Buffer Layout
-		BufferLayout TPBufferLayout = { { ShaderDataType::Float3 }, { ShaderDataType::Float3 }, { ShaderDataType::Float2 } };
-
-		// Adds the Buffer Layout to the Vertex Buffer
-		m_VertexBufferTP->setBufferLayout(TPBufferLayout);
-
-		//Sets the Buffer Layout
-		m_VertexArrayTP->setVertexBuffer(m_VertexBufferTP);
-
-		// Initiating the Index Buffer
-		m_IndexBufferTP.reset(IndexBuffer::Create(box2Dindices, m_count));
-		m_IndexBufferTP->Bind();
-		m_VertexArrayTP->setIndexBuffer(m_IndexBufferTP);
-
-		// Initiating the Shader
-		m_ShaderTP.reset(Engine::Shader::create("assets/shaders/texturedPhong.glsl"));
-		m_ShaderTP->Bind();
-
-		// Initiating the Textures
-		m_TextureTP.reset(Texture::createFromFile("assets/textures/letterCube.png"));
-		m_TextureTP.reset(Texture::createFromFile("assets/textures/numberCube.png"));
-
-		
-
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		//////////////////////////////////////////////////////Flat Colour Cube//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		float FCvertices[6 * 24] = {
-			-0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.2f, // red square
-			 0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.2f,
-			 0.5f,  0.5f, -0.5f, 0.8f, 0.2f, 0.2f,
-			-0.5f,  0.5f, -0.5f,  0.8f, 0.2f, 0.2f,
-			-0.5f, -0.5f, 0.5f, 0.2f, 0.8f, 0.2f, // green square
-			 0.5f, -0.5f, 0.5f, 0.2f, 0.8f, 0.2f,
-			 0.5f,  0.5f, 0.5f, 0.2f, 0.8f, 0.2f,
-			-0.5f,  0.5f, 0.5f,  0.2f, 0.8f, 0.2f,
-			-0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.8f, // magenta(ish) square
-			 0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.8f,
-			 0.5f, -0.5f, 0.5f, 0.8f, 0.2f, 0.8f,
-			-0.5f, -0.5f, 0.5f,  0.8f, 0.2f, 0.8f,
-			-0.5f, 0.5f, -0.5f, 0.8f, 0.8f, 0.2f, // yellow square 
-			 0.5f, 0.5f, -0.5f, 0.8f, 0.8f, 0.2f,
-			 0.5f, 0.5f, 0.5f, 0.8f, 0.8f, 0.2f,
-			-0.5f, 0.5f, 0.5f,  0.8f, 0.8f, 0.2f,
-			-0.5f, -0.5f, -0.5f, 0.2f, 0.8f, 0.8f, // Cyan(ish) square 
-			-0.5f,  0.5f, -0.5f,  0.2f, 0.8f, 0.8f,
-			-0.5f,  0.5f, 0.5f, 0.2f, 0.8f, 0.8f,
-			-0.5f,  -0.5f, 0.5f, 0.2f, 0.8f, 0.8f,
-			0.5f, -0.5f, -0.5f, 0.2f, 0.2f, 0.8f, // Blue square 
-			0.5f,  0.5f, -0.5f,  0.2f, 0.2f, 0.8f,
-			0.5f,  0.5f, 0.5f, 0.2f, 0.2f, 0.8f,
-			0.5f,  -0.5f, 0.5f, 0.2f, 0.2f, 0.8f
-		};
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
 
 		// Intiating the Vertex Array
 		m_VertexArrayFC.reset(VertexArray::create());
 
-		// Initiating the Vertex Buffer 
+		float FCvertices[6 * 4] = {
+			-0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.2f, // red square
+			 0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.2f,
+			 0.5f,  0.5f, -0.5f, 0.8f, 0.2f, 0.2f,
+			-0.5f,  0.5f, -0.5f,  0.8f, 0.2f, 0.2f,
+
+		};
+
+		// Initiating the Vertex Buffer
 		m_VertexBufferFC.reset(VertexBuffer::Create(FCvertices, sizeof(FCvertices)));
-		
 
 		// Initiating the Buffer Layout
-		BufferLayout FCBufferLayout = { { ShaderDataType::Float3 }, { ShaderDataType::Float3 } };
+		BufferLayout FCBufferLayout = { { ShaderDataType::Float3, ShaderDataType::Float3 } };
 
 		// Adds the Buffer Layout to the Vertex Buffer
 		m_VertexBufferFC->setBufferLayout(FCBufferLayout);
 
-		//Sets the Buffer Layout
 		m_VertexArrayFC->setVertexBuffer(m_VertexBufferFC);
-		
-		unsigned int indices[3 * 12] = {
-			2, 1, 0,
-			0, 3, 2,
-			4, 5, 6,
-			6, 7, 4,
-			8, 9, 10,
-			10, 11, 8,
-			14, 13, 12,
-			12, 15, 14,
-			18, 17, 16,
-			16, 19, 18,
-			20, 21, 22,
-			22, 23, 20
-		};
 
-		
-		
+		unsigned int indices[4] = { 0,1,2,3 };
 
 		// Initiating the Index Buffer 
-		m_IndexBufferFC.reset(IndexBuffer::Create(indices, 3 * 12));
+		m_IndexBufferFC.reset(IndexBuffer::Create(indices, 4));
 		m_IndexBufferFC->Bind();
 		m_VertexArrayFC->setIndexBuffer(m_IndexBufferFC);
-		
+
 		// Initiating the Shader
 		m_ShaderFC.reset(Shader::create("assets/shaders/flatColour.glsl"));
 		m_ShaderFC->Bind();
 
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		//////////////////////////////////////////////////////Textured Phong Cube////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 		
-
 		FCmodel = glm::translate(glm::mat4(1), glm::vec3(1.5, 0, 3));
-		TPmodel = glm::translate(glm::mat4(1), glm::vec3(-1.5, 0, 3));
+		//TPmodel = glm::translate(glm::mat4(1), glm::vec3(-1.5, 0, 3));
 		
 		// End temporary code
 
@@ -241,10 +136,10 @@ namespace Engine
 #pragma region TempDrawCode
 			// Temporary draw code to be abstracted
 			
-
 			glClearColor(0.1f, 0.1f, 0.1f, 1);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
+			//m_Renderer->DrawQuad(glm::vec2(0.5, 0.5) , glm::vec2(1,1), glm::vec4(0.8, 0.2, 0.3, 1));
 		
 			glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f); // Basic 4:3 camera
 
@@ -266,55 +161,21 @@ namespace Engine
 				m_timeSummed = 0.f;
 				m_goingUp = !m_goingUp;
 			}
-
-
-			FCmodel = glm::rotate(FCtranslation, glm::radians(20.f) * s_timestep, glm::vec3(0.f, 1.f, 0.f)); // Spin the cube at 20 degrees per second
-			//TPmodel = glm::rotate(TPtranslation, glm::radians(20.f) * s_timestep, glm::vec3(0.f, 1.f, 0.f)); // Spin the cube at 20 degrees per second
-
-			// End of code to make the cube move.
-
 			glm::mat4 fcMVP = projection * view * FCmodel;
-			
-			//Binds the Shader and Vertex Array for Flat Colour
+
 			m_ShaderFC->Bind();
 			m_VertexArrayFC->bind();
 
-			// Uploads the Flat Colour Uniform to the Shader
 			m_ShaderFC->UploadUniformMat4("u_MVP", &fcMVP[0][0]);
 
-			glDrawElements(GL_TRIANGLES, m_IndexBufferFC->GetCount(), GL_UNSIGNED_INT, nullptr);
+			//m_ShaderFC->setUniformFloat4("u_Colour", glm::vec4(0.8,0.2,0.3,1.0));
 
-			 //m_Player->draw(projection, view, FCmodel);
+			//glm::mat4 transform = glm::translate(glm::mat4(1.f),glm::vec3(0.5, 0.5, 0.f)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.f,1.f,1.f));
+			//m_ShaderFC->setUniformMat4("u_Transform", transform);
 
-			glm::mat4 tpMVP = projection * view * TPmodel;
 			
-			//m_TextureTP->getSlot();
-			unsigned int textureSlot;
-			if (m_goingUp) m_TextureTP->setSlot(0);
-			else  m_TextureTP->setSlot(1);
-
-			//Binds the Shader and Vertex Array for Textured Phong
-			m_ShaderTP->Bind();
-			m_VertexArrayTP->bind();
-
-
-			// Uploads the Textured Phong Uniforms to the Shader
-
-			m_ShaderTP->UploadUniformMat4("u_MVP", &tpMVP[0][0]);
-
-			m_ShaderTP->UploadUniformMat4("u_model", &TPmodel[0][0]);
-
-			m_ShaderTP->uploadFloat3("u_objectColour", 0.2f, 0.8f, 0.5f);
-
-			m_ShaderTP->uploadFloat3("u_lightColour", 1.0f, 1.0f, 1.0f);
-
-			m_ShaderTP->uploadFloat3("u_lightPos", 1.0f, 4.0f, -6.0f);
-
-			m_ShaderTP->uploadFloat3("u_viewPos", 0.0f, 0.0f, -4.5f);
-
-			m_ShaderTP->uploadInt("u_texData", m_TextureTP->getSlot() /*textureSlot*/);
-
-			glDrawElements(GL_QUADS, m_IndexBufferTP->GetCount() , GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_QUADS, m_IndexBufferFC->GetCount(), GL_UNSIGNED_INT, nullptr);
+		
 
 
 			// End temporary code

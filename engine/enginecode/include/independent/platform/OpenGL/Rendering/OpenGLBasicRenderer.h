@@ -1,7 +1,7 @@
 #pragma once
 #include "Rendering/Rendering.h"
 #include "Rendering/RenderCommand.h"
-
+#include "windows/Material.h"
 #include "glm/gtc/matrix_transform.hpp"
 
 namespace Engine
@@ -10,10 +10,11 @@ namespace Engine
 	{
 	public:
 		void actionCommand(RenderCommand* command) override; //!< Action for rendering
-		void beginScene(const SceneData& sceneData) override;
+		//void beginScene(const SceneData& sceneData) override;
 		void endScene() override; //!< End of scene
 		void submit(const std::shared_ptr<Material>& material) override;
 		void flush() override; //!< Draw Everything
+
 
 		
 	};

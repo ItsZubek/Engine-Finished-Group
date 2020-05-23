@@ -17,8 +17,6 @@ namespace Engine
 	class Object
 	{
 	protected:
-		glm::mat4 FCmodel;
-
 		std::shared_ptr<VertexArray> m_VAO; //!< Vertex Array
 		std::shared_ptr<VertexBuffer> m_VBO; //!< Vertex Buffer
 		std::shared_ptr<IndexBuffer> m_IBO; //!< Index Buffer

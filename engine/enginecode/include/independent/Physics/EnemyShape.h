@@ -8,6 +8,8 @@ namespace Engine
 {
 	class EnemyShape : public Object
 	{
+	private:
+		glm::mat4 EnemyModel;
 	public:
 		EnemyShape() {}; //!< Default Constructor
 		EnemyShape(b2World* world, const glm::vec2& position, const glm::vec2& size, const float& orientation, const glm::vec3& colour); //!< Complete Constructor)

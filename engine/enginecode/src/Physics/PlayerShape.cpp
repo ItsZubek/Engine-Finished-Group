@@ -75,14 +75,14 @@ namespace Engine
 
 	void PlayerShape::draw(glm::mat4 projection, glm::mat4 view)
 	{
-		glm::mat4 fcMVP = projection * view * FCmodel;
+		glm::mat4 MVP = projection * view * FCmodel;
 
 		//Binds the Shader and Vertex Array for Flat Colour
 		m_Shader->Bind();
 		m_VAO->bind();
 
 		// Uploads the Flat Colour Uniform to the Shader
-		m_Shader->UploadUniformMat4("u_MVP", &fcMVP[0][0]);
+		m_Shader->UploadUniformMat4("u_MVP", &MVP[0][0]);
 
 
 		glDrawElements(GL_TRIANGLES, m_IBO->GetCount(), GL_UNSIGNED_INT, nullptr);

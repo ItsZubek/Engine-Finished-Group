@@ -69,13 +69,22 @@ namespace Engine
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 
+		//!< Sets the position, size, orientation and colour of the player
 		m_Player = std::make_shared<PlayerShape>(boxWorld, glm::vec2(0.f, -2.5f), glm::vec2(1.f, 0.2f), 0, glm::vec3(0.8f, 0.2f, 0.2f));
 
-		//m_Enemies.resize(4);
-		m_Enemies = std::make_shared<EnemyShape>(boxWorld, glm::vec2(-2.5f, 2.0f), glm::vec2(1, 1), 0, glm::vec3(0.2f, 0.8f, 0.2f));
-		/*m_Enemies[1] = std::make_shared<EnemyShape>(boxWorld, glm::vec2(-1.5f, 2.0f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.8f, 0.2f, 0.2f));
-		m_Enemies[2] = std::make_shared<EnemyShape>(boxWorld, glm::vec2(1.5f, 2.0f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.8f, 0.2f, 0.2f));
-		m_Enemies[3] = std::make_shared<EnemyShape>(boxWorld, glm::vec2(2.5f, 2.0f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.8f, 0.2f, 0.2f));*/
+		//!< Sets the position, size, orientation and colour of the enemies
+		m_Enemies.resize(4);
+		m_Enemies[0] = std::make_shared<EnemyShape>(boxWorld, glm::vec2(2.5f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
+		m_Enemies[1] = std::make_shared<EnemyShape>(boxWorld, glm::vec2(1.f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
+		m_Enemies[2] = std::make_shared<EnemyShape>(boxWorld, glm::vec2(-1.f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
+		m_Enemies[3] = std::make_shared<EnemyShape>(boxWorld, glm::vec2(-2.5f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
+
+		//!< Sets the position, size, orientation and colour of the bullets
+		m_Bullets.resize(10);
+		m_Bullets[0] = std::make_shared<BulletShape>(boxWorld, glm::vec2(0.0f, -2.4f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
+		m_Bullets[1] = std::make_shared<BulletShape>(boxWorld, glm::vec2(0.0f, -2.4f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
+		m_Bullets[2] = std::make_shared<BulletShape>(boxWorld, glm::vec2(0.0f, -2.4f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
+		m_Bullets[3] = std::make_shared<BulletShape>(boxWorld, glm::vec2(0.0f, -2.4f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
 		
 		// End temporary code
 
@@ -123,9 +132,18 @@ namespace Engine
 			);
 
 			
-			m_Player->draw(projection, view);
+			m_Player->draw(projection, view); // draws the player to the screen
 
-			m_Enemies->draw(projection, view);
+			for (int i = 0; i < 4; i++)
+			{
+				m_Enemies[i]->draw(projection, view); // draws the enemies to the screen
+			}
+
+			for (int i = 0; i < 4; i++)
+			{
+				m_Bullets[i]->draw(projection, view);
+			}
+			
 		
 
 			m_Window->onUpdate();

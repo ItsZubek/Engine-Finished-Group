@@ -15,7 +15,7 @@ namespace Engine
 	class PlayerShape : public Object
 	{
 	private:
-		
+		glm::mat4 FCmodel;
 		
 	public:
 		PlayerShape() {}; //!< Default Constructor

@@ -2,14 +2,16 @@
 
 #include "Object.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 namespace Engine
 {
 	class EnemyShape : public Object
 	{
 	public:
 		EnemyShape() {}; //!< Default Constructor
-		b2Body* Enemy(b2World* world, const b2Vec2& position, const b2Vec2& size, const float& orientation); //!< Complete Constructor)
-		void draw(b2Vec2* points, b2Vec2 position, float angle); //!< draws the shape
+		EnemyShape(b2World* world, const glm::vec2& position, const glm::vec2& size, const float& orientation, const glm::vec3& colour); //!< Complete Constructor)
+		void draw(glm::mat4 projection, glm::mat4 view); //!< draws the shape
 		void Destroy(); //!< destroys the enemy
 	};
 }

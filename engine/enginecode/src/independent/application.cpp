@@ -20,6 +20,8 @@
 
 #include "platform/OpenGL/Rendering/OpenGLMaterial.h"
 
+#include "glm/gtc/matrix_transform.hpp"
+
 #pragma endregion TempIncludes
 
 
@@ -67,42 +69,13 @@ namespace Engine
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 
-		// Intiating the Vertex Array
-		m_VertexArrayFC.reset(VertexArray::create());
+		m_Player = std::make_shared<PlayerShape>(boxWorld, glm::vec2(0.f, -2.5f), glm::vec2(1.f, 0.2f), 0, glm::vec3(0.8f, 0.2f, 0.2f));
 
-		float FCvertices[6 * 4] = {
-			-0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.2f, // red square
-			 0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.2f,
-			 0.5f,  0.5f, -0.5f, 0.8f, 0.2f, 0.2f,
-			-0.5f,  0.5f, -0.5f,  0.8f, 0.2f, 0.2f,
-
-		};
-
-		// Initiating the Vertex Buffer
-		m_VertexBufferFC.reset(VertexBuffer::Create(FCvertices, sizeof(FCvertices)));
-
-		// Initiating the Buffer Layout
-		BufferLayout FCBufferLayout = { { ShaderDataType::Float3, ShaderDataType::Float3 } };
-
-		// Adds the Buffer Layout to the Vertex Buffer
-		m_VertexBufferFC->setBufferLayout(FCBufferLayout);
-
-		m_VertexArrayFC->setVertexBuffer(m_VertexBufferFC);
-
-		unsigned int indices[4] = { 0,1,2,3 };
-
-		// Initiating the Index Buffer 
-		m_IndexBufferFC.reset(IndexBuffer::Create(indices, 4));
-		m_IndexBufferFC->Bind();
-		m_VertexArrayFC->setIndexBuffer(m_IndexBufferFC);
-
-		// Initiating the Shader
-		m_ShaderFC.reset(Shader::create("assets/shaders/flatColour.glsl"));
-		m_ShaderFC->Bind();
-
-		
-		FCmodel = glm::translate(glm::mat4(1), glm::vec3(1.5, 0, 3));
-		//TPmodel = glm::translate(glm::mat4(1), glm::vec3(-1.5, 0, 3));
+		//m_Enemies.resize(4);
+		m_Enemies = std::make_shared<EnemyShape>(boxWorld, glm::vec2(-2.5f, 2.0f), glm::vec2(1, 1), 0, glm::vec3(0.2f, 0.8f, 0.2f));
+		/*m_Enemies[1] = std::make_shared<EnemyShape>(boxWorld, glm::vec2(-1.5f, 2.0f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.8f, 0.2f, 0.2f));
+		m_Enemies[2] = std::make_shared<EnemyShape>(boxWorld, glm::vec2(1.5f, 2.0f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.8f, 0.2f, 0.2f));
+		m_Enemies[3] = std::make_shared<EnemyShape>(boxWorld, glm::vec2(2.5f, 2.0f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.8f, 0.2f, 0.2f));*/
 		
 		// End temporary code
 
@@ -144,44 +117,16 @@ namespace Engine
 			glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f); // Basic 4:3 camera
 
 			glm::mat4 view = glm::lookAt(
-				glm::vec3(0.0f, 0.0f, -14.5), // Camera is at (0.0,0.0,-4.5), in World Space
+				glm::vec3(0.0f, 0.0f, -4.5f), // Camera is at (0.0,0.0,-4.5), in World Space
 				glm::vec3(0.f, 0.f, 0.f), // and looks at the origin
 				glm::vec3(0.f, 1.f, 0.f)  // Standing straight  up
 			);
 
-			// Code to make the cube move, you can ignore this more or less.
-			glm::mat4 FCtranslation, TPtranslation;
-
-
-			FCtranslation = FCmodel;
-			TPtranslation = TPmodel;
 			
-			m_timeSummed += s_timestep;
-			if (m_timeSummed > 20.0f) {
-				m_timeSummed = 0.f;
-				m_goingUp = !m_goingUp;
-			}
-			glm::mat4 fcMVP = projection * view * FCmodel;
+			m_Player->draw(projection, view);
 
-			m_ShaderFC->Bind();
-			m_VertexArrayFC->bind();
-
-			m_ShaderFC->UploadUniformMat4("u_MVP", &fcMVP[0][0]);
-
-			//m_ShaderFC->setUniformFloat4("u_Colour", glm::vec4(0.8,0.2,0.3,1.0));
-
-			//glm::mat4 transform = glm::translate(glm::mat4(1.f),glm::vec3(0.5, 0.5, 0.f)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.f,1.f,1.f));
-			//m_ShaderFC->setUniformMat4("u_Transform", transform);
-
-			
-			glDrawElements(GL_QUADS, m_IndexBufferFC->GetCount(), GL_UNSIGNED_INT, nullptr);
+			m_Enemies->draw(projection, view);
 		
-
-
-			// End temporary code
-#pragma endregion TempDrawCode
-			
-			
 
 			m_Window->onUpdate();
 			s_timestep = mp_timer->ElapsedTime();

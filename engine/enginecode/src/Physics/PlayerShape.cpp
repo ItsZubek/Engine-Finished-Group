@@ -6,7 +6,7 @@
 namespace Engine
 {
 
- PlayerShape::PlayerShape(b2World* world, const b2Vec2& position, const b2Vec2& size, const float& orientation)
+ PlayerShape::PlayerShape(b2World* world, const glm::vec2& position, const glm::vec2& size, const float& orientation, const glm::vec3& colour)
 	{
 		b2BodyDef l_bodyDef; // defines the body
 		b2PolygonShape l_shape;
@@ -29,52 +29,63 @@ namespace Engine
 
 		m_body->CreateFixture(&l_fixtureDef); //creates fixture
 		
+		float FCvertices[6 * 4] = {
+		-0.5f, -0.5f, -0.5f, colour.x, colour.y, colour.z, // red square
+		 0.5f, -0.5f, -0.5f, colour.x, colour.y, colour.z,
+		 0.5f,  0.5f, -0.5f, colour.x, colour.y, colour.z,
+		-0.5f,  0.5f, -0.5f, colour.x, colour.y, colour.z
+		};
 
-		/*m_vertices = ((b2PolygonShape*)m_body->GetFixtureList()->GetShape())->m_vertices; // Gets the vertices of the body
-		m_count = ((b2PolygonShape*)m_body->GetFixtureList()->GetShape())->m_count; // Gets the indices of the body
+		
 
-		// Creates a VAO
+		// Intiating the Vertex Array
 		m_VAO.reset(VertexArray::create());
-		m_VAO->bind();
 
-		// Create a VBO
-		m_VBO.reset(VertexBuffer::Create((float*)m_vertices, sizeof(m_vertices)));
-		BufferLayout box2DBL = { (ShaderDataType::Float3), {ShaderDataType::Float3} };
-		m_VBO->setBufferLayout(box2DBL);
+		// Initiating the Vertex Buffer 
+		m_VBO.reset(VertexBuffer::Create(FCvertices, sizeof(FCvertices)));
+
+
+		// Initiating the Buffer Layout
+		Engine::BufferLayout BufferLayout = { { ShaderDataType::Float3 }, { ShaderDataType::Float3 } };
+
+		// Adds the Buffer Layout to the Vertex Buffer
+		m_VBO->setBufferLayout(BufferLayout);
+
+		//Sets the Buffer Layout
 		m_VAO->setVertexBuffer(m_VBO);
 
-		/*m_IBO.reset(IndexBuffer::Create((unsigned int*)4, m_count));
+		unsigned int indices[3 * 2] = {
+			2, 1, 0,
+			0, 3, 2,
+		};
+
+		// Initiating the Index Buffer 
+		m_IBO.reset(IndexBuffer::Create(indices, 3 * 2));
 		m_IBO->Bind();
 		m_VAO->setIndexBuffer(m_IBO);
 
-		m_Shader.reset(Shader::create("assets/shaders/texturedPhong.glsl"));
-		m_Shader->Bind();*/
-		
+		// Initiating the Shader
+		m_Shader.reset(Shader::create("assets/shaders/flatColour.glsl"));
+		m_Shader->Bind();
+
+
+
+		FCmodel = glm::translate(glm::mat4(1), glm::vec3(position.x, position.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1));
 	}
 
-	/*void PlayerShape::draw(glm::mat4 projection, glm::mat4 view, glm::mat4 model)
+	void PlayerShape::draw(glm::mat4 projection, glm::mat4 view)
 	{
-		
+		glm::mat4 fcMVP = projection * view * FCmodel;
 
-		glm::mat4 MVP = projection * view * model;
-		
-
+		//Binds the Shader and Vertex Array for Flat Colour
 		m_Shader->Bind();
 		m_VAO->bind();
 
-		m_Shader->UploadUniformMat4("u_MVP", MVP);
+		// Uploads the Flat Colour Uniform to the Shader
+		m_Shader->UploadUniformMat4("u_MVP", &fcMVP[0][0]);
 
-		m_Shader->UploadUniformMat4("u_model", model);
 
-		m_Shader->uploadFloat3("u_objectColour", 0.2f, 0.8f, 0.5f);
-
-		m_Shader->uploadFloat3("u_lightColour", 255.f, 0.0f, 0.f);
-
-		m_Shader->uploadFloat3("u_lightPos", 1.0f, 4.0f, -6.0f);
-
-		m_Shader->uploadFloat3("u_viewPos", 0.0f, 0.0f, -4.5f);
-
-		glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, m_IBO->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
 
 	void PlayerShape::update()
@@ -88,5 +99,5 @@ namespace Engine
 	void PlayerShape::movement(b2Vec2 movement)
 	{
 		m_body->ApplyLinearImpulseToCenter(movement, true);
-	}*/
+	}
 }

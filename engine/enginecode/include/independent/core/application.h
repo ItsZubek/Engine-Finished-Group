@@ -89,8 +89,8 @@ namespace Engine {
 		b2Vec2 m_gravity = b2Vec2(0.f, 0.f);
 
 		std::shared_ptr<PlayerShape> m_Player; //!< the player in the game
-		std::shared_ptr<std::vector<BulletShape>> m_Bullets; //!< Bullets for the player to destroy enemies
-		std::vector<EnemyShape> m_Enemies; //!< Vector full of enemies
+		std::vector<std::shared_ptr<BulletShape>> m_Bullets; //!< Bullets for the player to destroy enemies
+		std::shared_ptr<EnemyShape> m_Enemies; //!< Vector full of enemies
 		
 		const int m_iVelIterations = 7;
 		const int m_iPosIterations = 5;

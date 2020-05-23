@@ -5,19 +5,20 @@
 
 namespace Engine
 {
-	b2Body* BulletShape::Bullet(b2World* world, const b2Vec2& position, const b2Vec2& size, const float& orientation)
+	BulletShape::BulletShape(b2World* world, const glm::vec2& position, const glm::vec2& size, const float& orientation, const glm::vec3& colour)
 	{
 		b2BodyDef l_bodyDef; // defines the body
-		b2PolygonShape l_shape; // Defines the shape
+		b2PolygonShape l_shape;
 		b2FixtureDef l_fixtureDef; // sets the fixture of the shape
 
 		l_bodyDef.type = b2_dynamicBody;
-		l_bodyDef.position.Set(position.x * PX2M, position.y * PX2M); // sets the position of the object as a parameter
+		l_bodyDef.position.Set(position.x, position.y); // sets the position of the object as a parameter
 		l_bodyDef.angle = orientation * DEG2RAD; // sets the direction the object is facing
+
 
 		m_body = world->CreateBody(&l_bodyDef); // sets the body to appear in the world
 
-		l_shape.SetAsBox(PX2M * size.x * 0.5f, PX2M * size.y * 0.5f);
+		l_shape.SetAsBox(size.x * 0.5f, size.y * 0.5f);
 		l_shape.m_radius = 0.0f;
 
 		l_fixtureDef.density = m_Density; // adds mass to the shape
@@ -26,25 +27,60 @@ namespace Engine
 		l_fixtureDef.shape = &l_shape; // sets fixture as the shape
 
 		m_body->CreateFixture(&l_fixtureDef); //creates fixture
-		m_body->SetLinearDamping(0.2f); // adds movement to the body
 
-		return m_body;
+		float FCvertices[6 * 4] = {
+		-0.5f, -0.5f, -0.5f, colour.x, colour.y, colour.z, // red square
+		 0.5f, -0.5f, -0.5f, colour.x, colour.y, colour.z,
+		 0.5f,  0.5f, -0.5f, colour.x, colour.y, colour.z,
+		-0.5f,  0.5f, -0.5f, colour.x, colour.y, colour.z
+		};
+
+
+
+		// Intiating the Vertex Array
+		m_VAO.reset(VertexArray::create());
+
+		// Initiating the Vertex Buffer 
+		m_VBO.reset(VertexBuffer::Create(FCvertices, sizeof(FCvertices)));
+
+
+		// Initiating the Buffer Layout
+		Engine::BufferLayout BufferLayout = { { ShaderDataType::Float3 }, { ShaderDataType::Float3 } };
+
+		// Adds the Buffer Layout to the Vertex Buffer
+		m_VBO->setBufferLayout(BufferLayout);
+
+		//Sets the Buffer Layout
+		m_VAO->setVertexBuffer(m_VBO);
+
+		unsigned int indices[3 * 2] = {
+			2, 1, 0,
+			0, 3, 2,
+		};
+
+		// Initiating the Index Buffer 
+		m_IBO.reset(IndexBuffer::Create(indices, 3 * 2));
+		m_IBO->Bind();
+		m_VAO->setIndexBuffer(m_IBO);
+
+		// Initiating the Shader
+		m_Shader.reset(Shader::create("assets/shaders/flatColour.glsl"));
+		m_Shader->Bind();
 	}
 
-	void BulletShape::draw(b2Vec2* points, b2Vec2 position, float angle)
+	void BulletShape::draw(glm::mat4 projection, glm::mat4 view)
 	{
-		glColor3f(0.8f, 0.2f, 0.2f);
-		position = m_body->GetPosition();
-		glPushMatrix();
-		glTranslatef(position.x * M2PX, position.y * M2PX, 0);
-		glRotatef(angle * RAD2DEG, 0, 0, 1);
-		glBegin(GL_POLYGON);
-		for (int i = 0; i < 4; i++)
-		{
-			glVertex2f(points[i].x * M2PX, points[i].y * M2PX);
-		}
-		glEnd();
-		glPopMatrix();
+		glm::mat4 fcMVP = projection * view * FCmodel;
+
+		//Binds the Shader and Vertex Array for Flat Colour
+		m_Shader->Bind();
+		m_VAO->bind();
+
+		// Uploads the Flat Colour Uniform to the Shader
+		m_Shader->UploadUniformMat4("u_MVP", &fcMVP[0][0]);
+
+
+		glDrawElements(GL_TRIANGLES, m_IBO->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
 
 	void BulletShape::update()

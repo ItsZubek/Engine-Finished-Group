@@ -131,7 +131,7 @@ namespace Engine
 				glm::vec3(0.f, 1.f, 0.f)  // Standing straight  up
 			);
 
-			
+			m_Player->update();
 			m_Player->draw(projection, view); // draws the player to the screen
 
 			for (int i = 0; i < 4; i++)
@@ -189,20 +189,16 @@ namespace Engine
 	bool Application::onKeyPress(KeyPressedEvent& e)
 	{
 		if (e.GetKeyCode() == 256) m_running = false;
-		if (e.GetKeyCode() == 65) { m_FCdirection[1] = true; }
-		if (e.GetKeyCode() == 68) { m_FCdirection[3] = true; }
-		if (e.GetKeyCode() == 87) { m_FCdirection[0] = true; }
-		if (e.GetKeyCode() == 83) { m_FCdirection[2] = true; }
+		if (e.GetKeyCode() == 65) m_Player->movement(b2Vec2(0.2f, 0.0f));
+		if (e.GetKeyCode() == 68) m_Player->movement(b2Vec2(-0.2f, 0.0f));
 
 		ENGINE_CORE_TRACE("KeyPressed: {0}, RepeatCount: {1}", e.GetKeyCode(), e.GetRepeatCount());
 		return true;
 	}
 	bool Application::onKeyRelease(KeyReleasedEvent& e)
 	{
-		if (e.GetKeyCode() == 65) { m_FCdirection[1] = false; }
-		if (e.GetKeyCode() == 68) { m_FCdirection[3] = false; }
-		if (e.GetKeyCode() == 87) { m_FCdirection[0] = false; }
-		if (e.GetKeyCode() == 83) { m_FCdirection[2] = false; }
+		if (e.GetKeyCode() == 65) m_Player->playerStopped();
+		if (e.GetKeyCode() == 68) 
 		ENGINE_CORE_TRACE("KeyReleased: {0}", e.GetKeyCode());
 		return true;
 	}

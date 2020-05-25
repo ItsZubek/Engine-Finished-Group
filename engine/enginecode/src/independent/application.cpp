@@ -29,7 +29,7 @@ namespace Engine
 	Application* Application::s_instance = nullptr;
 	float Application::s_timestep = 0.f;
 	glm::ivec2 Application::s_screenResolution = glm::ivec2(0, 0);
-	AudioManager m_audiosystem;
+	
 
 
 #pragma region TempGlobalVars
@@ -38,10 +38,6 @@ namespace Engine
 
 	Application::Application()
 	{
-		
-		boxWorld = new b2World(m_gravity);
-		m_Player = std::make_shared<PlayerShape>();
-		
 		mp_logger = std::make_shared<MyLogger>();
 		mp_logger->start();
 		ENGINE_CORE_INFO("Logging Initalised");
@@ -106,77 +102,8 @@ namespace Engine
 		}
 		mp_imgui->close();
 	}
+		
 
-			FCtranslation = FCmodel;
-			if (m_FCdirection[1]) { FCtranslation = glm::translate(FCmodel, glm::vec3(-0.25f * s_timestep, 0.0f, 0.0f)); }
-			if (m_FCdirection[3]) { FCtranslation = glm::translate(FCmodel, glm::vec3(0.25f * s_timestep, 0.0f, 0.0f)); }
-			if (m_FCdirection[0]) { FCtranslation = glm::translate(FCmodel, glm::vec3(0.0f, 0.25f * s_timestep, 0.0f)); }
-			if (m_FCdirection[2]) { FCtranslation = glm::translate(FCmodel, glm::vec3(0.0f, -0.25f * s_timestep, 0.0f)); }
-
-			m_timeSummed += s_timestep;
-			if (m_timeSummed > 20.0f) {
-				m_timeSummed = 0.f;
-				m_goingUp = !m_goingUp;
-			}
-
-
-			FCmodel = glm::rotate(FCtranslation, glm::radians(20.f) * s_timestep, glm::vec3(0.f, 1.f, 0.f)); // Spin the cube at 20 degrees per second
-			TPmodel = glm::rotate(TPtranslation, glm::radians(-20.f) * s_timestep, glm::vec3(0.f, 1.f, 0.f)); // Spin the cube at 20 degrees per second
-
-			// End of code to make the cube move.
-
-			glm::mat4 fcMVP = projection * view * FCmodel;
-			
-			//Binds the Shader and Vertex Array for Flat Colour
-			m_ShaderFC->Bind();
-			m_VertexArrayFC->bind();
-
-			// Uploads the Flat Colour Uniform to the Shader
-			m_ShaderFC->UploadUniformMat4("u_MVP", &fcMVP[0][0]);
-
-			glDrawElements(GL_TRIANGLES, m_IndexBufferFC->GetCount(), GL_UNSIGNED_INT, nullptr);
-
-			glm::mat4 tpMVP = projection * view * TPmodel;
-			//m_TextureTP->getSlot();
-			unsigned int textureSlot;
-			if (m_goingUp) m_TextureTP->setSlot(0);
-			else  m_TextureTP->setSlot(1);
-
-
-			//Binds the Shader and Vertex Array for Textured Phong
-			m_ShaderTP->Bind();
-			m_VertexArrayTP->bind();
-			
-			
-			// Uploads the Textured Phong Uniforms to the Shader
-
-			m_ShaderTP->UploadUniformMat4("u_MVP", &tpMVP[0][0]);
-
-			m_ShaderTP->UploadUniformMat4("u_model", &TPmodel[0][0]);
-
-			m_ShaderTP->uploadFloat3("u_objectColour", 0.2f, 0.8f, 0.5f);
-
-			m_ShaderTP->uploadFloat3("u_lightColour", 1.0f, 1.0f, 1.0f);
-
-			m_ShaderTP->uploadFloat3("u_lightPos", 1.0f, 4.0f, -6.0f);
-
-			m_ShaderTP->uploadFloat3("u_viewPos", 0.0f, 0.0f, -4.5f);
-
-			m_ShaderTP->uploadInt("u_texData", m_TextureTP->getSlot() /*textureSlot*/ );
-
-			glDrawElements(GL_TRIANGLES, m_IndexBufferTP->GetCount() , GL_UNSIGNED_INT, nullptr);
-			
-
-			// End temporary code
-#pragma endregion TempDrawCode
-			
-			
-
-			m_Window->onUpdate();
-			s_timestep = mp_timer->ElapsedTime();
-
-		}
-	}
 
 	Application::~Application()
 	{

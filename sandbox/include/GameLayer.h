@@ -46,6 +46,8 @@ private:
 
 	std::shared_ptr<Engine::Texture> m_TextureTP;
 
+	Engine::AudioManager m_audiosystem;
+
 	
 	std::shared_ptr<Engine::PlayerShape> m_Player; //!< the player in the game
 

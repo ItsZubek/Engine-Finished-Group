@@ -52,9 +52,7 @@ namespace Engine
 #pragma region TempSetup
 		//  Temporary set up code to be abstracted
 
-		m_audiosystem.Start();
-		m_audiosystem.LoadSound("assets/audio/movie_1.mp3");
-		m_audiosystem.PlaySounds("assets/audio/movie_1.mp3", glm::vec3(0, 0, 0), m_audiosystem.VolumeTodB(1.0f));
+		
 
 
 		m_Window = std::shared_ptr<Window>(Window::Create());
@@ -91,7 +89,7 @@ namespace Engine
 			boxWorld->Step(s_timestep, m_iVelIterations, m_iPosIterations);
 
 			mp_imgui->render();
-			m_audiosystem.Update();
+			
 			m_Window->onUpdate();
 			s_timestep = mp_timer->ElapsedTime();
 
@@ -110,7 +108,7 @@ namespace Engine
 		mp_logger->stop();
 		mp_logger.reset();
 		mp_timer->stop();
-		m_audiosystem.Stop();
+		
 	}
 
 	void Application::onEvent(EventBaseClass& e)

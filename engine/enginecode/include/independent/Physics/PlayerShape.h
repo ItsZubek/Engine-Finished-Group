@@ -6,6 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Object.h"
+
 #include <Box2D/Box2D.h>
 
 namespace Engine

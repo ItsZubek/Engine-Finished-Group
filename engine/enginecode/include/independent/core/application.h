@@ -6,17 +6,21 @@
 #include "systems/MyLogger.h"
 #include "systems/MyTimer.h"
 #include "windows/window.h"
+#include "windows/OrthographicCamera.h"
 
 #include "events/KeyEvents.h"
 #include "events/MouseEvents.h"
 #include "events/WindowEvents.h"
 
-#include "imgui.h"
 #include <glm/glm.hpp>
 
-#include "Layer/LayerStack.h"
+#include "Physics/PlayerShape.h"
+#include "Physics/EnemyShape.h"
+#include "Physics/BulletShape.h"
+#include "Physics/Collisions.h"
 
 #include <Box2D/Box2D.h>
+#include <vector>
 
 
 
@@ -40,23 +44,27 @@ namespace Engine {
 		std::shared_ptr<MyLogger> mp_logger; //!< Shared Pointer to a logger
 		std::shared_ptr<MyTimer> mp_timer;//!< Shared Pointer to a timer
 		std::shared_ptr<Window> m_Window;
-		std::shared_ptr<LayerStack> m_layerStack;
+		
 
 		
 	private:
 		static Application* s_instance; //!< Singleton instance of the application
 		static float s_timestep; //!< last frame timestep
+		OrthographicCamera m_Camera;
 
 		bool m_running = true; //!< Is the application running?
 		
-		std::shared_ptr<Imgui> mp_imgui; //!< Shared Pointer to ImGui
-
 		b2World* boxWorld = nullptr;
 		b2Vec2 m_gravity = b2Vec2(0.f, 0.f);
 
 		const int m_iVelIterations = 7;
 		const int m_iPosIterations = 5;
-		
+
+		std::shared_ptr<PlayerShape> m_Player;
+		std::vector<std::shared_ptr<EnemyShape>> m_Enemies;
+		std::vector<std::shared_ptr<BulletShape>> m_Bullets;
+		Collisions m_CollisionListener;
+
 		float TimeElapsedInSeconds; //!< Time Elapsed in seconds
 		float fps; //!< Frames Per Second
 		 //!< Pointer to a window class

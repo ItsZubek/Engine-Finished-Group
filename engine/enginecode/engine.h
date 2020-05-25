@@ -9,6 +9,7 @@
 #include "systems/Input.h"
 #include "systems/KeyCodes.h"
 #include "systems/MouseButtonCodes.h"
+#include "Audio/AudioManager.h"
 
 // entry point
 #include "include/independent/core/entrypoint.h"

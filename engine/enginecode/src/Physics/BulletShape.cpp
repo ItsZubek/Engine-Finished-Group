@@ -90,6 +90,12 @@ namespace Engine
 	{
 		b2Vec2 pos = m_body->GetPosition(); // updates body position 
 		m_bulletModel = glm::translate(glm::mat4(1), glm::vec3(pos.x, pos.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.1, 0.1, 1));
+
+		// If bullet is off screen stop it from moving
+		if (pos.y > 3.0f)
+		{
+			m_body->SetLinearVelocity(b2Vec2(0, 0));
+		}
 	}
 
 	void BulletShape::fire(b2Vec2 movement)

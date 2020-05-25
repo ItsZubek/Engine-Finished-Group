@@ -62,7 +62,7 @@ namespace Engine {
 
 		std::shared_ptr<PlayerShape> m_Player;
 		std::vector<std::shared_ptr<EnemyShape>> m_Enemies;
-		std::vector<std::shared_ptr<BulletShape>> m_Bullets;
+		std::shared_ptr<BulletShape> m_Bullet;
 		Collisions m_CollisionListener;
 
 		float TimeElapsedInSeconds; //!< Time Elapsed in seconds

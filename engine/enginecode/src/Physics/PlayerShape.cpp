@@ -93,8 +93,18 @@ namespace Engine
 
 	void PlayerShape::update()
 	{
-		m_position = m_body->GetPosition(); // updates body position 
-		FCmodel = glm::translate(glm::mat4(1), glm::vec3(m_position.x, m_position.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 0.2, 1));
+		b2Vec2 pos = m_body->GetPosition(); // updates body position 
+		FCmodel = glm::translate(glm::mat4(1), glm::vec3(pos.x, pos.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 0.2, 1));
+
+		if (pos.x > 4.5f)
+		{
+			m_body->SetTransform(b2Vec2(-4.4f, -2.5f), 0);
+		}
+
+		if (pos.x < -4.5)
+		{
+			m_body->SetTransform(b2Vec2(4.4f, -2.5f), 0);
+		}
 	}
 
 	void PlayerShape::movement(b2Vec2 movement)

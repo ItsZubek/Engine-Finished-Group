@@ -29,6 +29,7 @@ namespace Engine
 	Application* Application::s_instance = nullptr;
 	float Application::s_timestep = 0.f;
 	glm::ivec2 Application::s_screenResolution = glm::ivec2(0, 0);
+	AudioManager m_audiosystem;
 
 
 #pragma region TempGlobalVars
@@ -54,6 +55,10 @@ namespace Engine
 		boxWorld = new b2World(m_gravity);
 		
 		mp_imgui = std::shared_ptr<Imgui>(ImguiGLFW::initialise());
+
+		m_audiosystem.Start();
+		m_audiosystem.LoadSound("assets/audio/movie_1.mp3");
+		m_audiosystem.PlaySounds("assets/audio/movie_1.mp3", glm::vec3(0, 0, 0), m_audiosystem.VolumeTodB(1.0f));
 
 
 		m_Window = std::shared_ptr<Window>(Window::Create());

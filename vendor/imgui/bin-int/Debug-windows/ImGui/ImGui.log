@@ -1,8 +1,1 @@
-﻿  imgui.cpp
-  imgui_demo.cpp
-  imgui_draw.cpp
-  imgui_impl_glfw.cpp
-  imgui_impl_opengl3.cpp
-  imgui_widgets.cpp
-  Generowanie kodu...
-  ImGui.vcxproj -> I:\Mateusz\githubissue\cw-2019-2020-group-a\vendor\ImGui\bin\Debug-windows\ImGui\ImGui.lib
+﻿  ImGui.vcxproj -> I:\Mateusz\githubissue\cw-2019-2020-group-a\vendor\ImGui\bin\Debug-windows\ImGui\ImGui.lib

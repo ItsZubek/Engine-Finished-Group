@@ -1,9 +1,9 @@
 #include "engine_pch.h"
 #include "Audio/AudioManager.h"
-#include "systems/MyLogger.h"
 
 
-namespace Engine {
+namespace Engine 
+{
 
 	void AudioManager::Start() {
 		errorCheck(FMOD::Studio::System::create(&m_studioSystem));
@@ -21,7 +21,8 @@ namespace Engine {
 		errorCheck(m_lowLevelSystem->init(m_maxChannels, FMOD_INIT_NORMAL, NULL));
 	}
 
-	void AudioManager::Update() {
+	void AudioManager::Update() 
+	{
 		std::vector<std::map<int, FMOD::Channel*>::iterator> l_stoppedChannels;
 		for (auto it = m_channels.begin(); it != m_channels.end(); it++)
 		{
@@ -71,7 +72,7 @@ namespace Engine {
 		m_sounds.erase(it);
 	}
 
-	int AudioManager::PlaySound(const std::string& strSoundName, const glm::vec3& vPos, float fVolumedB)
+	int AudioManager::PlaySounds(const std::string& strSoundName, const glm::vec3& vPos, float fVolumedB)
 	{
 		int channelId = m_nextChannelId++;
 		auto it = m_sounds.find(strSoundName);
@@ -91,10 +92,12 @@ namespace Engine {
 		{
 			FMOD_MODE currMode;
 			it->second->getMode(&currMode);
-			if (currMode & FMOD_3D) {
+			if (currMode & FMOD_3D)
+			{
 				FMOD_VECTOR FVposition = VectorToFmod(vPos);
 				errorCheck(channel->set3DAttributes(&FVposition, nullptr));
 			}
+
 			errorCheck(channel->setVolume(dbToVolume(fVolumedB)));
 			errorCheck(channel->setPaused(false));
 			m_channels[channelId] = channel;
@@ -158,7 +161,8 @@ namespace Engine {
 		it->second->start();
 	}
 
-	void AudioManager::StopEvent(const std::string& strEventName, bool bImmediate) {
+	void AudioManager::StopEvent(const std::string& strEventName, bool bImmediate) 
+	{
 		auto it = m_events.find(strEventName);
 		if (it == m_events.end())
 			return;
@@ -167,19 +171,22 @@ namespace Engine {
 		errorCheck(it->second->stop(eMode));
 	}
 
-	bool AudioManager::IsEventPlaying(const std::string& strEventName) const {
+	bool AudioManager::IsEventPlaying(const std::string& strEventName) const 
+	{
 		auto it = m_events.find(strEventName);
 		if (it == m_events.end())
 			return false;
 
 		FMOD_STUDIO_PLAYBACK_STATE* state = NULL;
-		if (it->second->getPlaybackState(state) == FMOD_STUDIO_PLAYBACK_PLAYING) {
+		if (it->second->getPlaybackState(state) == FMOD_STUDIO_PLAYBACK_PLAYING) 
+		{
 			return true;
 		}
 		return false;
 	}
 
-	void AudioManager::GetEventParameter(const std::string& strEventName, const std::string& strParameterName, float* parameter) {
+	void AudioManager::GetEventParameter(const std::string& strEventName, const std::string& strParameterName, float* parameter) 
+	{
 		auto it = m_events.find(strEventName);
 		if (it == m_events.end())
 			return;
@@ -188,14 +195,16 @@ namespace Engine {
 		//errorCheck(pParameter->getValue(parameter));
 	}
 
-	void AudioManager::SetEventParameter(const std::string& strEventName, const std::string& strParameterName, float fValue) {
+	void AudioManager::SetEventParameter(const std::string& strEventName, const std::string& strParameterName, float fValue) 
+	{
 		auto it = m_events.find(strEventName);
 		if (it == m_events.end())
 			return;
 		errorCheck(it->second->setParameterByName(strParameterName.c_str(), fValue));
 	}
 
-	FMOD_VECTOR AudioManager::VectorToFmod(const glm::vec3& vPosition) {
+	FMOD_VECTOR AudioManager::VectorToFmod(const glm::vec3& vPosition)
+	{
 		FMOD_VECTOR fVec;
 		fVec.x = vPosition.x;
 		fVec.y = vPosition.y;
@@ -203,8 +212,10 @@ namespace Engine {
 		return fVec;
 	}
 
-	int errorCheck(FMOD_RESULT result) {
-		if (result != FMOD_OK) {
+	int errorCheck(FMOD_RESULT result) 
+	{
+		if (result != FMOD_OK) 
+		{
 			std::cout << "FMOD ERROR " << result << std::endl;
 			return 1;
 		}
@@ -222,8 +233,17 @@ namespace Engine {
 		return 20.0f * log10f(volume);
 	}
 
-	void AudioManager::Stop() {
+	void AudioManager::Stop() 
+	{
 		delete m_lowLevelSystem;
 		delete m_studioSystem;
+	}
+	int AudioManager::errorCheck(FMOD_RESULT result) {
+		if (result != FMOD_OK) {
+			std::cout << "FMOD ERROR " << result << std::endl;
+			return 1;
+		}
+		// cout << "FMOD all good" << endl;
+		return 0;
 	}
 }

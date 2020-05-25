@@ -14,6 +14,7 @@
 #include "windows/Texture.h"
 #include "windows/OrthographicCamera.h"
 #include <Box2D/Box2D.h>
+#include "Audio/AudioManager.h"
 
 #include <vector>
 #include "Physics/PlayerShape.h"

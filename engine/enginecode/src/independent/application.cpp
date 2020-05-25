@@ -27,6 +27,7 @@ namespace Engine {
 	Application* Application::s_instance = nullptr;
 	float Application::s_timestep = 0.f;
 	glm::ivec2 Application::s_screenResolution = glm::ivec2(0, 0);
+	AudioManager m_audiosystem;
 
 
 #pragma region TempGlobalVars
@@ -38,13 +39,15 @@ namespace Engine {
 		
 		boxWorld = new b2World(m_gravity);
 		m_Player = std::make_shared<PlayerShape>();
-		
 		mp_logger = std::make_shared<MyLogger>();
 		mp_logger->start();
 		mp_timer = std::make_shared<MyTimer>();
 		mp_timer->start();
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));
+		m_audiosystem.Start();
+		m_audiosystem.LoadSound("I:/Mateusz/githubissue/cw-2019-2020-group-a/sandbox/assets/audio/movie_1.mp3");
+		m_audiosystem.PlaySounds("I: / Mateusz / githubissue / cw - 2019 - 2020 - group - a / sandbox / assets / audio / movie_1.mp3");
 
 
 		Application::s_screenResolution = glm::ivec2(m_Window->getWidth(), m_Window->getHeight());
@@ -341,8 +344,7 @@ namespace Engine {
 			// End temporary code
 #pragma endregion TempDrawCode
 			
-			
-
+			m_audiosystem.Update();
 			m_Window->onUpdate();
 			s_timestep = mp_timer->ElapsedTime();
 

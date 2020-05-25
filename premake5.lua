@@ -140,9 +140,9 @@ project "Sandbox"
 	}
 	libdirs
 	{
-			"../vendor/FMOD/core/lib/x64",
-			"../vendor/FMOD/fsbank/lib/x64",
-			"../vendor/FMOD/studio/lib/x64"
+			"vendor/FMOD/core/lib/x64",
+			"vendor/FMOD/fsbank/lib/x64",
+			"vendor/FMOD/studio/lib/x64"
 	}
 
 	filter "system:windows"
@@ -164,10 +164,7 @@ project "Sandbox"
 		symbols "On"
 		libdirs 
         {
-            "./vendor/Box2D/x64/Debug",
-			"./vendor/FMOD/core/lib/x64",
-			"./vendor/FMOD/fsbank/lib/x64",
-			"./vendor/FMOD/studio/lib/x64"
+            "./vendor/Box2D/x64/Debug"
         }
 		links
 		{

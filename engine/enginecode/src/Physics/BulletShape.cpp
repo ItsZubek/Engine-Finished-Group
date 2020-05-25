@@ -87,13 +87,11 @@ namespace Engine
 
 	void BulletShape::update()
 	{
-		b2Vec2 pos = m_body->GetPosition(); // updates body position
-		glVertex2f(pos.x, pos.y); // sets body position to new position
-		float angle = m_body->GetAngle() * RAD2DEG; // sets angle of shape
-		glRotatef(angle, pos.x, pos.y, 0); //updates the rotation of the shape
+		b2Vec2 pos = m_body->GetPosition(); // updates body position 
+		m_bulletModel = glm::translate(glm::mat4(1), glm::vec3(pos.x, pos.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.1, 0.1, 1));
 	}
 
-	void BulletShape::movement(b2Vec2 movement)
+	void BulletShape::fire(b2Vec2 movement)
 	{
 		m_body->ApplyLinearImpulseToCenter(movement, true);
 	}

@@ -28,6 +28,8 @@ namespace Engine
 		l_fixtureDef.shape = &l_shape; // sets fixture as the shape
 
 		m_body->CreateFixture(&l_fixtureDef); //creates fixture
+
+		
 		
 		float FCvertices[6 * 4] = {
 		-0.5f, -0.5f, -0.5f, colour.x, colour.y, colour.z, // red square
@@ -90,8 +92,8 @@ namespace Engine
 
 	void PlayerShape::update()
 	{
-		b2Vec2 pos = m_body->GetPosition(); // updates body position 
-		FCmodel = glm::translate(glm::mat4(1), glm::vec3(pos.x, pos.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 0.2, 1));
+		m_position = m_body->GetPosition(); // updates body position 
+		FCmodel = glm::translate(glm::mat4(1), glm::vec3(m_position.x, m_position.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 0.2, 1));
 	}
 
 	void PlayerShape::movement(b2Vec2 movement)

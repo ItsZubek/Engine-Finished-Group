@@ -16,6 +16,7 @@ namespace Engine
 	{
 	private:
 		glm::mat4 FCmodel;
+		b2Vec2 m_position;
 	public:
 		PlayerShape() {}; //!< Default Constructor
 		PlayerShape(b2World* world, const glm::vec2& position, const glm::vec2& size, const float& orientation, const glm::vec3& colour); //!< Complete Contructor
@@ -23,7 +24,8 @@ namespace Engine
 		void update(); //!< updates the position of the shape
 		void movement(b2Vec2 movement); //!< moves the player
 		void playerStopped();
-		b2Body* getBody() { return m_body; }
+		glm::mat4 getPlayerPos() { return FCmodel; }
+		
 		
 
 		

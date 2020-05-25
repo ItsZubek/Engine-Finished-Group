@@ -81,10 +81,23 @@ namespace Engine
 
 		//!< Sets the position, size, orientation and colour of the bullets
 		m_Bullets.resize(10);
-		m_Bullets[0] = std::make_shared<BulletShape>(boxWorld, glm::vec2(0.0f, -2.4f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
-		m_Bullets[1] = std::make_shared<BulletShape>(boxWorld, glm::vec2(0.0f, -2.4f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
-		m_Bullets[2] = std::make_shared<BulletShape>(boxWorld, glm::vec2(0.0f, -2.4f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
-		m_Bullets[3] = std::make_shared<BulletShape>(boxWorld, glm::vec2(0.0f, -2.4f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
+		m_Bullets[0] = std::make_shared<BulletShape>(boxWorld, glm::vec2(-1.9f, -2.8f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
+		m_Bullets[1] = std::make_shared<BulletShape>(boxWorld, glm::vec2(-2.1f, -2.8f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
+		m_Bullets[2] = std::make_shared<BulletShape>(boxWorld, glm::vec2(-2.3f, -2.8f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
+		m_Bullets[3] = std::make_shared<BulletShape>(boxWorld, glm::vec2(-2.5f, -2.8f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
+		m_Bullets[4] = std::make_shared<BulletShape>(boxWorld, glm::vec2(-2.7f, -2.8f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
+		m_Bullets[5] = std::make_shared<BulletShape>(boxWorld, glm::vec2(-2.9f, -2.8f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
+		m_Bullets[6] = std::make_shared<BulletShape>(boxWorld, glm::vec2(-3.1f, -2.8f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
+		m_Bullets[7] = std::make_shared<BulletShape>(boxWorld, glm::vec2(-3.3f, -2.8f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
+		m_Bullets[8] = std::make_shared<BulletShape>(boxWorld, glm::vec2(-3.5f, -2.8f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
+		m_Bullets[9] = std::make_shared<BulletShape>(boxWorld, glm::vec2(-3.7f, -2.8f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
+
+		m_Player->setUserData(new std::pair<std::string, void*>(typeid(decltype(m_Player)).name(), &m_Player));
+		for (std::shared_ptr<EnemyShape>& enemies : m_Enemies) enemies->setUserData(new std::pair<std::string, void*>(typeid(decltype(enemies)).name(), &enemies));
+		for (std::shared_ptr<BulletShape>& bullets : m_Bullets) bullets->setUserData(new std::pair<std::string, void*>(typeid(decltype(bullets)).name(), &bullets));
+
+		boxWorld->SetContactListener(&m_CollisionListener); // sets contact listener
+		
 		
 		// End temporary code
 
@@ -139,8 +152,9 @@ namespace Engine
 				m_Enemies[i]->draw(projection, view); // draws the enemies to the screen
 			}
 
-			for (int i = 0; i < 4; i++)
+			for (int i = 0; i < 10; i++)
 			{
+				m_Bullets[i]->update();
 				m_Bullets[i]->draw(projection, view);
 			}
 			
@@ -191,10 +205,13 @@ namespace Engine
 		if (e.GetKeyCode() == 256) m_running = false;
 		if (e.GetKeyCode() == 65) m_Player->movement(b2Vec2(0.2f, 0.0f));
 		if (e.GetKeyCode() == 68) m_Player->movement(b2Vec2(-0.2f, 0.0f));
-
+		if (e.GetKeyCode() == 32) m_Bullets[4]->fire(b2Vec2(0.0f, 0.2f));
+		
+		
 		ENGINE_CORE_TRACE("KeyPressed: {0}, RepeatCount: {1}", e.GetKeyCode(), e.GetRepeatCount());
 		return true;
 	}
+
 	bool Application::onKeyRelease(KeyReleasedEvent& e)
 	{
 		if (e.GetKeyCode() == 65) m_Player->playerStopped();

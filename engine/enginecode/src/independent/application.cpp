@@ -98,6 +98,7 @@ namespace Engine
 
 		boxWorld->SetContactListener(&m_CollisionListener); // sets contact listener
 		
+		mp_timer->getFrameTimeSecomds();
 		
 		// End temporary code
 
@@ -117,20 +118,14 @@ namespace Engine
 		
 
 		float accumulatedTime = 0.f;
-		mp_timer->SetStartPoint();
-		mp_timer->SetFrameStart();
-
+		
 		
 
 		while (m_running)
 		{
-			ENGINE_CORE_CRITICAL("Timestep {0}", mp_timer->ElapsedTime());
-			mp_timer->SetStartPoint();
 			
-			boxWorld->Step(s_timestep, m_iPosIterations, m_iVelIterations);
+			s_timestep = mp_timer->getFrameTimeSecomds();
 
-#pragma region TempDrawCode
-			// Temporary draw code to be abstracted
 			
 			glClearColor(0.1f, 0.1f, 0.1f, 1);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -138,7 +133,6 @@ namespace Engine
 			//m_Renderer->DrawQuad(glm::vec2(0.5, 0.5) , glm::vec2(1,1), glm::vec4(0.8, 0.2, 0.3, 1));
 
 			
-		
 			glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f); // Basic 4:3 camera
 
 			glm::mat4 view = glm::lookAt(
@@ -146,8 +140,9 @@ namespace Engine
 				glm::vec3(0.f, 0.f, 0.f), // and looks at the origin
 				glm::vec3(0.f, 1.f, 0.f)  // Standing straight  up
 			);
-
-			
+			boxWorld->Step(s_timestep, m_iPosIterations, m_iVelIterations);
+			float fps = 1.0f / s_timestep;
+			ENGINE_CORE_ERROR("Timer {0}", fps);
 
 			m_Player->update();
 			m_Player->draw(projection, view); // draws the player to the screen
@@ -163,11 +158,7 @@ namespace Engine
 				m_Bullets[i]->draw(projection, view);
 			}
 			
-		
-
 			m_Window->onUpdate();
-			s_timestep = mp_timer->ElapsedTime();
-
 		}
 	}
 

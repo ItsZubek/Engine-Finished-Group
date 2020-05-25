@@ -40,7 +40,7 @@ namespace Engine
 
 	Application::Application() : m_Camera(-2.0f, 2.0f, -2.0f, 2.0f)
 	{
-		boxWorld = new b2World(m_gravity);
+		
 		
 		mp_logger = std::make_shared<MyLogger>();
 		mp_logger->start();
@@ -53,6 +53,7 @@ namespace Engine
 
 		Application::s_screenResolution = glm::ivec2(m_Window->getWidth(), m_Window->getHeight());
 
+		boxWorld = new b2World(m_gravity);
 		
 		//m_Renderer->BeginScene(m_Camera);
 
@@ -98,8 +99,6 @@ namespace Engine
 
 		boxWorld->SetContactListener(&m_CollisionListener); // sets contact listener
 		
-		mp_timer->getFrameTimeSecomds();
-		
 		// End temporary code
 
 #pragma endregion TempSetup
@@ -126,7 +125,8 @@ namespace Engine
 			
 			s_timestep = mp_timer->getFrameTimeSecomds();
 
-			
+			boxWorld->Step(s_timestep, m_iPosIterations, m_iVelIterations);
+
 			glClearColor(0.1f, 0.1f, 0.1f, 1);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
@@ -140,23 +140,21 @@ namespace Engine
 				glm::vec3(0.f, 0.f, 0.f), // and looks at the origin
 				glm::vec3(0.f, 1.f, 0.f)  // Standing straight  up
 			);
-			boxWorld->Step(s_timestep, m_iPosIterations, m_iVelIterations);
-			float fps = 1.0f / s_timestep;
-			ENGINE_CORE_ERROR("Timer {0}", fps);
+			
+				m_Player->update();
+				m_Player->draw(projection, view); // draws the player to the screen
 
-			m_Player->update();
-			m_Player->draw(projection, view); // draws the player to the screen
+				for (int i = 0; i < 4; i++)
+				{
+					m_Enemies[i]->draw(projection, view); // draws the enemies to the screen
+				}
 
-			for (int i = 0; i < 4; i++)
-			{
-				m_Enemies[i]->draw(projection, view); // draws the enemies to the screen
-			}
-
-			for (int i = 0; i < 10; i++)
-			{
-				m_Bullets[i]->update();
-				m_Bullets[i]->draw(projection, view);
-			}
+				for (int i = 0; i < 10; i++)
+				{
+					m_Bullets[i]->update();
+					m_Bullets[i]->draw(projection, view);
+				}
+			
 			
 			m_Window->onUpdate();
 		}

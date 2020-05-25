@@ -22,6 +22,11 @@ namespace Engine {
 
 		return timePassed.count();
 	}
+
+	void MyTimer::RestartClock()
+	{
+		startClock = std::chrono::high_resolution_clock::now();
+	}
 	
 	 
 }

@@ -24,7 +24,6 @@ namespace Engine
 		void update(); //!< updates the position of the shape
 		void movement(b2Vec2 movement); //!< moves the player
 		void playerStopped();
-		glm::mat4 getPlayerPos() { return FCmodel; }
 		
 		
 

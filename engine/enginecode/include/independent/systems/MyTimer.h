@@ -23,7 +23,7 @@ Responsible for timing all actions happening during runtime
 		void stop(SystemSignal close = SystemSignal::None, ...) override;
 
 		float getFrameTimeSecomds();
-		
+		void RestartClock();
 	
 	};
 }

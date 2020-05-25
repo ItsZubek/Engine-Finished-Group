@@ -17,6 +17,7 @@ namespace Engine
 
 
 		m_body = world->CreateBody(&l_bodyDef); // sets the body to appear in the world
+		m_body->SetUserData(this); // used by our collision listener
 
 		l_shape.SetAsBox(size.x * 0.5f, size.y * 0.5f);
 		l_shape.m_radius = 0.0f;

@@ -198,7 +198,8 @@ namespace Engine
 	bool Application::onKeyRelease(KeyReleasedEvent& e)
 	{
 		if (e.GetKeyCode() == 65) m_Player->playerStopped();
-		if (e.GetKeyCode() == 68) 
+		if (e.GetKeyCode() == 68) m_Player->playerStopped();
+		 
 		ENGINE_CORE_TRACE("KeyReleased: {0}", e.GetKeyCode());
 		return true;
 	}

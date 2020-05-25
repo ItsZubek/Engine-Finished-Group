@@ -16,8 +16,6 @@ namespace Engine
 	{
 	private:
 		glm::mat4 FCmodel;
-		bool m_playerStopped = true; //!< checks if ball has stopped
-		
 	public:
 		PlayerShape() {}; //!< Default Constructor
 		PlayerShape(b2World* world, const glm::vec2& position, const glm::vec2& size, const float& orientation, const glm::vec3& colour); //!< Complete Contructor
@@ -26,8 +24,7 @@ namespace Engine
 		void movement(b2Vec2 movement); //!< moves the player
 		void playerStopped();
 		b2Body* getBody() { return m_body; }
-		bool getPlayerStopped() { return m_playerStopped; }
-		void setPlayerStopped(bool playerStopped) { m_playerStopped = playerStopped; }
+		
 
 		
 	};

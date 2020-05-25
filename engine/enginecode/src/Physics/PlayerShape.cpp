@@ -90,12 +90,6 @@ namespace Engine
 
 	void PlayerShape::update()
 	{
-		m_playerStopped = m_body->GetLinearVelocity().Length() < 0.1f;
-
-		if (m_playerStopped)
-		{
-			m_body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
-		}
 		b2Vec2 pos = m_body->GetPosition(); // updates body position 
 		FCmodel = glm::translate(glm::mat4(1), glm::vec3(pos.x, pos.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 0.2, 1));
 	}
@@ -106,6 +100,6 @@ namespace Engine
 	}
 	void PlayerShape::playerStopped()
 	{
-		m_playerStopped = true;
+		m_body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
 	}
 }

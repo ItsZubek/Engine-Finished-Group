@@ -95,7 +95,7 @@ namespace Engine
 			boxWorld->Step(s_timestep, m_iVelIterations, m_iPosIterations);
 
 			mp_imgui->render();
-
+			m_audiosystem.Update();
 			m_Window->onUpdate();
 			s_timestep = mp_timer->ElapsedTime();
 
@@ -112,6 +112,7 @@ namespace Engine
 		mp_logger->stop();
 		mp_logger.reset();
 		mp_timer->stop();
+		m_audiosystem.Stop();
 	}
 
 	void Application::onEvent(EventBaseClass& e)

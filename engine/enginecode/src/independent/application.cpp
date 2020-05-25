@@ -46,8 +46,8 @@ namespace Engine {
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));
 		m_audiosystem.Start();
-		m_audiosystem.LoadSound("I:/Mateusz/githubissue/cw-2019-2020-group-a/sandbox/assets/audio/movie_1.mp3");
-		m_audiosystem.PlaySounds("I: / Mateusz / githubissue / cw - 2019 - 2020 - group - a / sandbox / assets / audio / movie_1.mp3");
+		m_audiosystem.LoadSound("assets/audio/movie_1.mp3");
+		m_audiosystem.PlaySounds("assets/audio/movie_1.mp3", glm::vec3(0,0,0), m_audiosystem.VolumeTodB(1.0f));
 
 
 		Application::s_screenResolution = glm::ivec2(m_Window->getWidth(), m_Window->getHeight());
@@ -356,6 +356,7 @@ namespace Engine {
 		mp_logger->stop();
 		mp_logger.reset();
 		mp_timer->stop();
+		m_audiosystem.Stop();
 	}
 
 	void Application::onEvent(EventBaseClass& e)

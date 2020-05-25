@@ -6,7 +6,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Object.h"
-
 #include <Box2D/Box2D.h>
 
 namespace Engine
@@ -25,6 +24,7 @@ namespace Engine
 		void update(); //!< updates the position of the shape
 		void movement(b2Vec2 movement); //!< moves the player
 		void playerStopped();
+		b2Vec2 playerPosition();
 		
 		
 

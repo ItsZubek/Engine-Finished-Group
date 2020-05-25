@@ -105,4 +105,8 @@ namespace Engine
 	{
 		m_body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
 	}
+	b2Vec2 PlayerShape::playerPosition()
+	{
+		return m_body->GetPosition();
+	}
 }

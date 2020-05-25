@@ -130,9 +130,6 @@ namespace Engine
 			glClearColor(0.1f, 0.1f, 0.1f, 1);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
-			//m_Renderer->DrawQuad(glm::vec2(0.5, 0.5) , glm::vec2(1,1), glm::vec4(0.8, 0.2, 0.3, 1));
-
-			
 			glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f); // Basic 4:3 camera
 
 			glm::mat4 view = glm::lookAt(
@@ -199,7 +196,12 @@ namespace Engine
 		if (e.GetKeyCode() == 256) m_running = false;
 		if (e.GetKeyCode() == 65) m_Player->movement(b2Vec2(0.2f, 0.0f));
 		if (e.GetKeyCode() == 68) m_Player->movement(b2Vec2(-0.2f, 0.0f));
-		if (e.GetKeyCode() == 32) m_Bullets[4]->fire(b2Vec2(0.0f, 0.2f));
+		if (e.GetKeyCode() == 32)
+		{
+			b2Vec2 playerPos = m_Player->playerPosition();
+			m_Bullets[4]->setPosition(b2Vec2(playerPos));
+			m_Bullets[4]->fire(b2Vec2(0.0f, 0.2f));
+		}
 		
 		
 		ENGINE_CORE_TRACE("KeyPressed: {0}, RepeatCount: {1}", e.GetKeyCode(), e.GetRepeatCount());
@@ -210,7 +212,7 @@ namespace Engine
 	{
 		if (e.GetKeyCode() == 65) m_Player->playerStopped();
 		if (e.GetKeyCode() == 68) m_Player->playerStopped();
-		if (e.GetKeyCode() == 32) m_Bullets[4]->setFired(false);
+		if (e.GetKeyCode() == 32) m_Bullets[4]->Fired();
 		 
 		ENGINE_CORE_TRACE("KeyReleased: {0}", e.GetKeyCode());
 		return true;

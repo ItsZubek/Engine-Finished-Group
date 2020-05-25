@@ -20,6 +20,7 @@ namespace Engine
 		void update(); //!< updates the position of the bullet
 		void draw(glm::mat4 projection, glm::mat4 view); //!< Draws the bullet shape
 		void fire(b2Vec2 movement); //!< moves the bullet Shape
-		void setFired(bool fired) { fired = m_bulletFired; }
+		void Fired();
+		void setPosition(b2Vec2 position);
 	};
 }

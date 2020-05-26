@@ -29,6 +29,7 @@ namespace Engine
 	Application* Application::s_instance = nullptr;
 	float Application::s_timestep = 0.f;
 	glm::ivec2 Application::s_screenResolution = glm::ivec2(0, 0);
+	
 
 
 #pragma region TempGlobalVars
@@ -37,23 +38,21 @@ namespace Engine
 
 	Application::Application()
 	{
-		if (s_instance == nullptr)
-		{
-			s_instance = this;
-		}
-
-		mp_logger.reset(new MyLogger());
+		mp_logger = std::make_shared<MyLogger>();
 		mp_logger->start();
 		ENGINE_CORE_INFO("Logging Initalised");
 		mp_timer.reset(new MyTimer());
 		mp_timer->start();
-		ENGINE_CORE_INFO("Timer Initalised");
+		m_Window = std::unique_ptr<Window>(Window::Create());
+		m_Window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));
+
+
+		Application::s_screenResolution = glm::ivec2(m_Window->getWidth(), m_Window->getHeight());
+
+#pragma region TempSetup
+		//  Temporary set up code to be abstracted
+
 		
-		m_layerStack.reset(new LayerStack());
-		
-		boxWorld = new b2World(m_gravity);
-		
-		mp_imgui = std::shared_ptr<Imgui>(ImguiGLFW::initialise());
 
 
 		m_Window = std::shared_ptr<Window>(Window::Create());
@@ -90,7 +89,7 @@ namespace Engine
 			boxWorld->Step(s_timestep, m_iVelIterations, m_iPosIterations);
 
 			mp_imgui->render();
-
+			m_audiosystem.Update();
 			m_Window->onUpdate();
 			s_timestep = mp_timer->ElapsedTime();
 
@@ -101,12 +100,15 @@ namespace Engine
 		}
 		mp_imgui->close();
 	}
+		
+
 
 	Application::~Application()
 	{
 		mp_logger->stop();
 		mp_logger.reset();
 		mp_timer->stop();
+		m_audiosystem.Stop();
 	}
 
 	void Application::onEvent(EventBaseClass& e)

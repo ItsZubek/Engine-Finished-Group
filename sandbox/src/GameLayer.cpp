@@ -209,6 +209,9 @@ void GameLayer::OnUpdate(float timestep)
 		m_goingUp = !m_goingUp;
 	}
 
+	m_audiosystem.Start();
+	m_audiosystem.LoadSound("assets/audio/movie_1.mp3");
+	m_audiosystem.PlaySounds("assets/audio/movie_1.mp3", glm::vec3(0, 0, 0), m_audiosystem.VolumeTodB(1.0f));
 
 	FCmodel = glm::rotate(FCtranslation, glm::radians(20.f) * timestep, glm::vec3(0.f, 1.f, 0.f)); // Spin the cube at 20 degrees per second
 	TPmodel = glm::rotate(TPtranslation, glm::radians(-20.f) * timestep, glm::vec3(0.f, 1.f, 0.f)); // Spin the cube at 20 degrees per second

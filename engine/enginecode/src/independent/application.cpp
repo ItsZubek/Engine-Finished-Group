@@ -17,6 +17,10 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+#include "imgui.h"
+#include "platform/GLFW/Imgui_plat_GLFW.h"
+
+
 
 #pragma endregion TempIncludes
 

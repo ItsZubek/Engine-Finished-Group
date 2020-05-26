@@ -20,6 +20,8 @@
 #include "Physics/PlayerShape.h"
 #include "Layer/LayerStack.h"
 
+#include "UI/imgui_impl.h"
+
 
 
 
@@ -39,11 +41,12 @@ namespace Engine {
 
 		std::shared_ptr<MyLogger> mp_logger; //!< Shared Pointer to a logger
 		std::shared_ptr<MyTimer> mp_timer; //!< Shared Pointer to a timer
-		std::unique_ptr<Window> m_Window;
+		std::shared_ptr<Window> m_Window;
 		std::shared_ptr<LayerStack> m_layerStack;
 	private:
 		static Application* s_instance; //!< Singleton instance of the application
 		
+		std::shared_ptr<Imgui> mp_imgui; //!< Shared Pointer to ImGui
 
 		float TimeElapsedInSeconds; //!< Time Elapsed in seconds
 		float fps; //!< Frames Per Second

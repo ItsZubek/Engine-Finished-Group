@@ -1,32 +1,30 @@
-#include "Physics/PlayerShape.h"
-#include "Position.h"
+
+
+#include "Physics/Object.h"
+#include <glm/gtc/matrix_transform.hpp>
 namespace Engine
 {
-	class Ship : public PlayerShape
+	class Ship : public Object
 	{
 	private:
-		
+		glm::mat4 EnemyShip;
+		b2Vec2 m_position;
 	protected:
-		Position pos; // current position of tank
-		Position oldPos; // Previous Position of tank
-		float rotation; //!< Current rotation of ship
 		
-		bool forward; //!< ship moving forwards
-		bool backward; //!< ship moving backwards
-		bool left; //!< ship turning left
-		bool right; //!< ship turning right
-		bool RotateLeft; //!< Turret turning left
-		bool RotateRight; //!< Turret turing right
+		
+		
+		
+		
 
-		void clearMovement(); //!< Stop current movement
-		//Box2D void update bounding box
-		//BOX2D void draw ship 
+		
 		
 	public:
-		Ship();
-		//!< BOX2D bounding Box
-		//BOX2D Drawship
-		//Box2D Reset Position
+		void movement(b2Vec2 movement, float spin);
+		Ship() {};
+		Ship(b2World* world, const glm::vec2& position, const glm::vec2& size, const float& orientation, const glm::vec3& colour); //!< Complete Contructor
+		void draw(glm::mat4 projection, glm::mat4 view); //!< draws the shape
+		void update(); //!< updates the position of the shape
+		void raycast(b2World* m_world, b2Vec2 p1, b2Vec2 p2);
 			// Movement methods
 		void goForward(); //!< Set the ship to go forwards
 		void goBackward(); //!< Set the ship to go backwards
@@ -34,24 +32,16 @@ namespace Engine
 		void goRight(); //!< Set the ship to go right
 		void ShipRotateLeft(); //!< Set the ship to go left
 		void ShipRotateRight(); //!< Set the ship to go right
-		void stop() { clearMovement(); } //!< Stop the ship movement
-		void stopRotate(); //!< Stop the turret movement
+		void stop(); //!< Stop the ship movement
 		//!< Box2D Record the prevoius position
 		 //!< Box2D Go back to the prevoius position
-
-		void fireShell(); //!< Fire a shell
-		virtual void move() = 0; //?!< Implemented in child classes
-		void implementMove();
-		
-
-		Position firingPosition() const; //!< Position of the ship as shell is fired
-		float getX() const { return pos.getX(); } //!< Position of the ship in x
-		float getY() const { return pos.getY(); } //!< Position of the ship in y
-		
-		bool canSee() const; //!< Can this ship see the bounding box?
-		bool canFire() const; //!< Can this ship fire
+		void Destroy();
+		bool canSee;
+		b2Vec2 EnemyPosition();
 		
 	};
 
+
+	
 
 }

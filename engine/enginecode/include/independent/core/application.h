@@ -15,7 +15,7 @@
 #include <glm/glm.hpp>
 
 #include "Physics/PlayerShape.h"
-#include "Physics/EnemyShape.h"
+#include "AI/ship.h"
 #include "Physics/BulletShape.h"
 #include "Physics/Collisions.h"
 
@@ -61,7 +61,7 @@ namespace Engine {
 		const int m_iPosIterations = 5;
 
 		std::shared_ptr<PlayerShape> m_Player;
-		std::vector<std::shared_ptr<EnemyShape>> m_Enemies;
+		std::vector<std::shared_ptr<Ship>> m_Enemies;
 		std::shared_ptr<BulletShape> m_Bullet;
 		Collisions m_CollisionListener;
 

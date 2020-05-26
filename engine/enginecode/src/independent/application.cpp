@@ -75,10 +75,10 @@ namespace Engine
 
 		//!< Sets the position, size, orientation and colour of the enemies
 		m_Enemies.resize(4);
-		m_Enemies[0] = std::make_shared<EnemyShape>(boxWorld, glm::vec2(2.5f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
-		m_Enemies[1] = std::make_shared<EnemyShape>(boxWorld, glm::vec2(1.f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
-		m_Enemies[2] = std::make_shared<EnemyShape>(boxWorld, glm::vec2(-1.f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
-		m_Enemies[3] = std::make_shared<EnemyShape>(boxWorld, glm::vec2(-2.5f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
+		m_Enemies[0] = std::make_shared<Ship>(boxWorld, glm::vec2(2.5f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
+		m_Enemies[1] = std::make_shared<Ship>(boxWorld, glm::vec2(1.f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
+		m_Enemies[2] = std::make_shared<Ship>(boxWorld, glm::vec2(-1.f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
+		m_Enemies[3] = std::make_shared<Ship>(boxWorld, glm::vec2(-2.5f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
 
 		//!< Sets the position, size, orientation and colour of the bullets
 		
@@ -86,7 +86,7 @@ namespace Engine
 		
 		m_Player->setUserData(new std::pair<std::string, void*>(typeid(decltype(m_Player)).name(), &m_Player));
 		m_Bullet->setUserData(new std::pair<std::string, void*>(typeid(decltype(m_Bullet)).name(), &m_Bullet));
-		for (std::shared_ptr<EnemyShape>& enemies : m_Enemies) enemies->setUserData(new std::pair<std::string, void*>(typeid(decltype(enemies)).name(), &enemies));
+		for (std::shared_ptr<Ship>& enemies : m_Enemies) enemies->setUserData(new std::pair<std::string, void*>(typeid(decltype(enemies)).name(), &enemies));
 		
 
 		boxWorld->SetContactListener(&m_CollisionListener); // sets contact listener

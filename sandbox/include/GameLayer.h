@@ -17,11 +17,15 @@
 #include "core/application.h"
 #include "Layer/Layer.h"
 
+#include"Audio/AudioManager.h"
+
 #include <vector>
 #include <glm/glm.hpp>
 
 #include <glad/glad.h>
 #include <gl/GL.h>
+
+#include "Audio/AudioManager.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -45,6 +49,8 @@ private:
 	Engine::OrthographicCamera m_Camera; //!< Orthographic Camera
 
 	std::shared_ptr<Engine::Texture> m_TextureTP;
+
+	Engine::AudioManager m_audiosystem;
 
 	
 	std::shared_ptr<Engine::PlayerShape> m_Player; //!< the player in the game

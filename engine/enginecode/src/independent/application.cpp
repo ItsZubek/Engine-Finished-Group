@@ -53,30 +53,33 @@ namespace Engine {
 		m_audiosystem.LoadSound("assets/audio/movie_1.mp3");
 		m_audiosystem.PlaySounds("assets/audio/movie_1.mp3", glm::vec3(0,0,0), m_audiosystem.VolumeTodB(1.0f));
 
+		mp_imgui = std::shared_ptr<Imgui>(ImguiGLFW::initialise());
+
 
 		Application::s_screenResolution = glm::ivec2(m_Window->getWidth(), m_Window->getHeight());
-
-#pragma region TempSetup
-
-		
-		
-
 
 		if (s_instance == nullptr)
 		{
 			s_instance = this;
 		}
 
+		mp_imgui->gen(m_Window);
+
 
 	}
 	void Application::run()
 	{
-		
-
-		
 		mp_timer->SetStartPoint();
 		mp_timer->SetFrameStart();
 
+		mp_imgui->createFrames();
+
+		ImGui::SetNextWindowSize(ImVec2(200, 200), ImGuiCond_Once);
+		ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Once);
+
+		ImGui::Begin("GUI Test");
+		ImGui::Text("This is a test box");
+		ImGui::End();
 
 
 		while (m_running)
@@ -93,10 +96,14 @@ namespace Engine {
 			}
 			
 			m_audiosystem.Update();
+
+			mp_imgui->render();
+
 			m_Window->onUpdate();
-		
+			
 
 		}
+		mp_imgui->close();
 	}
 
 	Application::~Application()

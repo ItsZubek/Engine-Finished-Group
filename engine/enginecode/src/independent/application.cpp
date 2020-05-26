@@ -52,7 +52,6 @@ namespace Engine
 		//  Temporary set up code to be abstracted
 
 		
-		mp_imgui = std::shared_ptr<Imgui>(ImguiGLFW::initialise());
 
 		m_Window = std::shared_ptr<Window>(Window::Create());
 		m_Window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));

@@ -11,8 +11,8 @@ namespace Engine
 	{
 	private:
 		glm::mat4 m_bulletModel;
-		std::shared_ptr<PlayerShape> m_player;
-		bool m_bulletFired = false; 
+		bool m_bulletFired = false;
+		int m_bulletCounter = 0;
 
 	public:
 		BulletShape() {}; //!< Default Constructor
@@ -22,5 +22,6 @@ namespace Engine
 		void fire(b2Vec2 movement); //!< moves the bullet Shape
 		void Fired();
 		void setPosition(b2Vec2 position);
+		
 	};
 }

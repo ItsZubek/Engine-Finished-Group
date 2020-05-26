@@ -177,7 +177,7 @@ namespace Engine
 		if (e.GetKeyCode() == 32)
 		{
 			b2Vec2 playerPos = m_Player->playerPosition();
-			m_Bullet->setPosition(b2Vec2(playerPos));
+			m_Bullet->setPosition(b2Vec2(playerPos.x, playerPos.y + 0.2));
 			m_Bullet->fire(b2Vec2(0.0f, 0.2f));
 		}
 		

@@ -102,6 +102,12 @@ namespace Engine
 	{
 		m_bulletFired = true;
 		m_body->ApplyLinearImpulseToCenter(movement, true);
+
+		if (m_bulletCounter > 10)
+		{
+			m_body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+			m_body->SetTransform(b2Vec2(5.0f, 0.f), 0);
+		}
 	}
 	void BulletShape::Fired()
 	{
@@ -111,6 +117,8 @@ namespace Engine
 	void BulletShape::setPosition(b2Vec2 position)
 	{
 		m_body->SetTransform(b2Vec2(position.x, position.y), 0);
+
+		
 	}
 
 	

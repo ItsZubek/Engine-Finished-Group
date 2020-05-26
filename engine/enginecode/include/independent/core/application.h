@@ -15,6 +15,8 @@
 #include "windows/OrthographicCamera.h"
 #include <Box2D/Box2D.h>
 #include "Audio/AudioManager.h"
+#include "systems/AssimpLoader.h"
+#include "UI/imgui_impl.h"
 
 #include <vector>
 #include "Physics/PlayerShape.h"
@@ -38,7 +40,8 @@ namespace Engine {
 	private:
 		static Application* s_instance; //!< Singleton instance of the application
 		std::shared_ptr<MyLogger> mp_logger; //!< Shared Pointer to a logger
-		std::shared_ptr<MyTimer> mp_timer; //!< Shared Pointer to a timer
+		std::shared_ptr<MyTimer> mp_timer;//!< Shared Pointer to a timer
+		std::shared_ptr<Imgui> mp_imgui; //!< Shared Pointer to ImGui
 		float TimeElapsedInSeconds; //!< Time Elapsed in seconds
 		float fps; //!< Frames Per Second
 		bool onWindowClose(WindowCloseEvent& e); //!< On Window Close Event
@@ -50,7 +53,7 @@ namespace Engine {
 		bool onMouseScroll(MouseScrolledEvent& e); //!< Mouse Scrolled Event
 		bool onMouseMoved(MouseMovedEvent& e); //!< Mouse Moved Event
 		bool m_running = true; //!< Bool to keep the application running
-		std::unique_ptr<Window> m_Window; //!< Pointer to a window class
+		std::shared_ptr<Window> m_Window; //!< Pointer to a window class
 		static glm::ivec2 s_screenResolution; //!< Screen resolution
 		static float s_timestep; //!< last frame timestep
 

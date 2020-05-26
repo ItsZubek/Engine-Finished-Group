@@ -5,6 +5,10 @@
 #include "systems/Input.h"
 #include <glad/glad.h>
 #include "systems/AssimpLoader.h"
+#include "imgui.h"
+#include "platform/GLFW/Imgui_plat_GLFW.h"
+
+
 //#include "events/KeyEvents.h"
 
 
@@ -43,11 +47,16 @@ namespace Engine {
 		mp_logger->start();
 		mp_timer = std::make_shared<MyTimer>();
 		mp_timer->start();
-		m_Window = std::unique_ptr<Window>(Window::Create());
+		m_Window = std::shared_ptr<Window>(Window::Create());
 		m_Window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));
 		m_audiosystem.Start();
 		m_audiosystem.LoadSound("assets/audio/movie_1.mp3");
 		m_audiosystem.PlaySounds("assets/audio/movie_1.mp3", glm::vec3(0,0,0), m_audiosystem.VolumeTodB(1.0f));
+
+		
+		mp_imgui = std::shared_ptr<Imgui>(ImguiGLFW::initialise());
+
+
 
 
 		Application::s_screenResolution = glm::ivec2(m_Window->getWidth(), m_Window->getHeight());
@@ -172,7 +181,7 @@ namespace Engine {
 		// Initiating the Vertex Array
 		m_VertexArrayTP.reset(VertexArray::create());
 
-		// Iinitiating the Vertex Buffer
+		// Initiating the Vertex Buffer
 		m_VertexBufferTP.reset(VertexBuffer::Create(TPvertices, sizeof(TPvertices)));
 
 		// Initiating the Buffer Layout
@@ -210,7 +219,7 @@ namespace Engine {
 		{
 			s_instance = this;
 		}
-
+		mp_imgui->gen(m_Window);
 
 	}
 	void Application::run()
@@ -221,7 +230,14 @@ namespace Engine {
 		mp_timer->SetStartPoint();
 		mp_timer->SetFrameStart();
 
+		mp_imgui->createFrames();
 
+		ImGui::SetNextWindowSize(ImVec2(200, 200), ImGuiCond_Once);
+		ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Once);
+
+		ImGui::Begin("gui");
+		ImGui::Text("test texts");
+		ImGui::End();
 
 		while (m_running)
 		{
@@ -339,16 +355,21 @@ namespace Engine {
 			m_ShaderTP->uploadInt("u_texData", m_TextureTP->getSlot() /*textureSlot*/ );
 
 			glDrawElements(GL_TRIANGLES, m_IndexBufferTP->GetCount() , GL_UNSIGNED_INT, nullptr);
+
+			// End temporary codes
 			
 
 			// End temporary code
 #pragma endregion TempDrawCode
 			
 			m_audiosystem.Update();
+			
+			mp_imgui->render();
+
 			m_Window->onUpdate();
 			s_timestep = mp_timer->ElapsedTime();
-
 		}
+		mp_imgui->close();
 	}
 
 	Application::~Application()

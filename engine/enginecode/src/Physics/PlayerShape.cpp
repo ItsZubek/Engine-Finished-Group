@@ -18,6 +18,7 @@ namespace Engine
 		
 
 		m_body = world->CreateBody(&l_bodyDef); // sets the body to appear in the world
+		m_body->SetUserData(this); // used by our collision listener
 
 		l_shape.SetAsBox(size.x * 0.5f, size.y * 0.5f);
 		l_shape.m_radius = 0.0f;
@@ -28,6 +29,8 @@ namespace Engine
 		l_fixtureDef.shape = &l_shape; // sets fixture as the shape
 
 		m_body->CreateFixture(&l_fixtureDef); //creates fixture
+
+		
 		
 		float FCvertices[6 * 4] = {
 		-0.5f, -0.5f, -0.5f, colour.x, colour.y, colour.z, // red square
@@ -90,14 +93,30 @@ namespace Engine
 
 	void PlayerShape::update()
 	{
-		b2Vec2 pos = m_body->GetPosition(); // updates body position
-		glVertex2f(pos.x, pos.y); // sets body position to new position
-		float angle = m_body->GetAngle() * RAD2DEG; // sets angle of shape
-		glRotatef(angle, pos.x, pos.y, 0); //updates the rotation of the shape
+		b2Vec2 pos = m_body->GetPosition(); // updates body position 
+		FCmodel = glm::translate(glm::mat4(1), glm::vec3(pos.x, pos.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 0.2, 1));
+
+		if (pos.x > 4.5f)
+		{
+			m_body->SetTransform(b2Vec2(-4.4f, -2.5f), 0);
+		}
+
+		if (pos.x < -4.5)
+		{
+			m_body->SetTransform(b2Vec2(4.4f, -2.5f), 0);
+		}
 	}
 
 	void PlayerShape::movement(b2Vec2 movement)
 	{
 		m_body->ApplyLinearImpulseToCenter(movement, true);
+	}
+	void PlayerShape::playerStopped()
+	{
+		m_body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+	}
+	b2Vec2 PlayerShape::playerPosition()
+	{
+		return m_body->GetPosition();
 	}
 }

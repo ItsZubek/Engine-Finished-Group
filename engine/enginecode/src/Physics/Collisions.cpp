@@ -4,6 +4,8 @@
 #include "Physics/BulletShape.h"
 #include "Physics/EnemyShape.h"
 
+#include "systems/MyLogger.h"
+
 namespace Engine
 {
 	void Collisions::beginCollisions(b2Contact* collisions)
@@ -28,10 +30,7 @@ namespace Engine
 				EnemyShape* enemies = static_cast<EnemyShape*>(dataA.second);
 				if (enemies != nullptr)
 				{
-					/*if (enemies)
-					{
-						// Do something when collision Happens
-					}*/
+					ENGINE_CORE_CRITICAL("Collision Occured");
 				}
 			}
 		}
@@ -43,10 +42,7 @@ namespace Engine
 				EnemyShape* enemies = static_cast<EnemyShape*>(dataA.second);
 				if (enemies != nullptr)
 				{
-					/*if (enemies-> == sf::Color::Yellow)
-					{
-						// do something when collision Happens
-					}*/
+					ENGINE_CORE_CRITICAL("Collision Occured");
 					
 				}
 			}
@@ -73,7 +69,7 @@ namespace Engine
 				EnemyShape* enemies = static_cast<EnemyShape*>(dataA.second);
 				if (enemies != nullptr)
 				{
-					// do somthing after the collision happens
+					ENGINE_CORE_CRITICAL("Collision Ended");
 				}
 			}
 			else if (dataA.first == typeid(BulletShape).name())
@@ -83,7 +79,7 @@ namespace Engine
 					EnemyShape* enemies = static_cast<EnemyShape*>(dataA.second);
 					if (enemies != nullptr)
 					{
-						// do somthing afther the collision happens
+						ENGINE_CORE_CRITICAL("Collision Ended");
 					}
 					
 				}

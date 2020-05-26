@@ -40,7 +40,7 @@ namespace Engine
 
 	Application::Application() : m_Camera(-2.0f, 2.0f, -2.0f, 2.0f)
 	{
-		boxWorld = new b2World(m_gravity);
+		
 		
 		mp_logger = std::make_shared<MyLogger>();
 		mp_logger->start();
@@ -53,6 +53,7 @@ namespace Engine
 
 		Application::s_screenResolution = glm::ivec2(m_Window->getWidth(), m_Window->getHeight());
 
+		boxWorld = new b2World(m_gravity);
 		
 		//m_Renderer->BeginScene(m_Camera);
 
@@ -70,7 +71,7 @@ namespace Engine
 		glCullFace(GL_BACK);
 
 		//!< Sets the position, size, orientation and colour of the player
-		m_Player = std::make_shared<PlayerShape>(boxWorld, glm::vec2(0.f, -2.5f), glm::vec2(1.f, 0.2f), 0, glm::vec3(0.8f, 0.2f, 0.2f));
+		m_Player = std::make_shared<PlayerShape>(boxWorld, glm::vec2(0.0f, -2.5f), glm::vec2(1.f, 0.2f), 0, glm::vec3(0.8f, 0.2f, 0.2f));
 
 		//!< Sets the position, size, orientation and colour of the enemies
 		m_Enemies.resize(4);
@@ -80,18 +81,16 @@ namespace Engine
 		m_Enemies[3] = std::make_shared<EnemyShape>(boxWorld, glm::vec2(-2.5f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
 
 		//!< Sets the position, size, orientation and colour of the bullets
-		m_Bullets.resize(10);
-		m_Bullets[0] = std::make_shared<BulletShape>(boxWorld, glm::vec2(0.0f, -2.4f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
-		m_Bullets[1] = std::make_shared<BulletShape>(boxWorld, glm::vec2(0.0f, -2.4f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
-		m_Bullets[2] = std::make_shared<BulletShape>(boxWorld, glm::vec2(0.0f, -2.4f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
-		m_Bullets[3] = std::make_shared<BulletShape>(boxWorld, glm::vec2(0.0f, -2.4f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
 		
-		// End temporary code
-
-#pragma endregion TempSetup
+		m_Bullet = std::make_shared<BulletShape>(boxWorld, glm::vec2(-5.0f, -2.8f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
+		
+		m_Player->setUserData(new std::pair<std::string, void*>(typeid(decltype(m_Player)).name(), &m_Player));
+		m_Bullet->setUserData(new std::pair<std::string, void*>(typeid(decltype(m_Bullet)).name(), &m_Bullet));
+		for (std::shared_ptr<EnemyShape>& enemies : m_Enemies) enemies->setUserData(new std::pair<std::string, void*>(typeid(decltype(enemies)).name(), &enemies));
 		
 
-
+		boxWorld->SetContactListener(&m_CollisionListener); // sets contact listener
+		
 		if (s_instance == nullptr)
 		{
 			s_instance = this;
@@ -103,26 +102,16 @@ namespace Engine
 	{
 		
 
-		float accumulatedTime = 0.f;
-		mp_timer->SetStartPoint();
-		mp_timer->SetFrameStart();
-
-
-
 		while (m_running)
 		{
-			mp_timer->SetStartPoint();
-			boxWorld->Step(s_timestep, m_iVelIterations, m_iPosIterations);
-
-
-#pragma region TempDrawCode
-			// Temporary draw code to be abstracted
 			
+			s_timestep = mp_timer->getFrameTimeSecomds();
+
+			boxWorld->Step(s_timestep, m_iPosIterations, m_iVelIterations);
+
 			glClearColor(0.1f, 0.1f, 0.1f, 1);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
-			//m_Renderer->DrawQuad(glm::vec2(0.5, 0.5) , glm::vec2(1,1), glm::vec4(0.8, 0.2, 0.3, 1));
-		
 			glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f); // Basic 4:3 camera
 
 			glm::mat4 view = glm::lookAt(
@@ -130,25 +119,19 @@ namespace Engine
 				glm::vec3(0.f, 0.f, 0.f), // and looks at the origin
 				glm::vec3(0.f, 1.f, 0.f)  // Standing straight  up
 			);
-
 			
-			m_Player->draw(projection, view); // draws the player to the screen
+				m_Player->update();
+				m_Player->draw(projection, view); // draws the player to the screen
 
-			for (int i = 0; i < 4; i++)
-			{
-				m_Enemies[i]->draw(projection, view); // draws the enemies to the screen
-			}
+				m_Bullet->update();
+				m_Bullet->draw(projection, view);
 
-			for (int i = 0; i < 4; i++)
-			{
-				m_Bullets[i]->draw(projection, view);
-			}
-			
-		
+				for (int i = 0; i < 4; i++)
+				{
+					m_Enemies[i]->draw(projection, view); // draws the enemies to the screen
+				}
 
 			m_Window->onUpdate();
-			s_timestep = mp_timer->ElapsedTime();
-
 		}
 	}
 
@@ -189,20 +172,26 @@ namespace Engine
 	bool Application::onKeyPress(KeyPressedEvent& e)
 	{
 		if (e.GetKeyCode() == 256) m_running = false;
-		if (e.GetKeyCode() == 65) { m_FCdirection[1] = true; }
-		if (e.GetKeyCode() == 68) { m_FCdirection[3] = true; }
-		if (e.GetKeyCode() == 87) { m_FCdirection[0] = true; }
-		if (e.GetKeyCode() == 83) { m_FCdirection[2] = true; }
-
+		if (e.GetKeyCode() == 65) m_Player->movement(b2Vec2(0.2f, 0.0f));
+		if (e.GetKeyCode() == 68) m_Player->movement(b2Vec2(-0.2f, 0.0f));
+		if (e.GetKeyCode() == 32)
+		{
+			b2Vec2 playerPos = m_Player->playerPosition();
+			m_Bullet->setPosition(b2Vec2(playerPos.x, playerPos.y + 0.2));
+			m_Bullet->fire(b2Vec2(0.0f, 0.2f));
+		}
+		
+		
 		ENGINE_CORE_TRACE("KeyPressed: {0}, RepeatCount: {1}", e.GetKeyCode(), e.GetRepeatCount());
 		return true;
 	}
+
 	bool Application::onKeyRelease(KeyReleasedEvent& e)
 	{
-		if (e.GetKeyCode() == 65) { m_FCdirection[1] = false; }
-		if (e.GetKeyCode() == 68) { m_FCdirection[3] = false; }
-		if (e.GetKeyCode() == 87) { m_FCdirection[0] = false; }
-		if (e.GetKeyCode() == 83) { m_FCdirection[2] = false; }
+		if (e.GetKeyCode() == 65) m_Player->playerStopped();
+		if (e.GetKeyCode() == 68) m_Player->playerStopped();
+		if (e.GetKeyCode() == 32) m_Bullet->Fired();
+		 
 		ENGINE_CORE_TRACE("KeyReleased: {0}", e.GetKeyCode());
 		return true;
 	}

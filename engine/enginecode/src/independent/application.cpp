@@ -235,8 +235,8 @@ namespace Engine {
 		ImGui::SetNextWindowSize(ImVec2(200, 200), ImGuiCond_Once);
 		ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Once);
 
-		ImGui::Begin("gui");
-		ImGui::Text("test texts");
+		ImGui::Begin("GUI Test");
+		ImGui::Text("This is a test box");
 		ImGui::End();
 
 		while (m_running)

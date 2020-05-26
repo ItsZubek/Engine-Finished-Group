@@ -1,12 +1,11 @@
-#include "engine_pch.h"
-#include "Physics\PlayerShape.h"
-#include <glad/glad.h>
 
+#include "engine_pch.h"
+#include "Physics/BulletShape.h"
+#include <glad/glad.h>
 
 namespace Engine
 {
-
- PlayerShape::PlayerShape(b2World* world, const glm::vec2& position, const glm::vec2& size, const float& orientation, const glm::vec3& colour)
+	BulletShape::BulletShape(b2World* world, const glm::vec2& position, const glm::vec2& size, const float& orientation, const glm::vec3& colour)
 	{
 		b2BodyDef l_bodyDef; // defines the body
 		b2PolygonShape l_shape;
@@ -15,7 +14,7 @@ namespace Engine
 		l_bodyDef.type = b2_dynamicBody;
 		l_bodyDef.position.Set(position.x, position.y); // sets the position of the object as a parameter
 		l_bodyDef.angle = orientation * DEG2RAD; // sets the direction the object is facing
-		
+
 
 		m_body = world->CreateBody(&l_bodyDef); // sets the body to appear in the world
 
@@ -28,7 +27,7 @@ namespace Engine
 		l_fixtureDef.shape = &l_shape; // sets fixture as the shape
 
 		m_body->CreateFixture(&l_fixtureDef); //creates fixture
-		
+
 		float FCvertices[6 * 4] = {
 		-0.5f, -0.5f, -0.5f, colour.x, colour.y, colour.z, // red square
 		 0.5f, -0.5f, -0.5f, colour.x, colour.y, colour.z,
@@ -36,7 +35,7 @@ namespace Engine
 		-0.5f,  0.5f, -0.5f, colour.x, colour.y, colour.z
 		};
 
-		
+
 
 		// Intiating the Vertex Array
 		m_VAO.reset(VertexArray::create());
@@ -68,14 +67,12 @@ namespace Engine
 		m_Shader.reset(Shader::create("assets/shaders/flatColour.glsl"));
 		m_Shader->Bind();
 
-
-
-		FCmodel = glm::translate(glm::mat4(1), glm::vec3(position.x, position.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1));
+		m_bulletModel = glm::translate(glm::mat4(1), glm::vec3(position.x, position.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1));
 	}
 
-	void PlayerShape::draw(glm::mat4 projection, glm::mat4 view)
+	void BulletShape::draw(glm::mat4 projection, glm::mat4 view)
 	{
-		glm::mat4 MVP = projection * view * FCmodel;
+		glm::mat4 MVP = projection * view * m_bulletModel;
 
 		//Binds the Shader and Vertex Array for Flat Colour
 		m_Shader->Bind();
@@ -88,7 +85,7 @@ namespace Engine
 		glDrawElements(GL_TRIANGLES, m_IBO->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
 
-	void PlayerShape::update()
+	void BulletShape::update()
 	{
 		b2Vec2 pos = m_body->GetPosition(); // updates body position
 		glVertex2f(pos.x, pos.y); // sets body position to new position
@@ -96,7 +93,7 @@ namespace Engine
 		glRotatef(angle, pos.x, pos.y, 0); //updates the rotation of the shape
 	}
 
-	void PlayerShape::movement(b2Vec2 movement)
+	void BulletShape::movement(b2Vec2 movement)
 	{
 		m_body->ApplyLinearImpulseToCenter(movement, true);
 	}

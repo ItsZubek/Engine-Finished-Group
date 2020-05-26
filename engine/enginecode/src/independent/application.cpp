@@ -85,6 +85,8 @@ namespace Engine {
 			s_timestep = mp_timer->ElapsedTime();
 			boxWorld->Step(s_timestep, m_iVelIterations, m_iPosIterations);
 
+			
+
 			for (auto it = m_layerStack->begin(); it != m_layerStack->end(); it++)
 			{
 				(*it)->OnUpdate(s_timestep);

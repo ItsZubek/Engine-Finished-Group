@@ -232,7 +232,7 @@ namespace Engine {
 			m_audiosystem.PlaySounds("assets/audio/laser.wav", glm::vec3(0, 0, 0), m_audiosystem.VolumeTodB(0.5f));
 			b2Vec2 playerPos = m_Player->playerPosition();
 			m_Bullet->setPosition(b2Vec2(playerPos.x, playerPos.y + 0.2));
-			m_Bullet->fire(b2Vec2(0.0f, 50.0f));
+			m_Bullet->fire(b2Vec2(0.0f, 20.0f));
 		}
 		ENGINE_CORE_TRACE("KeyPressed: {0}, RepeatCount: {1}", e.GetKeyCode(), e.GetRepeatCount());
 		return true;

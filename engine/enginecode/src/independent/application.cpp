@@ -20,10 +20,7 @@
 #include "imgui.h"
 #include "platform/GLFW/Imgui_plat_GLFW.h"
 
-
-
-#pragma endregion TempIncludes
-
+#include "Profiler/profiler.h"
 
 
 
@@ -138,18 +135,23 @@ namespace Engine {
 				glm::vec3(0.f, 1.f, 0.f)  // Standing straight  up
 			);
 
-			boxWorld->Step(s_timestep, m_iVelIterations, m_iPosIterations);
-
-			m_Player->update();
-			m_Player->draw(projection, view); // draws the player to the screen
-
-			m_Bullet->update();
-			m_Bullet->draw(projection, view);
-
-			for (int i = 0; i < 4; i++)
 			{
-				m_Enemies[i]->update(boxWorld);
-				m_Enemies[i]->draw(projection, view); // draws the enemies to the screen
+
+				Profiler profiler("Box2D: ");
+
+				boxWorld->Step(s_timestep, m_iVelIterations, m_iPosIterations);
+
+				m_Player->update();
+				m_Player->draw(projection, view); // draws the player to the screen
+
+				m_Bullet->update();
+				m_Bullet->draw(projection, view);
+
+				for (int i = 0; i < 4; i++)
+				{
+					m_Enemies[i]->update(boxWorld);
+					m_Enemies[i]->draw(projection, view); // draws the enemies to the screen
+				}
 			}
 			
 			m_audiosystem.Update();

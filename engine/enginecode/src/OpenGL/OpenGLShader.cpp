@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include "systems/MyLogger.h"
+#include <glm/gtc/type_ptr.hpp>
 
 
 
@@ -68,10 +69,31 @@ namespace Engine
 		glUseProgram(0);
 	}
 
+	void OpenGLShader::setUniformMat4(const std::string& name, glm::mat4 matrix)
+	{
+		//UploadUniformMat4(name, data);
+	}
+
+	void OpenGLShader::setUniformFloat3(const std::string& name, float a, float b, float c)
+	{
+		uploadFloat3(name, a, b, c);
+	}
+
+	void OpenGLShader::setUniformFloat4(const std::string& name, const glm::vec4& value)
+	{
+		UploadFloat4(name, value);
+	}
+
 	void OpenGLShader::UploadUniformMat4(const std::string & name, float* data)
 	{
 		GLuint loc = glGetUniformLocation(getRenderedID(), name.c_str());
 		glUniformMatrix4fv(loc, 1, GL_FALSE, data);
+	}
+
+	void OpenGLShader::UploadFloat4(const std::string& name, const glm::vec4& data)
+	{
+		GLint loc = glad_glGetUniformLocation(getRenderedID(), name.c_str());
+		glUniform4f(loc, data.x, data.y, data.z, data.w);
 	}
 
 	void OpenGLShader::uploadFloat3(const std::string & name, float a, float b, float c)

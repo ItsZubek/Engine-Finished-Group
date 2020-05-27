@@ -1,12 +1,11 @@
-#include "engine_pch.h"
-#include "Physics\PlayerShape.h"
-#include <glad/glad.h>
 
+#include "engine_pch.h"
+#include "Physics/BulletShape.h"
+#include <glad/glad.h>
 
 namespace Engine
 {
-
- PlayerShape::PlayerShape(b2World* world, const glm::vec2& position, const glm::vec2& size, const float& orientation, const glm::vec3& colour)
+	BulletShape::BulletShape(b2World* world, const glm::vec2& position, const glm::vec2& size, const float& orientation, const glm::vec3& colour)
 	{
 		b2BodyDef l_bodyDef; // defines the body
 		b2PolygonShape l_shape;
@@ -15,7 +14,7 @@ namespace Engine
 		l_bodyDef.type = b2_dynamicBody;
 		l_bodyDef.position.Set(position.x, position.y); // sets the position of the object as a parameter
 		l_bodyDef.angle = orientation * DEG2RAD; // sets the direction the object is facing
-		
+
 
 		m_body = world->CreateBody(&l_bodyDef); // sets the body to appear in the world
 		m_body->SetUserData(this); // used by our collision listener
@@ -30,8 +29,6 @@ namespace Engine
 
 		m_body->CreateFixture(&l_fixtureDef); //creates fixture
 
-		
-		
 		float FCvertices[6 * 4] = {
 		-0.5f, -0.5f, -0.5f, colour.x, colour.y, colour.z, // red square
 		 0.5f, -0.5f, -0.5f, colour.x, colour.y, colour.z,
@@ -39,7 +36,7 @@ namespace Engine
 		-0.5f,  0.5f, -0.5f, colour.x, colour.y, colour.z
 		};
 
-		
+
 
 		// Intiating the Vertex Array
 		m_VAO.reset(VertexArray::create());
@@ -71,14 +68,12 @@ namespace Engine
 		m_Shader.reset(Shader::create("assets/shaders/flatColour.glsl"));
 		m_Shader->Bind();
 
-
-
-		FCmodel = glm::translate(glm::mat4(1), glm::vec3(position.x, position.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1));
+		m_bulletModel = glm::translate(glm::mat4(1), glm::vec3(position.x, position.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1));
 	}
 
-	void PlayerShape::draw(glm::mat4 projection, glm::mat4 view)
+	void BulletShape::draw(glm::mat4 projection, glm::mat4 view)
 	{
-		glm::mat4 MVP = projection * view * FCmodel;
+		glm::mat4 MVP = projection * view * m_bulletModel;
 
 		//Binds the Shader and Vertex Array for Flat Colour
 		m_Shader->Bind();
@@ -91,32 +86,40 @@ namespace Engine
 		glDrawElements(GL_TRIANGLES, m_IBO->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
 
-	void PlayerShape::update()
+	void BulletShape::update()
 	{
 		b2Vec2 pos = m_body->GetPosition(); // updates body position 
-		FCmodel = glm::translate(glm::mat4(1), glm::vec3(pos.x, pos.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 0.2, 1));
+		m_bulletModel = glm::translate(glm::mat4(1), glm::vec3(pos.x, pos.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.1, 0.1, 1));
 
-		if (pos.x > 4.5f)
+		// If bullet is off screen stop it from moving
+		if (pos.y > 3.0f)
 		{
-			m_body->SetTransform(b2Vec2(-4.4f, -2.5f), 0);
-		}
-
-		if (pos.x < -4.5)
-		{
-			m_body->SetTransform(b2Vec2(4.4f, -2.5f), 0);
+			m_body->SetLinearVelocity(b2Vec2(0, 0));
 		}
 	}
 
-	void PlayerShape::movement(b2Vec2 movement)
+	void BulletShape::fire(b2Vec2 movement)
 	{
+		m_bulletFired = true;
 		m_body->ApplyLinearImpulseToCenter(movement, true);
+
+		if (m_bulletCounter > 10)
+		{
+			m_body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+			m_body->SetTransform(b2Vec2(5.0f, 0.f), 0);
+		}
 	}
-	void PlayerShape::playerStopped()
+	void BulletShape::Fired()
 	{
-		m_body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+		m_bulletFired = false;
 	}
-	b2Vec2 PlayerShape::playerPosition()
+
+	void BulletShape::setPosition(b2Vec2 position)
 	{
-		return m_body->GetPosition();
+		m_body->SetTransform(b2Vec2(position.x, position.y), 0);
+
+		
 	}
+
+	
 }

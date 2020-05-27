@@ -1,17 +1,33 @@
 #pragma once
 
+
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "Object.h"
+#include <Box2D/Box2D.h>
 
 namespace Engine
 {
-	class PlayerShape : Object
+
+
+	class PlayerShape : public Object
 	{
 	private:
-		const float m_Pixel2Meters = 20;
-		const float m_Meters2Pixel = 1 / m_Pixel2Meters;
+		glm::mat4 FCmodel;
+		b2Vec2 m_position;
 	public:
-		PlayerShape() {} //!< default Constructor
-		PlayerShape(b2World* world, const b2Vec2& position, const b2Vec2& size, float& orientation); //!< Complete Constructor 
-		void drawShape(b2Vec2* vertices, b2Vec2 centre, float angle); //!< draws a shape
+		PlayerShape() {}; //!< Default Constructor
+		PlayerShape(b2World* world, const glm::vec2& position, const glm::vec2& size, const float& orientation, const glm::vec3& colour); //!< Complete Contructor
+		void draw(glm::mat4 projection, glm::mat4 view); //!< draws the shape
+		void update(); //!< updates the position of the shape
+		void movement(b2Vec2 movement); //!< moves the player
+		void playerStopped();
+		b2Vec2 playerPosition();
+		
+		
+
+		
 	};
 }

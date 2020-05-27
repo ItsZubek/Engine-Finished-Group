@@ -5,47 +5,28 @@
 
 namespace Engine {
 
-
-	float MyTimer::ElapsedTime()
-	{
-		//timePassed = endpoint - startPoint;
-		seconds = (std::chrono::high_resolution_clock::now() - startPoint).count() * 0.000000001f;
-		return seconds;
-	}
 	void MyTimer::start(SystemSignal init, ...)
 	{
-		TimerInitializationStartPoint = std::chrono::high_resolution_clock::now();
+		startClock = std::chrono::high_resolution_clock::now();
 	}
 	void MyTimer::stop(SystemSignal init, ...)
 	{
-		TimerInitializationEndPoint = std::chrono::high_resolution_clock::now();
+		endClock = std::chrono::high_resolution_clock::now();
 	}
-	void MyTimer::SetStartPoint()
+
+	float MyTimer::getFrameTimeSecomds()
 	{
-		startPoint = std::chrono::high_resolution_clock::now();
+		endClock = std::chrono::high_resolution_clock::now();
+		timePassed = endClock - startClock;
+		startClock = std::chrono::high_resolution_clock::now();
+
+		return timePassed.count();
 	}
-	void MyTimer::SetEndPoint()
+
+	void MyTimer::RestartClock()
 	{
-		endpoint = std::chrono::high_resolution_clock::now();
+		startClock = std::chrono::high_resolution_clock::now();
 	}
-	float MyTimer::RunTime()
-	{
-		timePassed = TimerInitializationEndPoint - TimerInitializationStartPoint;
-		seconds = timePassed.count();
-		return seconds;
-	}
-	void MyTimer::SetFrameStart()
-	{
-		FrameStart = std::chrono::high_resolution_clock::now();
-	}
-	void MyTimer::SetFrameEnd()
-	{
-		FrameEnd = std::chrono::high_resolution_clock::now();
-	}
-	float MyTimer::FrameCounter()
-	{
-		FrameDuration = FrameEnd - FrameStart;
-		return FrameDuration.count();
-	}
+	
 	 
 }

@@ -58,14 +58,14 @@ namespace Engine {
 		
 		std::shared_ptr<Imgui> mp_imgui; //!< Shared Pointer to ImGui
 
-		struct ProfResult
+		struct ProfResult //profiler result struct
 		{
 			const char* Name;
 			float Time;
 
 		};
 
-		std::vector<ProfResult> m_ProfResults;
+		std::vector<ProfResult> m_ProfResults; //vector for profiler results
 
 		float TimeElapsedInSeconds; //!< Time Elapsed in seconds
 		float fps; //!< Frames Per Second

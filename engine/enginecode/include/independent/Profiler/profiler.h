@@ -35,7 +35,7 @@ namespace Engine
 
 			float duration = (end - start) * 0.001f;
 
-			std::cout << m_Name << ": " << duration << "ms" << std::endl;
+			std::cout << m_Name << ": " << duration << "ms" << std::endl; //need m_Name and duration to be accessible from application.h
 		};
 		~Profiler()
 		{

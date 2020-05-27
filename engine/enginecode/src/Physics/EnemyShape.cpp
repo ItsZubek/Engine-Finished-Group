@@ -84,10 +84,15 @@ namespace Engine
 		glDrawElements(GL_TRIANGLES, m_IBO->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
 
-	void EnemyShape::update()
+	void EnemyShape::update(b2World* world)
 	{
 		b2Vec2 pos = m_body->GetPosition(); // updates body position 
 		EnemyModel = glm::translate(glm::mat4(1), glm::vec3(pos.x, pos.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 1));
+
+		if (pos.y > 3.0f)
+		{
+			Destroy(world);
+		}
 	}
 
 	void EnemyShape::Destroy(b2World* world)

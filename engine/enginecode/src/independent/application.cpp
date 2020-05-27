@@ -148,7 +148,7 @@ namespace Engine {
 
 			for (int i = 0; i < 4; i++)
 			{
-				m_Enemies[i]->update();
+				m_Enemies[i]->update(boxWorld);
 				m_Enemies[i]->draw(projection, view); // draws the enemies to the screen
 			}
 			

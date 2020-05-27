@@ -41,8 +41,8 @@ namespace Engine {
 	Application::Application(): m_Camera(-2.0f, 2.0f, -2.0f, 2.0f)
 	{
 		
-		boxWorld = new b2World(m_gravity);
-		m_Player = std::make_shared<PlayerShape>();
+		/*boxWorld = new b2World(m_gravity);
+		m_Player = std::make_shared<PlayerShape>();*/
 		mp_logger = std::make_shared<MyLogger>();
 		mp_logger->start();
 		mp_timer = std::make_shared<MyTimer>();
@@ -73,8 +73,7 @@ namespace Engine {
 	}
 	void Application::run()
 	{
-		mp_timer->SetStartPoint();
-		mp_timer->SetFrameStart();
+		
 
 		mp_imgui->createFrames();
 
@@ -88,9 +87,9 @@ namespace Engine {
 
 		while (m_running)
 		{
-			mp_timer->SetStartPoint();
-			s_timestep = mp_timer->ElapsedTime();
-			boxWorld->Step(s_timestep, m_iVelIterations, m_iPosIterations);
+			
+			s_timestep = mp_timer->getFrameTimeSecomds();
+			//boxWorld->Step(s_timestep, m_iVelIterations, m_iPosIterations);
 
 			
 

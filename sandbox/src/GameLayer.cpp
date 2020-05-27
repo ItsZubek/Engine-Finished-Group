@@ -6,7 +6,7 @@
 
 GameLayer::GameLayer(const std::string& name) : Layer(name), m_Camera(-2.0f, 2.0f, -2.0f, 2.0f)
 {
-	m_Player = std::make_shared<Engine::PlayerShape>();
+	
 
 	//  Temporary set up code to be abstracted
 
@@ -154,6 +154,29 @@ GameLayer::GameLayer(const std::string& name) : Layer(name), m_Camera(-2.0f, 2.0
 	m_TextureTP.reset(Engine::Texture::createFromFile("assets/textures/letterCube.png"));
 	m_TextureTP.reset(Engine::Texture::createFromFile("assets/textures/numberCube.png"));
 
+	/*boxWorld = new b2World(m_gravity);
+
+	//!< Sets the position, size, orientation and colour of the player
+	m_Player = std::make_shared<Engine::PlayerShape>(boxWorld, glm::vec2(0.0f, -2.5f), glm::vec2(1.f, 0.2f), 0, glm::vec3(0.8f, 0.2f, 0.2f));
+
+	//!< Sets the position, size, orientation and colour of the enemies
+	m_Enemies.resize(4);
+	m_Enemies[0] = std::make_shared<Engine::EnemyShape>(boxWorld, glm::vec2(2.5f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
+	m_Enemies[1] = std::make_shared<Engine::EnemyShape>(boxWorld, glm::vec2(1.f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
+	m_Enemies[2] = std::make_shared<Engine::EnemyShape>(boxWorld, glm::vec2(-1.f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
+	m_Enemies[3] = std::make_shared<Engine::EnemyShape>(boxWorld, glm::vec2(-2.5f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
+
+	//!< Sets the position, size, orientation and colour of the bullets
+
+	m_Bullet = std::make_shared<Engine::BulletShape>(boxWorld, glm::vec2(-5.0f, -2.8f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
+
+	m_Player->setUserData(new std::pair<std::string, void*>(typeid(decltype(m_Player)).name(), &m_Player));
+	m_Bullet->setUserData(new std::pair<std::string, void*>(typeid(decltype(m_Bullet)).name(), &m_Bullet));
+	for (std::shared_ptr<Engine::EnemyShape>& enemies : m_Enemies) enemies->setUserData(new std::pair<std::string, void*>(typeid(decltype(enemies)).name(), &enemies));
+
+
+	boxWorld->SetContactListener(&m_CollisionListener); // sets contact listener*/
+
 	FCmodel = glm::translate(glm::mat4(1), glm::vec3(1.5, 0, 3));
 	TPmodel = glm::translate(glm::mat4(1), glm::vec3(-1.5, 0, 3));
 }
@@ -168,6 +191,8 @@ void GameLayer::OnAttach()
 void GameLayer::OnDetach()
 {
 	//m_audiosystem.Stop();
+	/*delete boxWorld;
+	boxWorld = nullptr;*/
 }
 
 void GameLayer::OnUpdate(float timestep)
@@ -269,10 +294,34 @@ void GameLayer::OnUpdate(float timestep)
 		m_ShaderTP->uploadInt("u_texData", m_TextureTP->getSlot() /*textureSlot*/);
 
 		glDrawElements(GL_TRIANGLES, m_IndexBufferTP->GetCount(), GL_UNSIGNED_INT, nullptr);
+
+		/*boxWorld->Step(s_timestep, m_iVelIterations, m_iPosIterations);
+
+		m_Player->update();
+		m_Player->draw(projection, view); // draws the player to the screen
+
+		m_Bullet->update();
+		m_Bullet->draw(projection, view);
+
+		for (int i = 0; i < 4; i++)
+		{
+			m_Enemies[i]->draw(projection, view); // draws the enemies to the screen
+		}*/
 	}
 }
 
 void GameLayer::OnEvent(Engine::EventBaseClass& e)
 {
-	
+	/*m_Player->playerStopped();
+	m_Player->playerStopped();
+	m_Bullet->Fired();
+
+	m_Player->movement(b2Vec2(0.2f, 0.0f));
+	m_Player->movement(b2Vec2(-0.2f, 0.0f));
+
+	{
+		b2Vec2 playerPos = m_Player->playerPosition();
+		m_Bullet->setPosition(b2Vec2(playerPos.x, playerPos.y + 0.2));
+		m_Bullet->fire(b2Vec2(0.0f, 0.2f));
+	}*/
 }

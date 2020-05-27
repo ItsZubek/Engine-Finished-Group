@@ -134,12 +134,13 @@ project "Sandbox"
 	links
 	{
 		"Engine",
-		"Box2D",
+		
 		"fmodL_vc.lib",
 		"fmodstudioL_vc.lib"
 	}
 	libdirs
 	{
+			
 			"vendor/FMOD/core/lib/x64",
 			"vendor/FMOD/fsbank/lib/x64",
 			"vendor/FMOD/studio/lib/x64"
@@ -164,7 +165,7 @@ project "Sandbox"
 		symbols "On"
 		libdirs 
         {
-            "./vendor/Box2D/x64/Debug"
+            
         }
 		links
 		{
@@ -179,7 +180,7 @@ project "Sandbox"
 		optimize "On"
 		libdirs 
         {
-            "./vendor/Box2D/x64/Release"
+            
         }
 		links
 		{

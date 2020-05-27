@@ -65,13 +65,13 @@ namespace Engine {
 
 		OrthographicCamera m_Camera; //!< Orthographic Camera
 
-		b2World* boxWorld = nullptr;
+		/*b2World* boxWorld = nullptr;
 		b2Vec2 m_gravity = b2Vec2(0.f, 0.f);
 
 		std::shared_ptr<PlayerShape> m_Player; //!< the player in the game
 		//b2Vec2 m_vertices;
 		const int m_iVelIterations = 7;
-		const int m_iPosIterations = 5;
+		const int m_iPosIterations = 5;*/
 
 //Code provided by SIMON COUPLAND
 #pragma region TempVars

@@ -23,7 +23,7 @@
 #include "UI/imgui_impl.h"
 
 #include "Physics/PlayerShape.h"
-#include "Physics/EnemyShape.h"
+#include "AI/ship.h"
 #include "Physics/Object.h"
 #include "Physics/BulletShape.h"
 #include "Physics/Collisions.h"
@@ -75,7 +75,7 @@ namespace Engine {
 		b2Vec2 m_gravity = b2Vec2(0.f, 0.f);
 
 		std::shared_ptr<Engine::PlayerShape> m_Player;
-		std::vector<std::shared_ptr<Engine::EnemyShape>> m_Enemies;
+		std::vector<std::shared_ptr<Engine::Ship>> m_Enemies;
 		std::shared_ptr<Engine::BulletShape> m_Bullet;
 		Engine::Collisions m_CollisionListener;
 

@@ -170,7 +170,7 @@ void GameLayer::OnUpdate(float timestep)
 {
 	Engine::Profiler profiler("GameLayer::OnUpdate");
 	 
-	m_audiosystem.Update();
+	//m_audiosystem.Update();
 
 	// Code to make the cube move, you can ignore this more or less.
 	/*glm::mat4 FCtranslation, TPtranslation;

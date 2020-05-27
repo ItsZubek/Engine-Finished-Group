@@ -83,9 +83,8 @@ namespace Engine {
 
 
 		m_audiosystem.Start();
-		m_audiosystem.LoadSound("assets/audio/sound4.mp3");
-		m_audiosystem.LoadSound("assets/audio/laser.wav");
-		m_audiosystem.PlaySounds("assets/audio/sound4.mp3", glm::vec3(0, 0, 0), m_audiosystem.VolumeTodB(0.02f));
+		m_audiosystem.LoadSound("assets/audio/movie_1.mp3");
+		m_audiosystem.PlaySounds("assets/audio/movie_1.mp3", glm::vec3(0, 0, 0), m_audiosystem.VolumeTodB(1.0f));
 		
 
 		mp_imgui = std::shared_ptr<Imgui>(ImguiGLFW::initialise());
@@ -112,6 +111,17 @@ namespace Engine {
 
 		ImGui::Begin("GUI Test");
 		ImGui::Text("This is a test box");
+
+		for (auto& result : m_ProfResults) //turn profiler results into imgui text
+		{
+			char label[50];
+			strcpy(label, result.Name);
+			strcat(label, " %.3fms");
+
+			ImGui::Text(label, result.Time); //the text being generated
+		}
+
+
 		ImGui::End();
 
 
@@ -214,7 +224,6 @@ namespace Engine {
 		if (e.GetKeyCode() == 68) m_Player->movement(b2Vec2(-0.2f, 0.0f));
 		if (e.GetKeyCode() == 32)
 		{
-			m_audiosystem.PlaySounds("assets/audio/laser.wav", glm::vec3(0, 0, 0), m_audiosystem.VolumeTodB(1.f));
 			b2Vec2 playerPos = m_Player->playerPosition();
 			m_Bullet->setPosition(b2Vec2(playerPos.x, playerPos.y + 0.2));
 			m_Bullet->fire(b2Vec2(0.0f, 0.2f));

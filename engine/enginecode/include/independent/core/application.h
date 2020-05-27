@@ -72,6 +72,7 @@ namespace Engine {
 		 //!< Pointer to a window class
 		static glm::ivec2 s_screenResolution; //!< Screen resolution
 		static float s_timestep; //!< last frame timestep
+
 		AudioManager m_audiosystem;
 
 		b2World* boxWorld = nullptr;

@@ -83,7 +83,7 @@ namespace Engine {
 
 
 		m_audiosystem.Start();
-		m_audiosystem.LoadSound("assets/audio/movie_1.mp3", false, true);
+		m_audiosystem.LoadSound("assets/audio/movie_1.mp3");
 		m_audiosystem.PlaySounds("assets/audio/movie_1.mp3", glm::vec3(0, 0, 0), m_audiosystem.VolumeTodB(1.0f));
 		
 

@@ -112,6 +112,17 @@ namespace Engine {
 
 		ImGui::Begin("GUI Test");
 		ImGui::Text("This is a test box");
+
+		for (auto& result : m_ProfResults)
+		{
+			char label[50];
+			strcpy(label, result.Name);
+			strcat(label, " %.3fms");
+
+			ImGui::Text(label, result.Time);
+		}
+
+
 		ImGui::End();
 
 

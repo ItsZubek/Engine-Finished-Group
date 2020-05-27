@@ -58,6 +58,15 @@ namespace Engine {
 		
 		std::shared_ptr<Imgui> mp_imgui; //!< Shared Pointer to ImGui
 
+		struct ProfResult
+		{
+			const char* Name;
+			float Time;
+
+		};
+
+		std::vector<ProfResult> m_ProfResults;
+
 		float TimeElapsedInSeconds; //!< Time Elapsed in seconds
 		float fps; //!< Frames Per Second
 		bool onWindowClose(WindowCloseEvent& e); //!< On Window Close Event

@@ -28,6 +28,7 @@ namespace Engine
 		l_fixtureDef.shape = &l_shape; // sets fixture as the shape
 
 		m_body->CreateFixture(&l_fixtureDef); //creates fixture
+		m_body->SetLinearDamping(0.2f);
 
 		float FCvertices[6 * 4] = {
 		-0.5f, -0.5f, -0.5f, colour.x, colour.y, colour.z, // red square

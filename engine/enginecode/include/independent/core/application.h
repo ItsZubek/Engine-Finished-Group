@@ -55,15 +55,17 @@ namespace Engine {
 		bool m_running = true; //!< Is the application running?
 		
 		b2World* boxWorld = nullptr;
-		b2Vec2 m_gravity = b2Vec2(0.f, 0.f);
+		b2Vec2 m_gravity = b2Vec2(0.0f, 0.0f);
 
 		const int m_iVelIterations = 7;
 		const int m_iPosIterations = 5;
 
+		Collisions m_CollisionListener; //!< used by the colision Listener
+
 		std::shared_ptr<PlayerShape> m_Player;
 		std::vector<std::shared_ptr<EnemyShape>> m_Enemies;
 		std::shared_ptr<BulletShape> m_Bullet;
-		Collisions m_CollisionListener;
+		
 
 		float TimeElapsedInSeconds; //!< Time Elapsed in seconds
 		float fps; //!< Frames Per Second
@@ -86,6 +88,7 @@ namespace Engine {
 		bool onMouseButtonRelease(MouseButtonReleasedEvent& e); //!< On Mouse Button Released Event
 		bool onMouseScroll(MouseScrolledEvent& e); //!< Mouse Scrolled Event
 		bool onMouseMoved(MouseMovedEvent& e); //!< Mouse Moved Event
+		b2World* getWorld() { return boxWorld; }
 	};
 
 	// To be defined in users code

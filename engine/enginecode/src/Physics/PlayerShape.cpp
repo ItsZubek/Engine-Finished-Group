@@ -29,6 +29,7 @@ namespace Engine
 		l_fixtureDef.shape = &l_shape; // sets fixture as the shape
 
 		m_body->CreateFixture(&l_fixtureDef); //creates fixture
+		m_body->SetLinearDamping(0.2f);
 
 		
 		

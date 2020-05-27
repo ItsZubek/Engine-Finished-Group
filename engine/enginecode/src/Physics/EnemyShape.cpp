@@ -1,6 +1,7 @@
 #include "engine_pch.h"
 
 #include "Physics/EnemyShape.h"
+
 #include <glad/glad.h>
 
 namespace Engine
@@ -11,7 +12,7 @@ namespace Engine
 		b2PolygonShape l_shape;
 		b2FixtureDef l_fixtureDef; // sets the fixture of the shape
 
-		l_bodyDef.type = b2_staticBody;
+		l_bodyDef.type = b2_dynamicBody;
 		l_bodyDef.position.Set(position.x, position.y); // sets the position of the object as a parameter
 		l_bodyDef.angle = orientation * DEG2RAD; // sets the direction the object is facing
 
@@ -28,6 +29,7 @@ namespace Engine
 		l_fixtureDef.shape = &l_shape; // sets fixture as the shape
 
 		m_body->CreateFixture(&l_fixtureDef); //creates fixture
+		m_body->SetLinearDamping(0.2f);
 
 		float FCvertices[6 * 4] = {
 		-0.5f, -0.5f, -0.5f, colour.x, colour.y, colour.z, // red square
@@ -84,8 +86,15 @@ namespace Engine
 		glDrawElements(GL_TRIANGLES, m_IBO->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
 
-	void EnemyShape::Destroy()
+	void EnemyShape::update()
 	{
-		//m_body->DestroyFixture()
+		b2Vec2 pos = m_body->GetPosition(); // updates body position 
+		EnemyModel = glm::translate(glm::mat4(1), glm::vec3(pos.x, pos.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 1));
+
+	}
+
+	void EnemyShape::Destroy(b2World* world)
+	{
+		world->DestroyBody(m_body);
 	}
 }

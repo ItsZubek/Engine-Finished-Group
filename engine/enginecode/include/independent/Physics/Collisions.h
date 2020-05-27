@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Physics/BulletShape.h"
+#include "Physics/EnemyShape.h"
+
 #include <Box2D/Box2D.h>
 
 namespace Engine

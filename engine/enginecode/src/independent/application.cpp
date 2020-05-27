@@ -128,6 +128,7 @@ namespace Engine
 
 				for (int i = 0; i < 4; i++)
 				{
+					m_Enemies[i]->update();
 					m_Enemies[i]->draw(projection, view); // draws the enemies to the screen
 				}
 
@@ -191,6 +192,7 @@ namespace Engine
 		if (e.GetKeyCode() == 65) m_Player->playerStopped();
 		if (e.GetKeyCode() == 68) m_Player->playerStopped();
 		if (e.GetKeyCode() == 32) m_Bullet->Fired();
+		if (e.GetKeyCode() == 66) m_Enemies[0]->Destroy(boxWorld);
 		 
 		ENGINE_CORE_TRACE("KeyReleased: {0}", e.GetKeyCode());
 		return true;

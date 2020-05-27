@@ -1,8 +1,7 @@
 
 #include "engine_pch.h"
 #include "Physics/Collisions.h"
-#include "Physics/BulletShape.h"
-#include "Physics/EnemyShape.h"
+
 
 #include "systems/MyLogger.h"
 
@@ -30,6 +29,7 @@ namespace Engine
 				EnemyShape* enemies = static_cast<EnemyShape*>(dataA.second);
 				if (enemies != nullptr)
 				{
+					//enemies->Destroy()
 					ENGINE_CORE_CRITICAL("Collision Occured");
 				}
 			}

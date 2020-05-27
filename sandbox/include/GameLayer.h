@@ -54,7 +54,7 @@ private:
 
 	std::shared_ptr<Engine::Texture> m_TextureTP;
 
-	Engine::AudioManager m_audiosystem;
+	//Engine::AudioManager m_audiosystem;
 
 
 	

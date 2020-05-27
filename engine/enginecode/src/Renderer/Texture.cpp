@@ -5,12 +5,15 @@
 
 #include "platform/OpenGL/OpenGLTexture.h"
 #include "windows/Renderer.h"
+#include "Profiler/profiler.h"
+
 
 
 namespace Engine
 {
 	Texture* Texture::createFromFile(const std::string& filepath)
 	{
+		Engine::Profiler profiler("Texture::CreateFromFile");
 		if (Renderer::GetAPI() == Renderer::RendererAPI::None)
 		{
 			 ENGINE_CORE_CRITICAL("Lack if graphics API not supported.");
@@ -25,6 +28,7 @@ namespace Engine
 
 	Texture* Texture::createFromRawData(unsigned int width, unsigned int height, unsigned int channels, unsigned char* textData)
 	{
+		Engine::Profiler profiler("Texture::CreateFromRawData");
 		if (Renderer::GetAPI() == Renderer::RendererAPI::None)
 		{
 			 ENGINE_CORE_CRITICAL("Lack if graphics API not supported.");

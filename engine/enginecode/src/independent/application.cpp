@@ -28,7 +28,6 @@ namespace Engine {
 	Application* Application::s_instance = nullptr;
 	float Application::s_timestep = 0.f;
 	glm::ivec2 Application::s_screenResolution = glm::ivec2(0, 0);
-	AudioManager m_audiosystem;
 
 
 #pragma region TempGlobalVars
@@ -37,7 +36,7 @@ namespace Engine {
 
 	Application::Application(): m_Camera(-2.0f, 2.0f, -2.0f, 2.0f)
 	{
-		
+		Engine::Profiler profiler("Application::Application");
 		
 		mp_logger = std::make_shared<MyLogger>();
 		mp_logger->start();
@@ -84,8 +83,10 @@ namespace Engine {
 
 
 		m_audiosystem.Start();
-		m_audiosystem.LoadSound("assets/audio/movie_1.mp3");
-		m_audiosystem.PlaySounds("assets/audio/movie_1.mp3", glm::vec3(0,0,0), m_audiosystem.VolumeTodB(1.0f));
+		m_audiosystem.LoadSound("assets/audio/sound4.mp3");
+		m_audiosystem.LoadSound("assets/audio/laser.wav");
+		m_audiosystem.PlaySounds("assets/audio/sound4.mp3", glm::vec3(0, 0, 0), m_audiosystem.VolumeTodB(0.02f));
+		
 
 		mp_imgui = std::shared_ptr<Imgui>(ImguiGLFW::initialise());
 
@@ -104,7 +105,6 @@ namespace Engine {
 	void Application::run()
 	{
 		
-
 		mp_imgui->createFrames();
 
 		ImGui::SetNextWindowSize(ImVec2(200, 200), ImGuiCond_Once);
@@ -112,6 +112,17 @@ namespace Engine {
 
 		ImGui::Begin("GUI Test");
 		ImGui::Text("This is a test box");
+
+		for (auto& result : m_ProfResults) //turn profiler results into imgui text
+		{
+			char label[50];
+			strcpy(label, result.Name);
+			strcat(label, " %.3fms");
+
+			ImGui::Text(label, result.Time); //the text being generated
+		}
+
+
 		ImGui::End();
 
 
@@ -180,6 +191,7 @@ namespace Engine {
 
 	void Application::onEvent(EventBaseClass& e)
 	{
+		Engine::Profiler profiler("Application::OnEvent");
 		EventDispatcher dispatcher(e);
 		dispatcher.dispatch<WindowCloseEvent>(std::bind(&Application::onWindowClose, this, std::placeholders::_1));
 		dispatcher.dispatch<WindowResizeEvent>(std::bind(&Application::onResize, this, std::placeholders::_1));
@@ -211,11 +223,13 @@ namespace Engine {
 
 	bool Application::onKeyPress(KeyPressedEvent& e)
 	{
+		Engine::Profiler profiler("Application::onKeyPress");
 		if (e.GetKeyCode() == 256) m_running = false;
 		if (e.GetKeyCode() == 65) m_Player->movement(b2Vec2(0.2, 0.0f));
 		if (e.GetKeyCode() == 68) m_Player->movement(b2Vec2(-0.2f, 0.0f));
 		if (e.GetKeyCode() == 32)
 		{
+			m_audiosystem.PlaySounds("assets/audio/laser.wav", glm::vec3(0, 0, 0), m_audiosystem.VolumeTodB(0.5f));
 			b2Vec2 playerPos = m_Player->playerPosition();
 			m_Bullet->setPosition(b2Vec2(playerPos.x, playerPos.y + 0.2));
 			m_Bullet->fire(b2Vec2(0.0f, 50.0f));
@@ -225,6 +239,7 @@ namespace Engine {
 	}
 	bool Application::onKeyRelease(KeyReleasedEvent& e)
 	{
+		Engine::Profiler profiler("Application::onKeyRelease");
 		if (e.GetKeyCode() == 65) m_Player->playerStopped();
 		if (e.GetKeyCode() == 68) m_Player->playerStopped();
 		if (e.GetKeyCode() == 32) m_Bullet->Fired();

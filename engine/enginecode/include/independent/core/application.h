@@ -58,6 +58,15 @@ namespace Engine {
 		
 		std::shared_ptr<Imgui> mp_imgui; //!< Shared Pointer to ImGui
 
+		struct ProfResult //profiler result struct
+		{
+			const char* Name;
+			float Time;
+
+		};
+
+		std::vector<ProfResult> m_ProfResults; //vector for profiler results
+
 		float TimeElapsedInSeconds; //!< Time Elapsed in seconds
 		float fps; //!< Frames Per Second
 		bool onWindowClose(WindowCloseEvent& e); //!< On Window Close Event
@@ -72,6 +81,7 @@ namespace Engine {
 		 //!< Pointer to a window class
 		static glm::ivec2 s_screenResolution; //!< Screen resolution
 		static float s_timestep; //!< last frame timestep
+		AudioManager m_audiosystem;
 
 		b2World* boxWorld = nullptr;
 		b2Vec2 m_gravity = b2Vec2(0.f, 0.f);

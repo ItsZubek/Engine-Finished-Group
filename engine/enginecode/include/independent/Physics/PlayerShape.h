@@ -21,10 +21,11 @@ namespace Engine
 		PlayerShape() {}; //!< Default Constructor
 		PlayerShape(b2World* world, const glm::vec2& position, const glm::vec2& size, const float& orientation, const glm::vec3& colour); //!< Complete Contructor
 		void draw(glm::mat4 projection, glm::mat4 view); //!< draws the shape
-		void update(); //!< updates the position of the shape
+		void update(b2World* world); //!< updates the position of the shape
 		void movement(b2Vec2 movement); //!< moves the player
 		void playerStopped();
 		b2Vec2 playerPosition();
+		void Destroy(b2World* world);
 		
 		
 

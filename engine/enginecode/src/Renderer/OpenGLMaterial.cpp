@@ -4,11 +4,13 @@
 #include "platform\OpenGL\Rendering\OpenGLMaterial.h"
 
 #include <glm/gtc/matrix_transform.hpp>
+#include "Profiler/profiler.h"
 
 namespace Engine
 {
 	OpenGLMaterial::OpenGLMaterial(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& VertexArray)
 	{
+		Engine::Profiler profiler("OpenGLMaterial::Create");
 		float FCvertices[6 * 24] = {
 			-0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.2f, // red square
 			 0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.2f,

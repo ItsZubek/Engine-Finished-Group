@@ -23,7 +23,7 @@
 #include "UI/imgui_impl.h"
 
 #include "Physics/PlayerShape.h"
-#include "Physics/EnemyShape.h"
+#include "AI/ship.h"
 #include "Physics/Object.h"
 #include "Physics/BulletShape.h"
 #include "Physics/Collisions.h"
@@ -58,6 +58,15 @@ namespace Engine {
 		
 		std::shared_ptr<Imgui> mp_imgui; //!< Shared Pointer to ImGui
 
+		struct ProfResult //profiler result struct
+		{
+			const char* Name;
+			float Time;
+
+		};
+
+		std::vector<ProfResult> m_ProfResults; //vector for profiler results
+
 		float TimeElapsedInSeconds; //!< Time Elapsed in seconds
 		float fps; //!< Frames Per Second
 		bool onWindowClose(WindowCloseEvent& e); //!< On Window Close Event
@@ -79,7 +88,7 @@ namespace Engine {
 		b2Vec2 m_gravity = b2Vec2(0.f, 0.f);
 
 		std::shared_ptr<Engine::PlayerShape> m_Player;
-		std::vector<std::shared_ptr<Engine::EnemyShape>> m_Enemies;
+		std::vector<std::shared_ptr<Engine::Ship>> m_Enemies;
 		std::shared_ptr<Engine::BulletShape> m_Bullet;
 		Engine::Collisions m_CollisionListener;
 

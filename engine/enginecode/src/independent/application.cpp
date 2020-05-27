@@ -36,7 +36,7 @@ namespace Engine {
 
 	Application::Application(): m_Camera(-2.0f, 2.0f, -2.0f, 2.0f)
 	{
-		
+		Engine::Profiler profiler("Application::Application");
 		
 		mp_logger = std::make_shared<MyLogger>();
 		mp_logger->start();
@@ -61,10 +61,10 @@ namespace Engine {
 
 		//!< Sets the position, size, orientation and colour of the enemies
 		m_Enemies.resize(4);
-		m_Enemies[0] = std::make_shared<Engine::EnemyShape>(boxWorld, glm::vec2(2.5f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
-		m_Enemies[1] = std::make_shared<Engine::EnemyShape>(boxWorld, glm::vec2(1.f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
-		m_Enemies[2] = std::make_shared<Engine::EnemyShape>(boxWorld, glm::vec2(-1.f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
-		m_Enemies[3] = std::make_shared<Engine::EnemyShape>(boxWorld, glm::vec2(-2.5f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
+		m_Enemies[0] = std::make_shared<Engine::Ship>(boxWorld, glm::vec2(2.5f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
+		m_Enemies[1] = std::make_shared<Engine::Ship>(boxWorld, glm::vec2(1.f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
+		m_Enemies[2] = std::make_shared<Engine::Ship>(boxWorld, glm::vec2(-1.f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
+		m_Enemies[3] = std::make_shared<Engine::Ship>(boxWorld, glm::vec2(-2.5f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
 
 		//!< Sets the position, size, orientation and colour of the bullets
 
@@ -72,7 +72,7 @@ namespace Engine {
 
 		m_Player->setUserData(new std::pair<std::string, void*>(typeid(decltype(m_Player)).name(), &m_Player));
 		m_Bullet->setUserData(new std::pair<std::string, void*>(typeid(decltype(m_Bullet)).name(), &m_Bullet));
-		for (std::shared_ptr<Engine::EnemyShape>& enemies : m_Enemies) enemies->setUserData(new std::pair<std::string, void*>(typeid(decltype(enemies)).name(), &enemies));
+		for (std::shared_ptr<Engine::Ship>& enemies : m_Enemies) enemies->setUserData(new std::pair<std::string, void*>(typeid(decltype(enemies)).name(), &enemies));
 
 
 		boxWorld->SetContactListener(&m_CollisionListener); // sets contact listener
@@ -83,8 +83,9 @@ namespace Engine {
 
 
 		m_audiosystem.Start();
-		m_audiosystem.LoadSound("assets/audio/movie_1.mp3", false, true);
-		m_audiosystem.PlaySounds("assets/audio/movie_1.mp3", glm::vec3(0, 0, 0), m_audiosystem.VolumeTodB(1.0f));
+		m_audiosystem.LoadSound("assets/audio/sound4.mp3");
+		m_audiosystem.LoadSound("assets/audio/laser.wav");
+		m_audiosystem.PlaySounds("assets/audio/sound4.mp3", glm::vec3(0, 0, 0), m_audiosystem.VolumeTodB(0.02f));
 		
 
 		mp_imgui = std::shared_ptr<Imgui>(ImguiGLFW::initialise());
@@ -111,13 +112,24 @@ namespace Engine {
 
 		ImGui::Begin("GUI Test");
 		ImGui::Text("This is a test box");
+
+		for (auto& result : m_ProfResults) //turn profiler results into imgui text
+		{
+			char label[50];
+			strcpy(label, result.Name);
+			strcat(label, " %.3fms");
+
+			ImGui::Text(label, result.Time); //the text being generated
+		}
+
+
 		ImGui::End();
 
 
 		while (m_running)
 		{
 			s_timestep = mp_timer->getFrameTimeSecomds();
-
+			
 			glClearColor(0.1f, 0.1f, 0.1f, 1);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -139,17 +151,19 @@ namespace Engine {
 				Profiler profiler("Box2D: ");
 
 				boxWorld->Step(s_timestep, m_iVelIterations, m_iPosIterations);
-
-				m_Player->update();
+				
+				m_Player->update(boxWorld);
 				m_Player->draw(projection, view); // draws the player to the screen
-
+			
 				m_Bullet->update();
 				m_Bullet->draw(projection, view);
 
 				for (int i = 0; i < 4; i++)
 				{
+					
 					m_Enemies[i]->update(boxWorld);
 					m_Enemies[i]->draw(projection, view); // draws the enemies to the screen
+					m_Enemies[i]->Move();
 				}
 			}
 			
@@ -177,6 +191,7 @@ namespace Engine {
 
 	void Application::onEvent(EventBaseClass& e)
 	{
+		Engine::Profiler profiler("Application::OnEvent");
 		EventDispatcher dispatcher(e);
 		dispatcher.dispatch<WindowCloseEvent>(std::bind(&Application::onWindowClose, this, std::placeholders::_1));
 		dispatcher.dispatch<WindowResizeEvent>(std::bind(&Application::onResize, this, std::placeholders::_1));
@@ -208,20 +223,23 @@ namespace Engine {
 
 	bool Application::onKeyPress(KeyPressedEvent& e)
 	{
+		Engine::Profiler profiler("Application::onKeyPress");
 		if (e.GetKeyCode() == 256) m_running = false;
 		if (e.GetKeyCode() == 65) m_Player->movement(b2Vec2(0.2, 0.0f));
 		if (e.GetKeyCode() == 68) m_Player->movement(b2Vec2(-0.2f, 0.0f));
 		if (e.GetKeyCode() == 32)
 		{
+			m_audiosystem.PlaySounds("assets/audio/laser.wav", glm::vec3(0, 0, 0), m_audiosystem.VolumeTodB(0.5f));
 			b2Vec2 playerPos = m_Player->playerPosition();
 			m_Bullet->setPosition(b2Vec2(playerPos.x, playerPos.y + 0.2));
-			m_Bullet->fire(b2Vec2(0.0f, 0.2f));
+			m_Bullet->fire(b2Vec2(0.0f, 50.0f));
 		}
 		ENGINE_CORE_TRACE("KeyPressed: {0}, RepeatCount: {1}", e.GetKeyCode(), e.GetRepeatCount());
 		return true;
 	}
 	bool Application::onKeyRelease(KeyReleasedEvent& e)
 	{
+		Engine::Profiler profiler("Application::onKeyRelease");
 		if (e.GetKeyCode() == 65) m_Player->playerStopped();
 		if (e.GetKeyCode() == 68) m_Player->playerStopped();
 		if (e.GetKeyCode() == 32) m_Bullet->Fired();

@@ -22,7 +22,7 @@ namespace Engine
 		l_shape.SetAsBox(size.x * 0.5f, size.y * 0.5f);
 		l_shape.m_radius = 0.0f;
 
-		l_fixtureDef.density = m_Density; // adds mass to the shape
+		l_fixtureDef.density = 100; // adds mass to the shape
 		l_fixtureDef.friction = m_Friction; // adds friction to the shape
 		l_fixtureDef.restitution = m_Restitution; //adds bouncyness to the shape
 		l_fixtureDef.shape = &l_shape; // sets fixture as the shape

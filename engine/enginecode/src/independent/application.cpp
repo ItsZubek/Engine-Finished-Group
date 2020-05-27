@@ -118,7 +118,7 @@ namespace Engine {
 		while (m_running)
 		{
 			s_timestep = mp_timer->getFrameTimeSecomds();
-
+			
 			glClearColor(0.1f, 0.1f, 0.1f, 1);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -140,17 +140,19 @@ namespace Engine {
 				Profiler profiler("Box2D: ");
 
 				boxWorld->Step(s_timestep, m_iVelIterations, m_iPosIterations);
-
-				m_Player->update();
+				
+				m_Player->update(boxWorld);
 				m_Player->draw(projection, view); // draws the player to the screen
-
+			
 				m_Bullet->update();
 				m_Bullet->draw(projection, view);
 
 				for (int i = 0; i < 4; i++)
 				{
+					
 					m_Enemies[i]->update(boxWorld);
 					m_Enemies[i]->draw(projection, view); // draws the enemies to the screen
+					m_Enemies[i]->Move();
 				}
 			}
 			
@@ -216,7 +218,7 @@ namespace Engine {
 		{
 			b2Vec2 playerPos = m_Player->playerPosition();
 			m_Bullet->setPosition(b2Vec2(playerPos.x, playerPos.y + 0.2));
-			m_Bullet->fire(b2Vec2(0.0f, 0.2f));
+			m_Bullet->fire(b2Vec2(0.0f, 50.0f));
 		}
 		ENGINE_CORE_TRACE("KeyPressed: {0}, RepeatCount: {1}", e.GetKeyCode(), e.GetRepeatCount());
 		return true;

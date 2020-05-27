@@ -1,5 +1,7 @@
 #include "engine_pch.h"
 #include "AI/ship.h"
+#include "Systems/MyLogger.h"
+#include <cstdlib>
 namespace Engine
 {
 	
@@ -9,7 +11,7 @@ namespace Engine
 		b2PolygonShape l_shape;
 		b2FixtureDef l_fixtureDef; // sets the fixture of the shape
 
-		l_bodyDef.type = b2_staticBody;
+		l_bodyDef.type = b2_dynamicBody;
 		l_bodyDef.position.Set(position.x, position.y); // sets the position of the object as a parameter
 		l_bodyDef.angle = orientation * DEG2RAD; // sets the direction the object is facing
 
@@ -87,51 +89,74 @@ namespace Engine
 		m_body->ApplyLinearImpulseToCenter(movement, true);
 	}
 	
-	void Ship::raycast(b2World* world, b2Vec2 p1, b2Vec2 p2)
+	void Ship::raycast(b2World* world)
 	{
-		b2Vec2 p1 = (&m_body->GetPosition); //center of scene
-		b2Vec2 p2 = p1 + b2Vec2(sinf(&m_body->GetAngle), cosf(&m_body->GetAngle));
-		MyRayCastCallback callback;
-		b2Vec2 point1 = (p1);
-		b2Vec2 point2 = (p2);
-		world->RayCast(&callback, point1, point2);
 		
-
+		MyRayCastCallback callback;
+		b2Vec2 point1(0, 0);
+		b2Vec2 point2(0, -5);
+		world->RayCast(&callback, point1, point2);
 	}
-	void Ship::update()
+	
+	void Ship::update(b2World* world)
 	{
 		b2Vec2 pos = m_body->GetPosition(); // updates body position 
-		EnemyShip = glm::translate(glm::mat4(1), glm::vec3(pos.x, pos.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 0.2, 1));
-
+		EnemyShip = glm::translate(glm::mat4(1), glm::vec3(pos.x, pos.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 1));
 		if (pos.x > 4.5f)
 		{
-			m_body->SetTransform(b2Vec2(-4.4f, -2.5f), 0);
+			m_body->SetTransform(b2Vec2(-4.4f, pos.y), 0);
 		}
 
 		if (pos.x < -4.5)
 		{
-			m_body->SetTransform(b2Vec2(4.4f, -2.5f), 0);
+			m_body->SetLinearVelocity(b2Vec2(0, 0));
+			m_body->SetTransform(b2Vec2(4.4, pos.y), 0);
 		}
+
+		if (pos.y < -3)
+		{
+			m_body->SetLinearVelocity(b2Vec2(0, 0));
+			m_body->SetTransform(b2Vec2(pos.x, 3), 0);
+		}
+		if (pos.y > 3.5)
+		{
+			ENGINE_CORE_INFO("Enemy Destroyed");
+			stop();
+			m_body->SetTransform(b2Vec2(1000, 0), 0);
+		}
+
+
+
+		
+		
 	}
 
+	void Ship::Destroy(b2World* world)
+	{
+		world->DestroyBody(m_body);
+	}
 
 	void Ship::goForward()
 	{
+		stop();
 		movement(b2Vec2(0.f, 0.2f));
 	}
 
 	void Ship::goBackward()
 	{
+		stop();
 		movement(b2Vec2(0.f, -0.2f));
-	}
-
-	void Ship::goLeft()
-	{
-		movement(b2Vec2(-0.2f, 0.0f));
 	}
 
 	void Ship::goRight()
 	{
+		stop();
+		movement(b2Vec2(-0.2f, 0.0f));
+	}
+
+	void Ship::goLeft()
+	{
+		stop();
 		movement(b2Vec2(0.2f, 0.0f));
 	}
 
@@ -139,9 +164,37 @@ namespace Engine
 	void Ship::stop()
 	{
 		m_body->SetLinearVelocity(b2Vec2(0, 0));
+		
 	}
 
+	
+
+	void Ship::Move()
+	{
+		
+		counter++;
+		ENGINE_CORE_INFO(counter);
+		if (counter > 10)
+		{
+			ENGINE_CORE_INFO("generateNum");
+			action = (rand() % 3) + 1;
+			counter = 0;
+		}
+		
+		switch (action)
+		{
+		case 1:goLeft(); break;
+
+		case 2:goBackward(); break;
+
+		case 3:goRight(); break;
+		
+
+		}
 
 
 
+
+
+	};
 }

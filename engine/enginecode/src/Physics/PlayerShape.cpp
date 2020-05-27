@@ -91,7 +91,7 @@ namespace Engine
 		glDrawElements(GL_TRIANGLES, m_IBO->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
 
-	void PlayerShape::update()
+	void PlayerShape::update(b2World* world)
 	{
 		b2Vec2 pos = m_body->GetPosition(); // updates body position 
 		FCmodel = glm::translate(glm::mat4(1), glm::vec3(pos.x, pos.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 0.2, 1));
@@ -103,8 +103,20 @@ namespace Engine
 
 		if (pos.x < -4.5)
 		{
-			m_body->SetTransform(b2Vec2(4.4f, -2.5f), 0);
+			m_body->SetTransform(b2Vec2(4.4f, pos.y), 0);
 		}
+
+		if (pos.y < -2.6)
+		{
+			m_body->SetLinearVelocity(b2Vec2(0, 0));
+			m_body->SetTransform(b2Vec2(1000, 0), 0);
+			ENGINE_CORE_INFO("Player Destroyed");
+		}
+	}
+
+	void PlayerShape::Destroy(b2World* world)
+	{
+		world->DestroyBody(m_body);
 	}
 
 	void PlayerShape::movement(b2Vec2 movement)

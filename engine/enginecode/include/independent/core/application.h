@@ -13,7 +13,7 @@
 #include "windows/Buffer.h"
 #include "windows/Texture.h"
 #include "windows/OrthographicCamera.h"
-#include <Box2D/Box2D.h>
+
 #include "Audio/AudioManager.h"
 
 #include <vector>
@@ -21,6 +21,14 @@
 #include "Layer/LayerStack.h"
 
 #include "UI/imgui_impl.h"
+
+#include "Physics/PlayerShape.h"
+#include "Physics/EnemyShape.h"
+#include "Physics/Object.h"
+#include "Physics/BulletShape.h"
+#include "Physics/Collisions.h"
+
+#include <Box2D/Box2D.h>
 
 
 
@@ -62,6 +70,17 @@ namespace Engine {
 		 //!< Pointer to a window class
 		static glm::ivec2 s_screenResolution; //!< Screen resolution
 		static float s_timestep; //!< last frame timestep
+
+		b2World* boxWorld = nullptr;
+		b2Vec2 m_gravity = b2Vec2(0.f, 0.f);
+
+		std::shared_ptr<Engine::PlayerShape> m_Player;
+		std::vector<std::shared_ptr<Engine::EnemyShape>> m_Enemies;
+		std::shared_ptr<Engine::BulletShape> m_Bullet;
+		Engine::Collisions m_CollisionListener;
+
+		const int m_iVelIterations = 7;
+		const int m_iPosIterations = 5;
 
 		OrthographicCamera m_Camera; //!< Orthographic Camera
 

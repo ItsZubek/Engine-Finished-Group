@@ -86,6 +86,6 @@ namespace Engine
 
 	void EnemyShape::Destroy()
 	{
-		//m_body->DestroyFixture()
+		
 	}
 }

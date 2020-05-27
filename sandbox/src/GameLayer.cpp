@@ -6,16 +6,11 @@
 
 GameLayer::GameLayer(const std::string& name) : Layer(name), m_Camera(-2.0f, 2.0f, -2.0f, 2.0f)
 {
-	
+
 
 	//  Temporary set up code to be abstracted
 
-		// Enable standard depth detest (Z-buffer)
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
-	// Enabling backface culling to ensure triangle vertices are correct ordered (CCW)
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+	
 
 
 	/*m_audiosystem.Start();
@@ -26,7 +21,7 @@ GameLayer::GameLayer(const std::string& name) : Layer(name), m_Camera(-2.0f, 2.0
 	//////////////////////////////////////////////////////Flat Colour Cube//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	float FCvertices[6 * 24] = {
+	/*float FCvertices[6 * 24] = {
 		-0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.2f, // red square
 		 0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.2f,
 		 0.5f,  0.5f, -0.5f, 0.8f, 0.2f, 0.2f,
@@ -39,15 +34,15 @@ GameLayer::GameLayer(const std::string& name) : Layer(name), m_Camera(-2.0f, 2.0
 		 0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.8f,
 		 0.5f, -0.5f, 0.5f, 0.8f, 0.2f, 0.8f,
 		-0.5f, -0.5f, 0.5f,  0.8f, 0.2f, 0.8f,
-		-0.5f, 0.5f, -0.5f, 0.8f, 0.8f, 0.2f, // yellow square 
+		-0.5f, 0.5f, -0.5f, 0.8f, 0.8f, 0.2f, // yellow square
 		 0.5f, 0.5f, -0.5f, 0.8f, 0.8f, 0.2f,
 		 0.5f, 0.5f, 0.5f, 0.8f, 0.8f, 0.2f,
 		-0.5f, 0.5f, 0.5f,  0.8f, 0.8f, 0.2f,
-		-0.5f, -0.5f, -0.5f, 0.2f, 0.8f, 0.8f, // Cyan(ish) square 
+		-0.5f, -0.5f, -0.5f, 0.2f, 0.8f, 0.8f, // Cyan(ish) square
 		-0.5f,  0.5f, -0.5f,  0.2f, 0.8f, 0.8f,
 		-0.5f,  0.5f, 0.5f, 0.2f, 0.8f, 0.8f,
 		-0.5f,  -0.5f, 0.5f, 0.2f, 0.8f, 0.8f,
-		0.5f, -0.5f, -0.5f, 0.2f, 0.2f, 0.8f, // Blue square 
+		0.5f, -0.5f, -0.5f, 0.2f, 0.2f, 0.8f, // Blue square
 		0.5f,  0.5f, -0.5f,  0.2f, 0.2f, 0.8f,
 		0.5f,  0.5f, 0.5f, 0.2f, 0.2f, 0.8f,
 		0.5f,  -0.5f, 0.5f, 0.2f, 0.2f, 0.8f
@@ -56,7 +51,7 @@ GameLayer::GameLayer(const std::string& name) : Layer(name), m_Camera(-2.0f, 2.0
 	// Intiating the Vertex Array
 	m_VertexArrayFC.reset(Engine::VertexArray::create());
 
-	// Initiating the Vertex Buffer 
+	// Initiating the Vertex Buffer
 	m_VertexBufferFC.reset(Engine::VertexBuffer::Create(FCvertices, sizeof(FCvertices)));
 
 
@@ -86,7 +81,7 @@ GameLayer::GameLayer(const std::string& name) : Layer(name), m_Camera(-2.0f, 2.0
 
 
 
-	// Initiating the Index Buffer 
+	// Initiating the Index Buffer
 	m_IndexBufferFC.reset(Engine::IndexBuffer::Create(indices, 3 * 12));
 	m_IndexBufferFC->Bind();
 	m_VertexArrayFC->setIndexBuffer(m_IndexBufferFC);
@@ -154,31 +149,7 @@ GameLayer::GameLayer(const std::string& name) : Layer(name), m_Camera(-2.0f, 2.0
 	m_TextureTP.reset(Engine::Texture::createFromFile("assets/textures/letterCube.png"));
 	m_TextureTP.reset(Engine::Texture::createFromFile("assets/textures/numberCube.png"));
 
-	/*boxWorld = new b2World(m_gravity);
-
-	//!< Sets the position, size, orientation and colour of the player
-	m_Player = std::make_shared<Engine::PlayerShape>(boxWorld, glm::vec2(0.0f, -2.5f), glm::vec2(1.f, 0.2f), 0, glm::vec3(0.8f, 0.2f, 0.2f));
-
-	//!< Sets the position, size, orientation and colour of the enemies
-	m_Enemies.resize(4);
-	m_Enemies[0] = std::make_shared<Engine::EnemyShape>(boxWorld, glm::vec2(2.5f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
-	m_Enemies[1] = std::make_shared<Engine::EnemyShape>(boxWorld, glm::vec2(1.f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
-	m_Enemies[2] = std::make_shared<Engine::EnemyShape>(boxWorld, glm::vec2(-1.f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
-	m_Enemies[3] = std::make_shared<Engine::EnemyShape>(boxWorld, glm::vec2(-2.5f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
-
-	//!< Sets the position, size, orientation and colour of the bullets
-
-	m_Bullet = std::make_shared<Engine::BulletShape>(boxWorld, glm::vec2(-5.0f, -2.8f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
-
-	m_Player->setUserData(new std::pair<std::string, void*>(typeid(decltype(m_Player)).name(), &m_Player));
-	m_Bullet->setUserData(new std::pair<std::string, void*>(typeid(decltype(m_Bullet)).name(), &m_Bullet));
-	for (std::shared_ptr<Engine::EnemyShape>& enemies : m_Enemies) enemies->setUserData(new std::pair<std::string, void*>(typeid(decltype(enemies)).name(), &enemies));
-
-
-	boxWorld->SetContactListener(&m_CollisionListener); // sets contact listener*/
-
-	FCmodel = glm::translate(glm::mat4(1), glm::vec3(1.5, 0, 3));
-	TPmodel = glm::translate(glm::mat4(1), glm::vec3(-1.5, 0, 3));
+	*/
 }
 
 void GameLayer::OnAttach()
@@ -199,22 +170,10 @@ void GameLayer::OnUpdate(float timestep)
 {
 	Engine::Profiler profiler("GameLayer::OnUpdate");
 	 
-	glClearColor(0.8f, 0.8f, 0.8f, 1);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
-
-	glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f); // Basic 4:3 camera
-
-	glm::mat4 view = glm::lookAt(
-		glm::vec3(0.0f, 0.0f, -4.5f), // Camera is at (0.0,0.0,-4.5), in World Space
-		glm::vec3(0.f, 0.f, 0.f), // and looks at the origin
-		glm::vec3(0.f, 1.f, 0.f)  // Standing straight  up
-	);
-
 	m_audiosystem.Update();
 
 	// Code to make the cube move, you can ignore this more or less.
-	glm::mat4 FCtranslation, TPtranslation;
+	/*glm::mat4 FCtranslation, TPtranslation;
 
 	if (m_goingUp)
 	{
@@ -241,7 +200,7 @@ void GameLayer::OnUpdate(float timestep)
 
 	/*m_audiosystem.Start();
 	m_audiosystem.LoadSound("assets/audio/movie_1.mp3");
-	m_audiosystem.PlaySounds("assets/audio/movie_1.mp3", glm::vec3(0, 0, 0), m_audiosystem.VolumeTodB(1.0f));*/
+	m_audiosystem.PlaySounds("assets/audio/movie_1.mp3", glm::vec3(0, 0, 0), m_audiosystem.VolumeTodB(1.0f));
 
 	FCmodel = glm::rotate(FCtranslation, glm::radians(20.f) * timestep, glm::vec3(0.f, 1.f, 0.f)); // Spin the cube at 20 degrees per second
 	TPmodel = glm::rotate(TPtranslation, glm::radians(-20.f) * timestep, glm::vec3(0.f, 1.f, 0.f)); // Spin the cube at 20 degrees per second
@@ -291,37 +250,14 @@ void GameLayer::OnUpdate(float timestep)
 
 		m_ShaderTP->uploadFloat3("u_viewPos", 0.0f, 0.0f, -4.5f);
 
-		m_ShaderTP->uploadInt("u_texData", m_TextureTP->getSlot() /*textureSlot*/);
+		m_ShaderTP->uploadInt("u_texData", m_TextureTP->getSlot() /*textureSlot);
 
 		glDrawElements(GL_TRIANGLES, m_IndexBufferTP->GetCount(), GL_UNSIGNED_INT, nullptr);
 
-		/*boxWorld->Step(s_timestep, m_iVelIterations, m_iPosIterations);
-
-		m_Player->update();
-		m_Player->draw(projection, view); // draws the player to the screen
-
-		m_Bullet->update();
-		m_Bullet->draw(projection, view);
-
-		for (int i = 0; i < 4; i++)
-		{
-			m_Enemies[i]->draw(projection, view); // draws the enemies to the screen
-		}*/
-	}
+	}*/
 }
 
 void GameLayer::OnEvent(Engine::EventBaseClass& e)
 {
-	/*m_Player->playerStopped();
-	m_Player->playerStopped();
-	m_Bullet->Fired();
-
-	m_Player->movement(b2Vec2(0.2f, 0.0f));
-	m_Player->movement(b2Vec2(-0.2f, 0.0f));
-
-	{
-		b2Vec2 playerPos = m_Player->playerPosition();
-		m_Bullet->setPosition(b2Vec2(playerPos.x, playerPos.y + 0.2));
-		m_Bullet->fire(b2Vec2(0.0f, 0.2f));
-	}*/
+	
 }

@@ -41,8 +41,7 @@ namespace Engine {
 	Application::Application(): m_Camera(-2.0f, 2.0f, -2.0f, 2.0f)
 	{
 		
-		/*boxWorld = new b2World(m_gravity);
-		m_Player = std::make_shared<PlayerShape>();*/
+		
 		mp_logger = std::make_shared<MyLogger>();
 		mp_logger->start();
 		mp_timer = std::make_shared<MyTimer>();
@@ -51,6 +50,40 @@ namespace Engine {
 
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));
+
+		// Enable standard depth detest (Z-buffer)
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
+		// Enabling backface culling to ensure triangle vertices are correct ordered (CCW)
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+
+		boxWorld = new b2World(m_gravity);
+
+		//!< Sets the position, size, orientation and colour of the player
+		m_Player = std::make_shared<Engine::PlayerShape>(boxWorld, glm::vec2(0.0f, -2.5f), glm::vec2(1.f, 0.2f), 0, glm::vec3(0.8f, 0.2f, 0.2f));
+
+		//!< Sets the position, size, orientation and colour of the enemies
+		m_Enemies.resize(4);
+		m_Enemies[0] = std::make_shared<Engine::EnemyShape>(boxWorld, glm::vec2(2.5f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
+		m_Enemies[1] = std::make_shared<Engine::EnemyShape>(boxWorld, glm::vec2(1.f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
+		m_Enemies[2] = std::make_shared<Engine::EnemyShape>(boxWorld, glm::vec2(-1.f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
+		m_Enemies[3] = std::make_shared<Engine::EnemyShape>(boxWorld, glm::vec2(-2.5f, 1.5f), glm::vec2(0.5, 0.5), 0, glm::vec3(0.2f, 0.8f, 0.2f));
+
+		//!< Sets the position, size, orientation and colour of the bullets
+
+		m_Bullet = std::make_shared<Engine::BulletShape>(boxWorld, glm::vec2(-5.0f, -2.8f), glm::vec2(0.1, 0.1), 0, glm::vec3(0.2f, 0.2f, 0.8f));
+
+		m_Player->setUserData(new std::pair<std::string, void*>(typeid(decltype(m_Player)).name(), &m_Player));
+		m_Bullet->setUserData(new std::pair<std::string, void*>(typeid(decltype(m_Bullet)).name(), &m_Bullet));
+		for (std::shared_ptr<Engine::EnemyShape>& enemies : m_Enemies) enemies->setUserData(new std::pair<std::string, void*>(typeid(decltype(enemies)).name(), &enemies));
+
+
+		boxWorld->SetContactListener(&m_CollisionListener); // sets contact listener
+
+		FCmodel = glm::translate(glm::mat4(1), glm::vec3(1.5, 0, 3));
+		TPmodel = glm::translate(glm::mat4(1), glm::vec3(-1.5, 0, 3));
+	
 
 
 		m_audiosystem.Start();
@@ -87,15 +120,36 @@ namespace Engine {
 
 		while (m_running)
 		{
-			
 			s_timestep = mp_timer->getFrameTimeSecomds();
-			//boxWorld->Step(s_timestep, m_iVelIterations, m_iPosIterations);
 
-			
+			glClearColor(0.8f, 0.8f, 0.8f, 1);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glLoadIdentity();
 
 			for (auto it = m_layerStack->begin(); it != m_layerStack->end(); it++)
 			{
 				(*it)->OnUpdate(s_timestep);
+			}
+
+			glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f); // Basic 4:3 camera
+
+			glm::mat4 view = glm::lookAt(
+				glm::vec3(0.0f, 0.0f, -4.5f), // Camera is at (0.0,0.0,-4.5), in World Space
+				glm::vec3(0.f, 0.f, 0.f), // and looks at the origin
+				glm::vec3(0.f, 1.f, 0.f)  // Standing straight  up
+			);
+
+			boxWorld->Step(s_timestep, m_iVelIterations, m_iPosIterations);
+
+			m_Player->update();
+			m_Player->draw(projection, view); // draws the player to the screen
+
+			m_Bullet->update();
+			m_Bullet->draw(projection, view);
+
+			for (int i = 0; i < 4; i++)
+			{
+				m_Enemies[i]->draw(projection, view); // draws the enemies to the screen
 			}
 			
 			m_audiosystem.Update();
@@ -115,6 +169,9 @@ namespace Engine {
 		mp_logger.reset();
 		mp_timer->stop();
 		m_audiosystem.Stop();
+
+		delete boxWorld;
+		boxWorld = nullptr;
 	}
 
 	void Application::onEvent(EventBaseClass& e)
@@ -151,19 +208,22 @@ namespace Engine {
 	bool Application::onKeyPress(KeyPressedEvent& e)
 	{
 		if (e.GetKeyCode() == 256) m_running = false;
-		if (e.GetKeyCode() == 65) { m_FCdirection[1] = true; }
-		if (e.GetKeyCode() == 68) { m_FCdirection[3] = true; }
-		if (e.GetKeyCode() == 87) { m_FCdirection[0] = true; }
-		if (e.GetKeyCode() == 83) { m_FCdirection[2] = true; }
+		if (e.GetKeyCode() == 65) m_Player->movement(b2Vec2(0.2, 0.0f));
+		if (e.GetKeyCode() == 68) m_Player->movement(b2Vec2(-0.2f, 0.0f));
+		if (e.GetKeyCode() == 32)
+		{
+			m_Bullet->setPosition(b2Vec2(0.0f, 0.0f));
+			m_Bullet->fire(b2Vec2(0.0f, 0.2f));
+		}
 		ENGINE_CORE_TRACE("KeyPressed: {0}, RepeatCount: {1}", e.GetKeyCode(), e.GetRepeatCount());
 		return true;
 	}
 	bool Application::onKeyRelease(KeyReleasedEvent& e)
 	{
-		if (e.GetKeyCode() == 65) { m_FCdirection[1] = false; }
-		if (e.GetKeyCode() == 68) { m_FCdirection[3] = false; }
-		if (e.GetKeyCode() == 87) { m_FCdirection[0] = false; }
-		if (e.GetKeyCode() == 83) { m_FCdirection[2] = false; }
+		if (e.GetKeyCode() == 65) m_Player->playerStopped();
+		if (e.GetKeyCode() == 68) m_Player->playerStopped();
+		if (e.GetKeyCode() == 32) m_Bullet->Fired();
+		if (e.GetKeyCode() == 83) 
 		ENGINE_CORE_TRACE("KeyReleased: {0}", e.GetKeyCode());
 		return true;
 	}

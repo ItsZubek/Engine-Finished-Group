@@ -122,9 +122,8 @@ namespace Engine {
 		{
 			s_timestep = mp_timer->getFrameTimeSecomds();
 
-			glClearColor(0.8f, 0.8f, 0.8f, 1);
+			glClearColor(0.1f, 0.1f, 0.1f, 1);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glLoadIdentity();
 
 			for (auto it = m_layerStack->begin(); it != m_layerStack->end(); it++)
 			{
@@ -149,6 +148,7 @@ namespace Engine {
 
 			for (int i = 0; i < 4; i++)
 			{
+				m_Enemies[i]->update();
 				m_Enemies[i]->draw(projection, view); // draws the enemies to the screen
 			}
 			
@@ -212,7 +212,8 @@ namespace Engine {
 		if (e.GetKeyCode() == 68) m_Player->movement(b2Vec2(-0.2f, 0.0f));
 		if (e.GetKeyCode() == 32)
 		{
-			m_Bullet->setPosition(b2Vec2(0.0f, 0.0f));
+			b2Vec2 playerPos = m_Player->playerPosition();
+			m_Bullet->setPosition(b2Vec2(playerPos.x, playerPos.y + 0.2));
 			m_Bullet->fire(b2Vec2(0.0f, 0.2f));
 		}
 		ENGINE_CORE_TRACE("KeyPressed: {0}, RepeatCount: {1}", e.GetKeyCode(), e.GetRepeatCount());

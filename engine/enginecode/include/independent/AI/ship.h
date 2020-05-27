@@ -1,5 +1,5 @@
 
-
+#include "Profiler/profiler.h"
 #include "Physics/Object.h"
 #include <glm/gtc/matrix_transform.hpp>
 namespace Engine

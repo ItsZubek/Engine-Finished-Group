@@ -23,12 +23,13 @@ namespace Engine
 		l_shape.SetAsBox(size.x * 0.5f, size.y * 0.5f);
 		l_shape.m_radius = 0.0f;
 
-		l_fixtureDef.density = 1.0f; // adds mass to the shape
+		l_fixtureDef.density = m_Density; // adds mass to the shape
 		l_fixtureDef.friction = m_Friction; // adds friction to the shape
 		l_fixtureDef.restitution = m_Restitution; //adds bouncyness to the shape
 		l_fixtureDef.shape = &l_shape; // sets fixture as the shape
 
 		m_body->CreateFixture(&l_fixtureDef); //creates fixture
+		m_body->SetLinearDamping(0.2f);
 
 		
 		
@@ -71,7 +72,7 @@ namespace Engine
 		m_Shader.reset(Shader::create("assets/shaders/flatColour.glsl"));
 		m_Shader->Bind();
 
-
+		m_Texture.reset(Texture::createFromFile("assets/textures/Tank.png"));
 
 		FCmodel = glm::translate(glm::mat4(1), glm::vec3(position.x, position.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1));
 	}
@@ -87,11 +88,15 @@ namespace Engine
 		// Uploads the Flat Colour Uniform to the Shader
 		m_Shader->UploadUniformMat4("u_MVP", &MVP[0][0]);
 
+		float textslot = m_Texture->getSlot();
+
+		m_Shader->uploadFloat3
+
 
 		glDrawElements(GL_TRIANGLES, m_IBO->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
 
-	void PlayerShape::update(b2World* world)
+	void PlayerShape::update()
 	{
 		b2Vec2 pos = m_body->GetPosition(); // updates body position 
 		FCmodel = glm::translate(glm::mat4(1), glm::vec3(pos.x, pos.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 0.2, 1));
@@ -103,20 +108,8 @@ namespace Engine
 
 		if (pos.x < -4.5)
 		{
-			m_body->SetTransform(b2Vec2(4.4f, pos.y), 0);
+			m_body->SetTransform(b2Vec2(4.4f, -2.5f), 0);
 		}
-
-		if (pos.y < -2.6 || pos.y > 2.6)
-		{
-			m_body->SetLinearVelocity(b2Vec2(0, 0));
-			m_body->SetTransform(b2Vec2(0, 10000), 0);
-			ENGINE_CORE_INFO("Player Destroyed");
-		}
-	}
-
-	void PlayerShape::Destroy(b2World* world)
-	{
-		world->DestroyBody(m_body);
 	}
 
 	void PlayerShape::movement(b2Vec2 movement)

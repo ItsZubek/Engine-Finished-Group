@@ -7,6 +7,7 @@ namespace Engine
 	
 	Ship::Ship(b2World * world, const glm::vec2 & position, const glm::vec2 & size, const float & orientation, const glm::vec3 & colour)
 	{
+		Engine::Profiler profiler("AI::Start");
 		b2BodyDef l_bodyDef; // defines the body
 		b2PolygonShape l_shape;
 		b2FixtureDef l_fixtureDef; // sets the fixture of the shape
@@ -86,12 +87,13 @@ namespace Engine
 
 	void Ship::movement(b2Vec2 movement)
 	{
+		Engine::Profiler profiler("AI::Movement");
 		m_body->ApplyLinearImpulseToCenter(movement, true);
 	}
 	
 	void Ship::raycast(b2World* world)
 	{
-		
+		Engine::Profiler profiler("AI::Raycast");
 		MyRayCastCallback callback;
 		b2Vec2 point1(0, 0);
 		b2Vec2 point2(0, -5);
@@ -100,6 +102,7 @@ namespace Engine
 	
 	void Ship::update(b2World* world)
 	{
+		Engine::Profiler profiler("AI::Update");
 		b2Vec2 pos = m_body->GetPosition(); // updates body position 
 		EnemyShip = glm::translate(glm::mat4(1), glm::vec3(pos.x, pos.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 1));
 		if (pos.x > 4.5f)
@@ -120,7 +123,7 @@ namespace Engine
 		}
 		if (pos.y > 3.5)
 		{
-			ENGINE_CORE_INFO("Enemy Destroyed");
+			
 			stop();
 			m_body->SetTransform(b2Vec2(1000, 0), 0);
 		}
@@ -173,10 +176,10 @@ namespace Engine
 	{
 		
 		counter++;
-		ENGINE_CORE_INFO(counter);
+		
 		if (counter > 10)
 		{
-			ENGINE_CORE_INFO("generateNum");
+			
 			action = (rand() % 3) + 1;
 			counter = 0;
 		}

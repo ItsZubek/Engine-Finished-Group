@@ -13,13 +13,24 @@
 #include "windows/Buffer.h"
 #include "windows/Texture.h"
 #include "windows/OrthographicCamera.h"
-#include <Box2D/Box2D.h>
+
 #include "Audio/AudioManager.h"
-#include "systems/AssimpLoader.h"
-#include "UI/imgui_impl.h"
 
 #include <vector>
 #include "Physics/PlayerShape.h"
+#include "Layer/LayerStack.h"
+
+#include "UI/imgui_impl.h"
+
+#include "Physics/PlayerShape.h"
+#include "AI/ship.h"
+#include "Physics/Object.h"
+#include "Physics/BulletShape.h"
+#include "Physics/Collisions.h"
+
+
+
+#include <Box2D/Box2D.h>
 
 
 
@@ -37,11 +48,25 @@ namespace Engine {
 	{
 	protected:
 		Application(); //!< Constructor
+
+		std::shared_ptr<MyLogger> mp_logger; //!< Shared Pointer to a logger
+		std::shared_ptr<MyTimer> mp_timer; //!< Shared Pointer to a timer
+		std::shared_ptr<Window> m_Window;
+		std::shared_ptr<LayerStack> m_layerStack;
 	private:
 		static Application* s_instance; //!< Singleton instance of the application
-		std::shared_ptr<MyLogger> mp_logger; //!< Shared Pointer to a logger
-		std::shared_ptr<MyTimer> mp_timer;//!< Shared Pointer to a timer
+		
 		std::shared_ptr<Imgui> mp_imgui; //!< Shared Pointer to ImGui
+
+		struct ProfResult //profiler result struct
+		{
+			const char* Name;
+			float Time;
+
+		};
+
+		std::vector<ProfResult> m_ProfResults; //vector for profiler results
+
 		float TimeElapsedInSeconds; //!< Time Elapsed in seconds
 		float fps; //!< Frames Per Second
 		bool onWindowClose(WindowCloseEvent& e); //!< On Window Close Event
@@ -53,43 +78,32 @@ namespace Engine {
 		bool onMouseScroll(MouseScrolledEvent& e); //!< Mouse Scrolled Event
 		bool onMouseMoved(MouseMovedEvent& e); //!< Mouse Moved Event
 		bool m_running = true; //!< Bool to keep the application running
-		std::shared_ptr<Window> m_Window; //!< Pointer to a window class
+		 //!< Pointer to a window class
 		static glm::ivec2 s_screenResolution; //!< Screen resolution
 		static float s_timestep; //!< last frame timestep
 
-		std::shared_ptr<Shader> m_ShaderFC; //!< Pointer to a shader class
-		std::shared_ptr<Shader> m_ShaderTP; //!< Pointer to a shader class
+		AudioManager m_audiosystem;
 
-		std::shared_ptr<VertexArray> m_VertexArrayFC; //!< Pointer to a Vertex Array Class
-		std::shared_ptr<VertexArray> m_VertexArrayTP; //!< Pointer to a Vertex Array Class
+		b2World* boxWorld = nullptr;
+		b2Vec2 m_gravity = b2Vec2(0.f, 0.f);
 
-		std::shared_ptr<VertexBuffer> m_VertexBufferFC; //!< Pointer to a Vertex Buffer class
-		std::shared_ptr<VertexBuffer> m_VertexBufferTP; //!< Pointer to a Vertex Buffer class
+		std::shared_ptr<Engine::PlayerShape> m_Player;
+		std::vector<std::shared_ptr<Engine::Ship>> m_Enemies;
+		std::shared_ptr<Engine::BulletShape> m_Bullet;
+		Engine::Collisions m_CollisionListener;
 
-		std::shared_ptr<IndexBuffer> m_IndexBufferFC; //!< Pointer to a Index Buffer class
-		std::shared_ptr<IndexBuffer> m_IndexBufferTP; //!< Pointer to a Index Buffer class
+		const int m_iVelIterations = 7;
+		const int m_iPosIterations = 5;
 
 		OrthographicCamera m_Camera; //!< Orthographic Camera
 
-		// Used For Assimp
-		/*std::shared_ptr<aiScene> m_ModelScene;
-		std::shared_ptr<aiMesh> m_ModelMesh;
-		std::shared_ptr<aiNode> m_ModelNode;
-		*/
-		std::shared_ptr<Texture> m_TextureTP;
-
-		b2World* boxWorld = nullptr;
+		/*b2World* boxWorld = nullptr;
 		b2Vec2 m_gravity = b2Vec2(0.f, 0.f);
 
 		std::shared_ptr<PlayerShape> m_Player; //!< the player in the game
 		//b2Vec2 m_vertices;
 		const int m_iVelIterations = 7;
-		const int m_iPosIterations = 5;
-
-		
-		
-		
-
+		const int m_iPosIterations = 5;*/
 
 //Code provided by SIMON COUPLAND
 #pragma region TempVars

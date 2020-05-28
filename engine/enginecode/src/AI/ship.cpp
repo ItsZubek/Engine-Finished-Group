@@ -1,15 +1,18 @@
 #include "engine_pch.h"
 #include "AI/ship.h"
+#include "Systems/MyLogger.h"
+#include <cstdlib>
 namespace Engine
 {
 	
 	Ship::Ship(b2World * world, const glm::vec2 & position, const glm::vec2 & size, const float & orientation, const glm::vec3 & colour)
 	{
+		Engine::Profiler profiler("AI::Start");
 		b2BodyDef l_bodyDef; // defines the body
 		b2PolygonShape l_shape;
 		b2FixtureDef l_fixtureDef; // sets the fixture of the shape
 
-		l_bodyDef.type = b2_staticBody;
+		l_bodyDef.type = b2_dynamicBody;
 		l_bodyDef.position.Set(position.x, position.y); // sets the position of the object as a parameter
 		l_bodyDef.angle = orientation * DEG2RAD; // sets the direction the object is facing
 
@@ -82,124 +85,120 @@ namespace Engine
 		glDrawElements(GL_TRIANGLES, m_IBO->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
 
-	void Ship::movement(b2Vec2 movement, float spin)
+	void Ship::movement(b2Vec2 movement)
 	{
+		Engine::Profiler profiler("AI::Movement");
 		m_body->ApplyLinearImpulseToCenter(movement, true);
-		m_body->ApplyAngularImpulse(spin, true);
 	}
 	
-	void Ship::raycast(b2World* world, b2Vec2 p1, b2Vec2 p2)
+	void Ship::raycast(b2World* world)
 	{
-		
-		float rayLength = 25;
-		b2Vec2 p1 = (&m_body->GetPosition); //center of scene
-		b2Vec2 p2 = p1 + rayLength * b2Vec2(sinf(&m_body->GetAngle), cosf(&m_body->GetAngle));
-
-		glColor3f(1, 1, 1); //white
-		
-		b2RayCastInput input;
-		input.p1 = p1;
-		input.p2 = p2;
-		input.maxFraction = 1;
-
-		//check every fixture of every body to find closest
-		float closestFraction = 1; //start with end of line as p2
-		b2Vec2 intersectionNormal(0, 0);
-		for (b2Body* b = world->GetBodyList(); b; b = b->GetNext()) {
-			for (b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext()) {
-
-				b2RayCastOutput output;
-				if (!f->RayCast(&output, input, 1))
-					continue;
-				if (output.fraction < closestFraction) {
-					closestFraction = output.fraction;
-					intersectionNormal = output.normal;
-				}
-			}
-		}
-		b2Vec2 intersectionPoint = p1 + closestFraction * (p2 - p1);
-
-		//draw this part of the ray
-		glBegin(GL_LINES);
-		glVertex2f(p1.x, p1.y);
-		glVertex2f(intersectionPoint.x, intersectionPoint.y);
-		glEnd();
-
-		if (closestFraction == 1)
-			return; //ray hit nothing so we can finish here
-		if (closestFraction == 0)
-			return;
-		canSee = true;
-
-	
-
-		//recurse
-		
-
+		Engine::Profiler profiler("AI::Raycast");
+		MyRayCastCallback callback;
+		b2Vec2 point1(0, 0);
+		b2Vec2 point2(0, -5);
+		world->RayCast(&callback, point1, point2);
 	}
-	void Ship::update()
+	
+	void Ship::update(b2World* world)
 	{
+		Engine::Profiler profiler("AI::Update");
 		b2Vec2 pos = m_body->GetPosition(); // updates body position 
-		EnemyShip = glm::translate(glm::mat4(1), glm::vec3(pos.x, pos.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 0.2, 1));
-
+		EnemyShip = glm::translate(glm::mat4(1), glm::vec3(pos.x, pos.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 1));
 		if (pos.x > 4.5f)
 		{
-			m_body->SetTransform(b2Vec2(-4.4f, -2.5f), 0);
+			m_body->SetTransform(b2Vec2(-4.4f, pos.y), 0);
 		}
 
 		if (pos.x < -4.5)
 		{
-			m_body->SetTransform(b2Vec2(4.4f, -2.5f), 0);
+			m_body->SetLinearVelocity(b2Vec2(0, 0));
+			m_body->SetTransform(b2Vec2(4.4, pos.y), 0);
 		}
+
+		if (pos.y < -3)
+		{
+			m_body->SetLinearVelocity(b2Vec2(0, 0));
+			m_body->SetTransform(b2Vec2(pos.x, 3), 0);
+		}
+		if (pos.y > 3.5)
+		{
+			
+			stop();
+			m_body->SetTransform(b2Vec2(0, 1000), 0);
+		}
+
+
+
+		
+		
 	}
 
+	void Ship::Destroy(b2World* world)
+	{
+		world->DestroyBody(m_body);
+	}
 
 	void Ship::goForward()
 	{
-		movement(b2Vec2(0.f, 0.2f), (0));
+		stop();
+		movement(b2Vec2(0.f, 0.2f));
 	}
 
 	void Ship::goBackward()
 	{
-		movement(b2Vec2(0.f, -0.2f), (0));
-	}
-
-	void Ship::goLeft()
-	{
-		movement(b2Vec2(-0.2f, 0.0f), (0));
+		stop();
+		movement(b2Vec2(0.f, -0.2f));
 	}
 
 	void Ship::goRight()
 	{
-		movement(b2Vec2(0.2f, 0.0f), (0));
+		stop();
+		movement(b2Vec2(-0.2f, 0.0f));
 	}
 
-	void Ship::ShipRotateLeft()
+	void Ship::goLeft()
 	{
-		movement(b2Vec2(0.0f, 0.0f), (-30));
+		stop();
+		movement(b2Vec2(0.2f, 0.0f));
 	}
 
-	void Ship::ShipRotateRight()
-	{
-		movement(b2Vec2(0.0f, 0.0f), (30));
-	}
 
 	void Ship::stop()
 	{
 		m_body->SetLinearVelocity(b2Vec2(0, 0));
-		m_body->SetAngularVelocity(0);
+		
 	}
 
+	
 
-	void Ship::Destroy()
+	void Ship::Move()
 	{
-		//m_body->DestroyFixture();
-	}
+		
+		counter++;
+		
+		if (counter > 10)
+		{
+			
+			action = (rand() % 3) + 1;
+			counter = 0;
+
+		}
+		
+		switch (action)
+		{
+		case 1:goLeft(); break;
+
+		case 2:goBackward(); break;
+
+		case 3:goRight(); break;
+		
+
+		}
 
 
-	b2Vec2 Ship::EnemyPosition()
-	{
-		return m_body->GetPosition();
-	}
 
+
+
+	};
 }

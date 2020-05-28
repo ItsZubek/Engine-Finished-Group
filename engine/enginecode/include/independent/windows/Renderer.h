@@ -1,0 +1,26 @@
+/** \file Renderer.h
+*/
+#pragma once
+
+namespace Engine
+{
+	
+	/**
+\Renderer Class, uses enums for API choices
+*/
+	class Renderer
+	{
+	public:
+		enum class RendererAPI
+		{
+			None = 0, OpenGL = 1
+		};
+
+		inline static RendererAPI GetAPI() { return s_RendererAPI; }
+		static Renderer* createRenderer2D();
+	private:
+		static RendererAPI s_RendererAPI;
+
+	};
+
+}

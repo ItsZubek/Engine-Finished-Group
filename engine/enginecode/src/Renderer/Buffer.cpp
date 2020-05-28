@@ -11,7 +11,7 @@ namespace Engine{
 
 	VertexBuffer* VertexBuffer::Create(float* vertices, uint32_t size)
 	{
-		Engine::Profiler profiler("VertexBuffer::Create");
+		PROFILE_SCOPE("VertexBuffer::Create");
 
 		switch (Renderer::GetAPI())
 		{
@@ -25,7 +25,7 @@ namespace Engine{
 	}
 	IndexBuffer * IndexBuffer::Create(uint32_t * indices, uint32_t size)
 	{
-		Engine::Profiler profiler("IndexBuffer::Create");
+		PROFILE_SCOPE("IndexBuffer::Create");
 		switch (Renderer::GetAPI())
 		{
 		case Renderer::RendererAPI::None: ENGINE_CORE_ERROR("API::NONE currently not supported"); return nullptr;

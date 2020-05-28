@@ -9,7 +9,7 @@
 #include "windows/Texture.h"
 #include "windows/OrthographicCamera.h"
 
-#include "Profiler/Profiler.h"
+
 
 
 
@@ -72,7 +72,7 @@ public:
 	void OnAttach() override;
 	void OnDetach() override;
 	void OnUpdate(float timestep) override;
-	void OnImGuiRender();
+	
 	void OnEvent(Engine::EventBaseClass& e) override;
 
 	

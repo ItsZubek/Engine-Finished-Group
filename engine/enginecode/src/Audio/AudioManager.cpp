@@ -8,7 +8,7 @@ namespace Engine
 
 	void AudioManager::Start() 
 	{ //initialize the sound system
-		Engine::Profiler profiler("AudioManager::Start");
+		PROFILE_SCOPE("AudioManager::Start");
 		errorCheck(FMOD::Studio::System::create(&m_studioSystem));
 		errorCheck(m_studioSystem->initialize(m_maxChannels, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, NULL));
 
@@ -26,7 +26,7 @@ namespace Engine
 
 	void AudioManager::Update() 
 	{ //update the sound
-		Engine::Profiler profiler("AudioManager::Update");
+		PROFILE_SCOPE("AudioManager::Update");
 		std::vector<std::map<int, FMOD::Channel*>::iterator> l_stoppedChannels;
 		for (auto it = m_channels.begin(); it != m_channels.end(); it++)
 		{
@@ -49,7 +49,7 @@ namespace Engine
 
 	void AudioManager::LoadSound(const std::string& strSoundName, bool b3d, bool bLooping, bool bStream, float minDist, float maxDist)
 	{
-		Engine::Profiler profiler("AudioManager::LoadSound");
+		PROFILE_SCOPE("AudioManager::LoadSound");
 		auto it = m_sounds.find(strSoundName);
 		if (it != m_sounds.end())
 			return;
@@ -70,7 +70,7 @@ namespace Engine
 
 	void AudioManager::UnLoadSound(const std::string& strSoundName)
 	{
-		Engine::Profiler profiler("AudioManager::UnLoadSound");
+		PROFILE_SCOPE("AudioManager::UnLoadSound");
 		auto it = m_sounds.find(strSoundName);
 		if (it == m_sounds.end())
 			return;
@@ -80,7 +80,7 @@ namespace Engine
 
 	int AudioManager::PlaySounds(const std::string& strSoundName, const glm::vec3& vPos, float fVolumedB)
 	{
-		Engine::Profiler profiler("AudioManager::PlaySounds");
+		PROFILE_SCOPE("AudioManager::PlaySounds");
 		int channelId = m_nextChannelId++;
 		auto it = m_sounds.find(strSoundName);
 		if (it == m_sounds.end())
@@ -124,7 +124,7 @@ namespace Engine
 
 	void AudioManager::SetChannelVolume(int channelId, float fVolumedB)
 	{
-		Engine::Profiler profiler("AudioManager::SetChannelVolume");
+		PROFILE_SCOPE("AudioManager::SetChannelVolume");
 		auto it = m_channels.find(channelId);
 		if (it == m_channels.end())
 			return;
@@ -133,7 +133,7 @@ namespace Engine
 	}
 
 	void AudioManager::LoadBank(const std::string& strBankName, FMOD_STUDIO_LOAD_BANK_FLAGS flags) {
-		Engine::Profiler profiler("AudioManager::LoadBank");
+		PROFILE_SCOPE("AudioManager::LoadBank");
 		auto it = m_banks.find(strBankName);
 		if (it != m_banks.end())
 			return;
@@ -145,7 +145,7 @@ namespace Engine
 	}
 
 	void AudioManager::LoadEvent(const std::string& strEventName) {
-		Engine::Profiler profiler("AudioManager::LoadEvent");
+		PROFILE_SCOPE("AudioManager::LoadEvent");
 		auto it = m_events.find(strEventName);
 		if (it != m_events.end())
 			return;
@@ -161,7 +161,7 @@ namespace Engine
 	}
 
 	void AudioManager::PlayEvent(const std::string& strEventName) {
-		Engine::Profiler profiler("AudioManager::PlayEvent");
+		PROFILE_SCOPE("AudioManager::PlayEvent");
 		auto it = m_events.find(strEventName);
 		if (it == m_events.end()) {
 			LoadEvent(strEventName);
@@ -174,7 +174,7 @@ namespace Engine
 
 	void AudioManager::StopEvent(const std::string& strEventName, bool bImmediate) 
 	{
-		Engine::Profiler profiler("AudioManager::StopEvent");
+		PROFILE_SCOPE("AudioManager::StopEvent");
 		auto it = m_events.find(strEventName);
 		if (it == m_events.end())
 			return;
@@ -214,7 +214,7 @@ namespace Engine
 
 	FMOD_VECTOR AudioManager::VectorToFmod(const glm::vec3& vPosition)
 	{
-		Engine::Profiler profiler("AudioManager::VectorToFmod");
+		PROFILE_SCOPE("AudioManager::VectorToFmod");
 		FMOD_VECTOR fVec;
 		fVec.x = vPosition.x;
 		fVec.y = vPosition.y;
@@ -234,19 +234,19 @@ namespace Engine
 
 	float  AudioManager::dbToVolume(float dB)
 	{
-		Engine::Profiler profiler("AudioManager::dbToVlume");
+		PROFILE_SCOPE("AudioManager::dbToVlume");
 		return powf(10.0f, 0.05f * dB);
 	}
 
 	float  AudioManager::VolumeTodB(float volume)
 	{
-		Engine::Profiler profiler("AudioManager::VolumeTodb");
+		PROFILE_SCOPE("AudioManager::VolumeTodb");
 		return 20.0f * log10f(volume);
 	}
 
 	void AudioManager::Stop() 
 	{
-		Engine::Profiler profiler("AudioManager::Stop");
+		PROFILE_SCOPE("AudioManager::Stop");
 		delete m_lowLevelSystem;
 		delete m_studioSystem;
 	}

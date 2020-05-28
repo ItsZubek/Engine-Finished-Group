@@ -5,4 +5,4 @@
   imgui_impl_opengl3.cpp
   imgui_widgets.cpp
   Generating Code...
-  ImGui.vcxproj -> C:\Users\Jack\Documents\DeMontfort University\Year Three\Game Engine Development\Coursework\vendor\ImGui\bin\Debug-windows\ImGui\ImGui.lib
+  ImGui.vcxproj -> C:\Users\Mike\Documents\GitHub\cw-2019-2020-group-a\vendor\ImGui\bin\Debug-windows\ImGui\ImGui.lib

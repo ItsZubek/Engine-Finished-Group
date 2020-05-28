@@ -37,7 +37,7 @@ namespace Engine {
 
 	Application::Application(): m_Camera(-2.0f, 2.0f, -2.0f, 2.0f)
 	{
-		Engine::Profiler profiler("Application::Application");
+		PROFILE_SCOPE("Application::Application");
 		
 		
 		mp_logger = std::make_shared<MyLogger>();
@@ -152,7 +152,7 @@ namespace Engine {
 
 			{
 
-				Profiler profiler("Box2D: ");
+				PROFILE_SCOPE("Box2D: ");
 
 				boxWorld->Step(s_timestep, m_iVelIterations, m_iPosIterations);
 				
@@ -195,7 +195,7 @@ namespace Engine {
 
 	void Application::onEvent(EventBaseClass& e)
 	{
-		Engine::Profiler profiler("Application::OnEvent");
+		PROFILE_SCOPE("Application::OnEvent");
 		EventDispatcher dispatcher(e);
 		dispatcher.dispatch<WindowCloseEvent>(std::bind(&Application::onWindowClose, this, std::placeholders::_1));
 		dispatcher.dispatch<WindowResizeEvent>(std::bind(&Application::onResize, this, std::placeholders::_1));
@@ -227,7 +227,7 @@ namespace Engine {
 
 	bool Application::onKeyPress(KeyPressedEvent& e)
 	{
-		Engine::Profiler profiler("Application::onKeyPress");
+		PROFILE_SCOPE("Application::onKeyPress");
 		if (e.GetKeyCode() == 256) m_running = false;
 		if (e.GetKeyCode() == 65) m_Player->movement(b2Vec2(0.2, 0.0f));
 		if (e.GetKeyCode() == 68) m_Player->movement(b2Vec2(-0.2f, 0.0f));
@@ -243,7 +243,7 @@ namespace Engine {
 	}
 	bool Application::onKeyRelease(KeyReleasedEvent& e)
 	{
-		Engine::Profiler profiler("Application::onKeyRelease");
+		PROFILE_SCOPE("Application::onKeyRelease");
 		if (e.GetKeyCode() == 65) m_Player->playerStopped();
 		if (e.GetKeyCode() == 68) m_Player->playerStopped();
 		if (e.GetKeyCode() == 32) m_Bullet->Fired();

@@ -1,13 +1,14 @@
 #include "engine_pch.h"
 #include "AI/ship.h"
-#include "Systems/MyLogger.h"
+
 #include <cstdlib>
+
 namespace Engine
 {
 	
 	Ship::Ship(b2World * world, const glm::vec2 & position, const glm::vec2 & size, const float & orientation, const glm::vec3 & colour)
 	{
-		Engine::Profiler profiler("AI::Start");
+		PROFILE_SCOPE("AI::Start");
 		b2BodyDef l_bodyDef; // defines the body
 		b2PolygonShape l_shape;
 		b2FixtureDef l_fixtureDef; // sets the fixture of the shape
@@ -87,13 +88,13 @@ namespace Engine
 
 	void Ship::movement(b2Vec2 movement)
 	{
-		Engine::Profiler profiler("AI::Movement");
+		PROFILE_SCOPE("AI::Movement");
 		m_body->ApplyLinearImpulseToCenter(movement, true);
 	}
 	
 	void Ship::raycast(b2World* world)
 	{
-		Engine::Profiler profiler("AI::Raycast");
+		PROFILE_SCOPE("AI::Raycast");
 		MyRayCastCallback callback;
 		b2Vec2 point1(0, 0);
 		b2Vec2 point2(0, -5);
@@ -102,7 +103,7 @@ namespace Engine
 	
 	void Ship::update(b2World* world)
 	{
-		Engine::Profiler profiler("AI::Update");
+		PROFILE_SCOPE("AI::Update");
 		b2Vec2 pos = m_body->GetPosition(); // updates body position 
 		EnemyShip = glm::translate(glm::mat4(1), glm::vec3(pos.x, pos.y, 3)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 1));
 		if (pos.x > 4.5f)

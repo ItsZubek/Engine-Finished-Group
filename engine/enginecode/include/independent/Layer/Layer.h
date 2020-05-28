@@ -16,6 +16,6 @@ namespace Engine
 		virtual void OnUpdate(float timestep) {}
 		virtual void OnEvent(EventBaseClass& e) {}
 
-		inline const std::string& GetName() const { return m_Name; }
+		//inline const std::string& GetName() const { return m_Name; }
 	};
 }

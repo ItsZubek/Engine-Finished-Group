@@ -168,16 +168,14 @@ void GameLayer::OnDetach()
 
 void GameLayer::OnUpdate(float timestep)
 {
-	Engine::Profiler profiler("GameLayer::OnUpdate") ;
+	
 	 
 	
 }
 
 
 
-void GameLayer::OnImGuiRender()
-{
-}
+
 
 void GameLayer::OnEvent(Engine::EventBaseClass& e)
 {

@@ -10,7 +10,7 @@ namespace Engine
 {
 	Material* Material::create(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray)
 	{
-		Engine::Profiler profiler("Material::Create");
+		PROFILE_SCOPE("Material::Create");
 		if (Renderer::GetAPI() == Renderer::RendererAPI::None)
 		{
 			ENGINE_CORE_CRITICAL(" API is not supported");

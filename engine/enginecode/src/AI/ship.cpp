@@ -125,7 +125,7 @@ namespace Engine
 		{
 			
 			stop();
-			m_body->SetTransform(b2Vec2(1000, 0), 0);
+			m_body->SetTransform(b2Vec2(0, 1000), 0);
 		}
 
 
@@ -182,6 +182,7 @@ namespace Engine
 			
 			action = (rand() % 3) + 1;
 			counter = 0;
+
 		}
 		
 		switch (action)

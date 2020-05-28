@@ -9,14 +9,17 @@
 
 #include <chrono>
 
+
 namespace Engine
 {
+
 	class Profiler
 	{
 	private:
 		const char* m_Name;
 		bool m_Stopped;
 		std::chrono::time_point<std::chrono::steady_clock> m_StartTimePoint;
+
 	public:
 		Profiler(const char* name)
 			: m_Name(name), m_Stopped(false)
@@ -36,6 +39,7 @@ namespace Engine
 			float duration = (end - start) * 0.001f;
 
 			std::cout << m_Name << ": " << duration << "ms" << std::endl; //need m_Name and duration to be accessible from application.h
+
 		};
 		~Profiler()
 		{
@@ -45,5 +49,4 @@ namespace Engine
 			}
 		}
 	};
-		
 }

@@ -2,6 +2,7 @@
 #include "Profiler/profiler.h"
 #include "Physics/Object.h"
 #include <glm/gtc/matrix_transform.hpp>
+
 namespace Engine
 {
 	class Ship : public Object
@@ -13,6 +14,7 @@ namespace Engine
 		int rando;
 		
 	public:
+		
 		Ship() {};
 		Ship(b2World* world, const glm::vec2& position, const glm::vec2& size, const float& orientation, const glm::vec3& colour); //!< Complete Contructor
 		void draw(glm::mat4 projection, glm::mat4 view); //!< draws the shape
@@ -28,7 +30,7 @@ namespace Engine
 
 		void Move();
 		
-		b2Vec2 EnemyPosition();
+		
 		void movement(b2Vec2 movement);
 		void raycast(b2World* world);
 	};

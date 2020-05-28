@@ -106,10 +106,10 @@ namespace Engine
 			m_body->SetTransform(b2Vec2(4.4f, pos.y), 0);
 		}
 
-		if (pos.y < -2.6)
+		if (pos.y < -2.6 || pos.y > 2.6)
 		{
 			m_body->SetLinearVelocity(b2Vec2(0, 0));
-			m_body->SetTransform(b2Vec2(1000, 0), 0);
+			m_body->SetTransform(b2Vec2(0, 10000), 0);
 			ENGINE_CORE_INFO("Player Destroyed");
 		}
 	}

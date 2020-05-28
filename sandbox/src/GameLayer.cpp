@@ -168,93 +168,15 @@ void GameLayer::OnDetach()
 
 void GameLayer::OnUpdate(float timestep)
 {
-	Engine::Profiler profiler("GameLayer::OnUpdate");
+	Engine::Profiler profiler("GameLayer::OnUpdate") ;
 	 
-	//m_audiosystem.Update();
-
-	// Code to make the cube move, you can ignore this more or less.
-	/*glm::mat4 FCtranslation, TPtranslation;
-
-	if (m_goingUp)
-	{
-		//FCtranslation = glm::translate(FCmodel, glm::vec3(0.0f, 0.2f * s_timestep, 0.0f));
-		TPtranslation = glm::translate(TPmodel, glm::vec3(0.0f, -0.2f * timestep, 0.0f));
-	}
-	else
-	{
-		//FCtranslation = glm::translate(FCmodel, glm::vec3(0.0f, -0.2f * s_timestep, 0.0f));
-		TPtranslation = glm::translate(TPmodel, glm::vec3(0.0f, 0.2f * timestep, 0.0f));
-	}
-
-	FCtranslation = FCmodel;
-	if (m_FCdirection[1]) { FCtranslation = glm::translate(FCmodel, glm::vec3(-0.25f * timestep, 0.0f, 0.0f)); }
-	if (m_FCdirection[3]) { FCtranslation = glm::translate(FCmodel, glm::vec3(0.25f * timestep, 0.0f, 0.0f)); }
-	if (m_FCdirection[0]) { FCtranslation = glm::translate(FCmodel, glm::vec3(0.0f, 0.25f * timestep, 0.0f)); }
-	if (m_FCdirection[2]) { FCtranslation = glm::translate(FCmodel, glm::vec3(0.0f, -0.25f * timestep, 0.0f)); }
-
-	m_timeSummed += timestep;
-	if (m_timeSummed > 20.0f) {
-		m_timeSummed = 0.f;
-		m_goingUp = !m_goingUp;
-	}
-
-	/*m_audiosystem.Start();
-	m_audiosystem.LoadSound("assets/audio/movie_1.mp3");
-	m_audiosystem.PlaySounds("assets/audio/movie_1.mp3", glm::vec3(0, 0, 0), m_audiosystem.VolumeTodB(1.0f));
-
-	FCmodel = glm::rotate(FCtranslation, glm::radians(20.f) * timestep, glm::vec3(0.f, 1.f, 0.f)); // Spin the cube at 20 degrees per second
-	TPmodel = glm::rotate(TPtranslation, glm::radians(-20.f) * timestep, glm::vec3(0.f, 1.f, 0.f)); // Spin the cube at 20 degrees per second
-
-	// End of code to make the cube move.
-
-	glm::mat4 fcMVP = projection * view * FCmodel;
-
-	{
-		Engine::Profiler profiler("Flat Colour Cube");
-
-	//Binds the Shader and Vertex Array for Flat Colour
-	m_ShaderFC->Bind();
-	m_VertexArrayFC->bind();
-
-	// Uploads the Flat Colour Uniform to the Shader
-	m_ShaderFC->UploadUniformMat4("u_MVP", &fcMVP[0][0]);
-		
-		
-		glDrawElements(GL_TRIANGLES, m_IndexBufferFC->GetCount(), GL_UNSIGNED_INT, nullptr);
-	}
-
-	glm::mat4 tpMVP = projection * view * TPmodel;
-	//m_TextureTP->getSlot();
-	unsigned int textureSlot;
-	if (m_goingUp) m_TextureTP->setSlot(0);
-	else  m_TextureTP->setSlot(1);
 	
-	{
-		Engine::Profiler profiler("Textured Phong Cube");
-		//Binds the Shader and Vertex Array for Textured Phong
-		m_ShaderTP->Bind();
-		m_VertexArrayTP->bind();
+}
 
 
-		// Uploads the Textured Phong Uniforms to the Shader
 
-		m_ShaderTP->UploadUniformMat4("u_MVP", &tpMVP[0][0]);
-
-		m_ShaderTP->UploadUniformMat4("u_model", &TPmodel[0][0]);
-
-		m_ShaderTP->uploadFloat3("u_objectColour", 0.2f, 0.8f, 0.5f);
-
-		m_ShaderTP->uploadFloat3("u_lightColour", 1.0f, 1.0f, 1.0f);
-
-		m_ShaderTP->uploadFloat3("u_lightPos", 1.0f, 4.0f, -6.0f);
-
-		m_ShaderTP->uploadFloat3("u_viewPos", 0.0f, 0.0f, -4.5f);
-
-		m_ShaderTP->uploadInt("u_texData", m_TextureTP->getSlot() /*textureSlot);
-
-		glDrawElements(GL_TRIANGLES, m_IndexBufferTP->GetCount(), GL_UNSIGNED_INT, nullptr);
-
-	}*/
+void GameLayer::OnImGuiRender()
+{
 }
 
 void GameLayer::OnEvent(Engine::EventBaseClass& e)

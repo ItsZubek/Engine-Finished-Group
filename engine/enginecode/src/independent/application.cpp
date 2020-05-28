@@ -34,9 +34,11 @@ namespace Engine {
 	glm::mat4 FCmodel, TPmodel;
 #pragma endregion TempGlobalVars
 
+
 	Application::Application(): m_Camera(-2.0f, 2.0f, -2.0f, 2.0f)
 	{
 		Engine::Profiler profiler("Application::Application");
+		
 		
 		mp_logger = std::make_shared<MyLogger>();
 		mp_logger->start();
@@ -102,6 +104,7 @@ namespace Engine {
 
 
 	}
+
 	void Application::run()
 	{
 		
@@ -112,6 +115,8 @@ namespace Engine {
 
 		ImGui::Begin("GUI Test");
 		ImGui::Text("This is a test box");
+		
+		 
 
 		for (auto& result : m_ProfResults) //turn profiler results into imgui text
 		{
@@ -121,8 +126,7 @@ namespace Engine {
 
 			ImGui::Text(label, result.Time); //the text being generated
 		}
-
-
+		m_ProfResults.clear();
 		ImGui::End();
 
 
